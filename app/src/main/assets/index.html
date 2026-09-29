@@ -8,34 +8,45 @@
 <script type="module">
 import * as THREE from './three.module.js';
 import { GLTFLoader } from './GLTFLoader.js';
-const $=s=>document.querySelector(s), sceneRoot=$('#scene');let scene,camera,renderer,clock,player,enemy,playerPlane='f86',enemyPlaneType='mig15',weaponMode='mg',enemyWeaponMode='both',playerAmmo={mg:1800,n37:40,ns23:160},enemyAmmo={mg:1800,n37:40,ns23:160},playerWeaponCooldowns={mg:0,n37:0,ns23:0},enemyWeaponCooldowns={mg:0,n37:0,ns23:0},enemyMode='attack',enemyModeTimer=2,enemyBreakDirection=1,playing=false,ended=false,kills=0,hp=700,eHp=600,boost=100,hitFlash=0,worldTime=0,previewRenderer=null,previewScene=null,previewCamera=null,previewPlane=null,previewType='mig15';const keys={up:false,down:false,left:false,right:false,fire:false,boost:false};const bullets=[];const clouds=[];const tmp=new THREE.Vector3();const METERS_PER_UNIT=10,SPAWN_DISTANCE_METERS=2000,PLANE_LENGTH_METERS={mig15:10,f86:11.4},MODEL_REFERENCE_LENGTH=8.15;const blueSpawn=new THREE.Vector3(0,60,SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT)),redSpawn=new THREE.Vector3(0,60,-SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT));
+const $=s=>document.querySelector(s), sceneRoot=$('#scene');let scene,camera,renderer,clock,player,enemy,playerPlane='f86',enemyPlaneType='mig15',weaponMode='mg',enemyWeaponMode='both',playerAmmo={mg:1800,n37:40,ns23:160},enemyAmmo={mg:1800,n37:40,ns23:160},playerWeaponCooldowns={mg:0,n37:0,ns23:0},enemyWeaponCooldowns={mg:0,n37:0,ns23:0},enemyMode='attack',enemyModeTimer=2,enemyBreakDirection=1,playing=false,ended=false,kills=0,hp=700,eHp=600,boost=100,hitFlash=0,worldTime=0,previewRenderer=null,previewScene=null,previewCamera=null,previewPlane=null,previewType='mig15';const keys={up:false,down:false,left:false,right:false,fire:false,boost:false};const bullets=[];const clouds=[];const tmp=new THREE.Vector3();
+// Game coordinates: +X right, +Y up, nose toward -Z; 1 world unit = 10 m.
+const METERS_PER_UNIT=10,SPAWN_DISTANCE_METERS=2000;
+// Keep each GLB's correction, real dimensions, and collision envelope with its own spec.
+const AIRCRAFT_SPECS={mig15:{modelFile:'./mig15.glb',lengthMeters:10,axisFlip:[1,-1,-1],collisionMeters:{x:10.08,y:3.7,z:10}},f86:{modelFile:'./f-86f-2_sabre_custom_war_thunder.glb',lengthMeters:11.4,axisFlip:[1,-1,-1],collisionMeters:{x:11.3,y:4.5,z:11.4}}};
+const blueSpawn=new THREE.Vector3(0,60,SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT)),redSpawn=new THREE.Vector3(0,60,-SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT));
 const mat=(color,rough=.65,metal=.1)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal,flatShading:true});
 const planeInfo={mig15:{name:'MiG-15 米格-15',health:600,speed:72,intro:'苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大；选择合适的射击窗口，或切换双炮持续压制。',specs:[['机体耐久','600'],['37 mm N-37','1门 · 备弹40 · 400发/分 · 伤害304 · 弹速较低'],['23 mm NS-23','2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速较快'],['射击模式','N-37 / 双NS-23 / 三炮齐射']]},f86:{name:'F-86 佩刀',health:700,speed:77,intro:'美国早期喷气式战斗机，操纵轻快。六挺勃朗宁机枪形成密集弹幕，备弹充足，适合持续追击和校正瞄准。',specs:[['机体耐久','700'],['武器','6挺 12.7 mm 勃朗宁机枪'],['总备弹','1800发 · 6挺合计'],['射速','每挺600发/分'],['单发伤害','34'],['弹速','较快']]}};
 const weaponInfo={f86:{mg:{rpm:600,damage:34,speed:330,cost:6,count:6,radius:.09,color:0x9df4ff,offsets:[[-.245,-.008,-.135],[-.205,-.008,-.11],[-.165,-.008,-.085],[.165,-.008,-.085],[.205,-.008,-.11],[.245,-.008,-.135]]}},mig15:{n37:{rpm:400,damage:304,speed:205,cost:1,count:1,radius:.22,color:0xffd36e,offsets:[[0,-.01,-.55]]},ns23:{rpm:550,damage:106,speed:315,cost:2,count:2,radius:.16,color:0xffef9b,offsets:[[-.032,-.01,-.53],[.032,-.01,-.53]]}}};
 
-const planeModelFiles={mig15:'./mig15.glb',f86:'./f-86f-2_sabre_custom_war_thunder.glb'};
 const planeModelLoader=new GLTFLoader();
 const planeModelPromises={};
-function loadPlaneModel(type){if(!planeModelPromises[type])planeModelPromises[type]=planeModelLoader.loadAsync(planeModelFiles[type]).then(gltf=>gltf.scene).catch(error=>{console.error('无法加载飞机模型：'+type,error);throw error});return planeModelPromises[type]}
+function loadPlaneModel(type){const spec=AIRCRAFT_SPECS[type];if(!spec)throw new Error('未知飞机型号：'+type);if(!planeModelPromises[type])planeModelPromises[type]=planeModelLoader.loadAsync(spec.modelFile).then(gltf=>gltf.scene).catch(error=>{console.error('无法加载飞机模型：'+type,error);throw error});return planeModelPromises[type]}
 function aircraft(isPlayer,type){
- const root=new THREE.Group(),lengthMeters=PLANE_LENGTH_METERS[type];
- root.userData={speed:planeInfo[type].speed,type,lengthMeters,hitRadius:lengthMeters/METERS_PER_UNIT*.56};
+ const root=new THREE.Group(),spec=AIRCRAFT_SPECS[type],lengthMeters=spec.lengthMeters,collision=spec.collisionMeters;
+ root.userData={speed:planeInfo[type].speed,type,lengthMeters,collisionHalfExtents:new THREE.Vector3(collision.x,collision.y,collision.z).multiplyScalar(.5/METERS_PER_UNIT)};
  loadPlaneModel(type).then(source=>{
   if(root.userData.modelAttached)return;
   const model=new THREE.Group();
   model.add(source.clone(true));
-  model.scale.set(1,-1,-1);
+  // 1) Correct this GLB's axes before measuring it.
+  model.scale.set(...spec.axisFlip);
   model.updateMatrixWorld(true);
-  const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
-  if(!Number.isFinite(size.z)||size.z<=0)throw new Error('飞机模型长度无效：'+type);
-  model.position.sub(center);
-  const modelScale=(lengthMeters/METERS_PER_UNIT)/size.z;
-  model.scale.set(modelScale,-modelScale,-modelScale);
+  const correctedBounds=new THREE.Box3().setFromObject(model),correctedSize=correctedBounds.getSize(new THREE.Vector3());
+  if(!Number.isFinite(correctedSize.z)||correctedSize.z<=0)throw new Error('飞机模型修正方向后长度无效：'+type);
+  // 2) Match the real fuselage length in game units, uniformly on all axes.
+  const modelScale=(lengthMeters/METERS_PER_UNIT)/correctedSize.z;
+  model.scale.multiplyScalar(modelScale);
+  model.updateMatrixWorld(true);
+  // 3) Recompute bounds after scaling, then place the scaled center at the aircraft origin.
+  const scaledBounds=new THREE.Box3().setFromObject(model),scaledCenter=scaledBounds.getCenter(new THREE.Vector3());
+  model.position.sub(scaledCenter);
+  model.updateMatrixWorld(true);
   model.traverse(object=>{if(object.isMesh){object.castShadow=true;object.receiveShadow=true}});
   root.add(model);root.userData.modelAttached=true
  }).catch(()=>{root.userData.modelError=true});
  return root
 }
+function insideAircraftHitbox(point,aircraftRoot,projectileRadius=0){const half=aircraftRoot.userData.collisionHalfExtents;if(!half)return false;const local=aircraftRoot.worldToLocal(point.clone());return Math.abs(local.x)<=half.x+projectileRadius&&Math.abs(local.y)<=half.y+projectileRadius&&Math.abs(local.z)<=half.z+projectileRadius}
 function freshAmmo(type){return type==='mig15'?{mg:0,n37:40,ns23:160}:{mg:1800,n37:0,ns23:0}}
 function selectedWeaponIds(type,mode){return type==='f86'?['mg']:mode==='both'?['n37','ns23']:[mode]}
 function updateAmmoUI(){if(playerPlane==='mig15'){$('#ammo').textContent=`N-37 ${playerAmmo.n37} · NS-23 ${playerAmmo.ns23}`;$('#ammoBar').style.width=(((playerAmmo.n37+playerAmmo.ns23)/200)*100)+'%'}else{$('#ammo').textContent=`${playerAmmo.mg} / 1800`;$('#ammoBar').style.width=(playerAmmo.mg/1800*100)+'%'}$('#weaponSelect').classList.toggle('hidden',playerPlane!=='mig15');$('#weaponSelect').textContent=weaponMode==='n37'?'N-37 单炮':weaponMode==='ns23'?'NS-23 双炮':'三炮齐射'}
@@ -59,7 +70,7 @@ function updateTacticalDisplay(){if(!player||!enemy||!camera)return;camera.updat
 function animate(){requestAnimationFrame(animate);if(!scene)return;const dt=Math.min(clock.getDelta(),.04);worldTime+=dt;if(playing){const turn=.72*dt*(keys.boost?1.08:1);if(keys.left)player.rotation.y+=turn;if(keys.right)player.rotation.y-=turn;if(keys.up)player.rotation.x-=turn;if(keys.down)player.rotation.x+=turn;player.rotation.z=THREE.MathUtils.damp(player.rotation.z,((keys.left?1:0)-(keys.right?1:0))*.58,2.3,dt);player.rotation.x=THREE.MathUtils.clamp(player.rotation.x,-.72,.72);const forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion),base=player.userData.speed*(keys.boost&&boost>0?1.45:1)/METERS_PER_UNIT;if(keys.boost&&boost>0)boost=Math.max(0,boost-30*dt);else boost=Math.min(100,boost+13*dt);player.position.addScaledVector(forward,base*dt);player.position.y=THREE.MathUtils.clamp(player.position.y,-110,200);if((player.position.y+90)*METERS_PER_UNIT<0){hp=0;updateHealthUI();finish(false)}
 // The enemy alternates between a short attack and a longer break, leaving a clear window to line up a shot.
 enemyModeTimer-=dt;if(enemyModeTimer<=0){enemyMode=enemyMode==='attack'?'break':'attack';enemyModeTimer=enemyMode==='attack'?2.4+Math.random()*1.1:4.2+Math.random()*1.5;enemyBreakDirection=Math.random()<.5?-1:1;if(enemyMode==='break')enemy.rotateY(enemyBreakDirection*.62)}const toPlayer=tmp.copy(player.position).sub(enemy.position),dist=toPlayer.length();if(enemyMode==='attack'){const desired=new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,-1),toPlayer.clone().normalize());enemy.quaternion.slerp(desired,Math.min(dt*.34,1));if(dist<190)fireWeapons(enemy,true,dt,true)}else{enemy.rotateY(enemyBreakDirection*.10*dt+Math.sin(worldTime*1.4)*.04*dt);enemy.rotateZ(Math.sin(worldTime*1.6)*.08*dt)}const enemySpeed=59/METERS_PER_UNIT;enemy.position.addScaledVector(new THREE.Vector3(0,0,-1).applyQuaternion(enemy.quaternion),enemySpeed*dt);fireWeapons(player,false,dt,keys.fire)
-for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.mesh.position.addScaledVector(b.dir,b.speed*dt);b.life-=dt;let hit=false;if(b.enemy){if(b.mesh.position.distanceTo(player.position)<player.userData.hitRadius+b.radius){damage('player',b.damage);hit=true}}else if(b.mesh.position.distanceTo(enemy.position)<enemy.userData.hitRadius+b.radius){damage('enemy',b.damage);hit=true}if(hit||b.life<=0){scene.remove(b.mesh);bullets.splice(i,1)}}
+for(let i=bullets.length-1;i>=0;i--){const b=bullets[i];b.mesh.position.addScaledVector(b.dir,b.speed*dt);b.life-=dt;let hit=false;if(b.enemy){if(insideAircraftHitbox(b.mesh.position,player,b.radius)){damage('player',b.damage);hit=true}}else if(insideAircraftHitbox(b.mesh.position,enemy,b.radius)){damage('enemy',b.damage);hit=true}if(hit||b.life<=0){scene.remove(b.mesh);bullets.splice(i,1)}}
 const back=new THREE.Vector3(0,10/METERS_PER_UNIT,10/METERS_PER_UNIT).applyQuaternion(player.quaternion);camera.position.lerp(tmp.copy(player.position).add(back),1-Math.exp(-5.2*dt));const look=player.position.clone().addScaledVector(forward,4);look.y+=.25;camera.lookAt(look);updateTacticalDisplay();$('#speed').textContent=Math.round(base*METERS_PER_UNIT*3.6);$('#alt').textContent=Math.max(0,Math.round((player.position.y+90)*METERS_PER_UNIT))+' m'}else if(player&&camera){const forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion);camera.position.lerp(tmp.copy(player.position).add(new THREE.Vector3(0,10/METERS_PER_UNIT,10/METERS_PER_UNIT).applyQuaternion(player.quaternion)),.035);camera.lookAt(player.position.clone().addScaledVector(forward,4))}clouds.forEach(c=>{c.position.x+=c.userData.drift*dt;if(c.position.x>430)c.position.x=-430});if(renderer)renderer.render(scene,camera);if(previewRenderer&&!$('#encyclopedia').classList.contains('hidden')){if(previewPlane)previewPlane.rotation.y=worldTime*.32;previewCamera.lookAt(0,0,0);previewRenderer.render(previewScene,previewCamera)}}
 for(const b of document.querySelectorAll('[data-key]')){const k=b.dataset.key;const down=e=>{if(e.button!==undefined&&e.button!==0)return;e.preventDefault();keys[k]=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId)}catch{}},up=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on')};b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('lostpointercapture',up)}
 const keyMap={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',' ':'fire',Shift:'boost'};
