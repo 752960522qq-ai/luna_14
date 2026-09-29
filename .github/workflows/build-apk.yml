@@ -40,7 +40,13 @@ jobs:
           open_catalog = html[open_start:open_end]
           assert open_catalog.index("showMenuScreen('encyclopedia')") < open_catalog.index('setCatalogSpecs(previewType)'), 'Catalog must switch screens before initializing its specs'
           assert all(token in html for token in ('tech-panel', 'class=\"rank-band\"', 'id=\"researchOwned\"')), 'Ranked tech-tree layout is incomplete'
-          print('Startup, catalog initialization, and ranked tech-tree checks passed')
+          audio_dir = Path('app/src/main/assets/audio')
+          required_audio = ('jet_engine.mp3', 'b29_engine.mp3', 'f86_gun.mp3', 'b29_gun.mp3', 'mig23_gun.mp3', 'mig37_gun.mp3', 'meteor20_gun.mp3', 'bomb_drop.mp3', 'kill_confirm.mp3')
+          assert all((audio_dir / name).is_file() for name in required_audio), 'A referenced aircraft sound asset is missing'
+          assert 'function turnRateForPlane(type,airspeedMps)' in html, 'Published turn time/radius limit is missing'
+          assert 'maxHeadingStep=turnRateForPlane(data.type,afterForcesSpeed)*dt' in html, 'Flight-path turn limit is missing'
+          assert 'function updateDroppedBombs(dt)' in html and 'data-key=\"bomb\"' in html, 'B-29 bomb release control is missing'
+          print('Startup, catalog, tech tree, audio assets, and flight-dynamics checks passed')
           PY
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
