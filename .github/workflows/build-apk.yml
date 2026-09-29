@@ -34,7 +34,13 @@ jobs:
           assert 'class="screen" id="menu"' in html, 'Main menu must be visible at startup'
           for screen_id in ('hangar', 'research', 'encyclopedia', 'end'):
               assert f'class="screen hidden" id="{screen_id}"' in html, f'{screen_id} must start hidden'
-          print('Startup menu and overlay visibility checks passed')
+          assert 'function setCatalogSpecs(type)' in html, 'Catalog spec renderer is missing'
+          open_start = html.index('function openCatalog()')
+          open_end = html.index('\nfunction closeCatalog()', open_start)
+          open_catalog = html[open_start:open_end]
+          assert open_catalog.index("showMenuScreen('encyclopedia')") < open_catalog.index('setCatalogSpecs(previewType)'), 'Catalog must switch screens before initializing its specs'
+          assert all(token in html for token in ('tech-panel', 'class=\"rank-band\"', 'id=\"researchOwned\"')), 'Ranked tech-tree layout is incomplete'
+          print('Startup, catalog initialization, and ranked tech-tree checks passed')
           PY
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
