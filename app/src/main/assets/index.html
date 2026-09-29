@@ -13,7 +13,7 @@ const $=s=>document.querySelector(s), sceneRoot=$('#scene');let scene,camera,ren
 // Game coordinates: +X right, +Y up, nose toward -Z; 1 world unit = 10 m.
 const METERS_PER_UNIT=10,SPAWN_DISTANCE_METERS=2000;
 // Keep each GLB's correction, real dimensions, and collision envelope with its own spec.
-const AIRCRAFT_SPECS={mig15:{modelFile:'./mig15.glb',lengthMeters:10,axisFlip:[1,1,1],collisionMeters:{x:10.08,y:3.7,z:10}},f86:{modelFile:'./f-86f-2_sabre_custom_war_thunder.glb',lengthMeters:11.4,axisFlip:[-1,1,-1],collisionMeters:{x:11.3,y:4.5,z:11.4}},meteor:{modelFile:'./meteor_f_mk_4_g.41f_war_thunder.glb',lengthMeters:12.6,axisFlip:[1,1,1],axisRotation:[0,.70710678,.70710678,0],collisionMeters:{x:14.55,y:3.3,z:12.6}}};
+const AIRCRAFT_SPECS={mig15:{modelFile:'./mig15.glb',lengthMeters:10,axisFlip:[1,1,1],collisionMeters:{x:10.08,y:3.7,z:10}},f86:{modelFile:'./f-86f-2_sabre_custom_war_thunder.glb',lengthMeters:11.4,axisFlip:[-1,1,-1],collisionMeters:{x:11.3,y:4.5,z:11.4}},meteor:{modelFile:'./meteor_f_mk_4_g.41f_war_thunder.glb',lengthMeters:12.6,axisFlip:[-1,1,-1],collisionMeters:{x:13.2,y:3.0,z:12.6}}};
 const PROFILE_KEY='sky-duel-profile-v1';let unlockedPlanes=['f86','mig15','meteor'],selectedAircraft='f86',researchNation='all';try{const saved=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}');if(Array.isArray(saved.unlocked)){unlockedPlanes=[...new Set([...saved.unlocked.filter(id=>AIRCRAFT_SPECS[id]),'meteor'])];if(!unlockedPlanes.length)unlockedPlanes=['f86','mig15','meteor']}if(saved.selected&&unlockedPlanes.includes(saved.selected))selectedAircraft=saved.selected}catch{}playerPlane=selectedAircraft;
 const AIRCRAFT_TREE={f86:{nation:'us',nationName:'美系',rating:8.0},mig15:{nation:'ussr',nationName:'苏系',rating:8.0},meteor:{nation:'uk',nationName:'英系',rating:8.0}};
 const blueSpawn=new THREE.Vector3(0,60,SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT)),redSpawn=new THREE.Vector3(0,60,-SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT));
@@ -37,8 +37,8 @@ function aircraft(isPlayer,type){
   if(root.userData.modelAttached)return;
   const model=new THREE.Group();
   model.add(source.clone(true));
-  // Correct the Meteor GLB: source -Y nose becomes game -Z, source +Z up becomes game +Y.
-  if(spec.axisRotation)model.quaternion.set(...spec.axisRotation);
+  // The Meteor GLB already contains a Sketchfab Z-up to Y-up node transform; its source -Y nose arrives along +Z.
+  // A 180-degree yaw flips X/Z into the game axes without distorting its native wingspan-to-length ratio.
   // 1) Correct this GLB's axes before measuring it.
   model.scale.set(...spec.axisFlip);
   model.updateMatrixWorld(true);
