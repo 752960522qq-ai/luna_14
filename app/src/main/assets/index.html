@@ -12,7 +12,7 @@ const $=s=>document.querySelector(s), sceneRoot=$('#scene');let scene,camera,ren
 // Game coordinates: +X right, +Y up, nose toward -Z; 1 world unit = 10 m.
 const METERS_PER_UNIT=10,SPAWN_DISTANCE_METERS=2000;
 // Keep each GLB's correction, real dimensions, and collision envelope with its own spec.
-const AIRCRAFT_SPECS={mig15:{modelFile:'./mig15.glb',lengthMeters:10,axisFlip:[1,-1,-1],collisionMeters:{x:10.08,y:3.7,z:10}},f86:{modelFile:'./f-86f-2_sabre_custom_war_thunder.glb',lengthMeters:11.4,axisFlip:[1,-1,1],collisionMeters:{x:11.3,y:4.5,z:11.4}}};
+const AIRCRAFT_SPECS={mig15:{modelFile:'./mig15.glb',lengthMeters:10,axisFlip:[1,1,1],collisionMeters:{x:10.08,y:3.7,z:10}},f86:{modelFile:'./f-86f-2_sabre_custom_war_thunder.glb',lengthMeters:11.4,axisFlip:[1,1,-1],collisionMeters:{x:11.3,y:4.5,z:11.4}}};
 const blueSpawn=new THREE.Vector3(0,60,SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT)),redSpawn=new THREE.Vector3(0,60,-SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT));
 const mat=(color,rough=.65,metal=.1)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal,flatShading:true});
 const planeInfo={mig15:{name:'MiG-15 米格-15',health:600,speed:72,intro:'苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大；选择合适的射击窗口，或切换双炮持续压制。',specs:[['机体耐久','600'],['37 mm N-37','1门 · 备弹40 · 400发/分 · 伤害304 · 弹速较低'],['23 mm NS-23','2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速较快'],['射击模式','N-37 / 双NS-23 / 三炮齐射']]},f86:{name:'F-86 佩刀',health:700,speed:77,intro:'美国早期喷气式战斗机，操纵轻快。六挺勃朗宁机枪形成密集弹幕，备弹充足，适合持续追击和校正瞄准。',specs:[['机体耐久','700'],['武器','6挺 12.7 mm 勃朗宁机枪'],['总备弹','1800发 · 6挺合计'],['射速','每挺600发/分'],['单发伤害','34'],['弹速','较快']]}};
