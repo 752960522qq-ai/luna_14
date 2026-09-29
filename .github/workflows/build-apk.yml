@@ -25,6 +25,15 @@ jobs:
           packages: 'platform-tools'
       - name: Install Android SDK platform
         run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+      - name: Validate startup screen visibility
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('app/src/main/assets/index.html').read_text()
+          assert '.hidden{display:none!important}' in html, 'Hidden screen CSS is missing'
+          assert html.count('class="screen hidden"') == 2, 'Expected encyclopedia and end screens to start hidden'
+          print('Startup overlay visibility checks passed')
+          PY
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
