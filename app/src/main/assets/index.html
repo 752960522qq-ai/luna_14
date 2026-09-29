@@ -24,13 +24,13 @@ function aircraft(isPlayer,type){
   if(root.userData.modelAttached)return;
   const model=new THREE.Group();
   model.add(source.clone(true));
-  model.rotation.order='ZYX';
-  model.rotation.set(0,type==='mig15'?Math.PI:0,Math.PI);
+  model.scale.set(1,-1,-1);
   model.updateMatrixWorld(true);
   const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3()),center=bounds.getCenter(new THREE.Vector3());
   if(!Number.isFinite(size.z)||size.z<=0)throw new Error('飞机模型长度无效：'+type);
   model.position.sub(center);
-  model.scale.setScalar((lengthMeters/METERS_PER_UNIT)/size.z);
+  const modelScale=(lengthMeters/METERS_PER_UNIT)/size.z;
+  model.scale.set(modelScale,-modelScale,-modelScale);
   model.traverse(object=>{if(object.isMesh){object.castShadow=true;object.receiveShadow=true}});
   root.add(model);root.userData.modelAttached=true
  }).catch(()=>{root.userData.modelError=true});
