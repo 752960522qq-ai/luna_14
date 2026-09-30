@@ -44,7 +44,12 @@ jobs:
           required_audio = ('jet_engine.mp3', 'b29_engine.mp3', 'f86_gun.mp3', 'b29_gun.mp3', 'mig23_gun.mp3', 'mig37_gun.mp3', 'meteor20_gun.mp3', 'bomb_drop.mp3', 'kill_confirm.mp3')
           assert all((audio_dir / name).is_file() for name in required_audio), 'A referenced aircraft sound asset is missing'
           assert 'function turnRateForPlane(type,airspeedMps)' in html, 'Published turn time/radius limit is missing'
-          assert 'maxHeadingStep=turnRateForPlane(data.type,afterForcesSpeed)*dt' in html, 'Flight-path turn limit is missing'
+          assert 'function softLimitRate(value,limit)' in html, 'Progressive turn response is missing'
+          assert 'bankTarget=controls.x*bankEnvelope' in html, 'Horizontal joystick must command bank angle'
+          assert 'player.userData.velocity.applyAxisAngle(worldUp,turnStep)' in html, 'Bank must turn the flight path with the nose'
+          assert 'cameraBankAngle=THREE.MathUtils.damp(cameraBankAngle,flightBankAngle*.55,5,dt)' in html, 'Reduced delayed camera bank is missing'
+          assert 'turnDrag=.006*turnLoad*turnLoad' in html, 'Sustained-turn speed loss is missing'
+          assert 'maxHeadingStep=turnRateForPlane(data.type,afterForcesSpeed)*dt' not in html, 'Hard flight-path cutoff must stay removed'
           assert 'function updateDroppedBombs(dt)' in html and 'data-key=\"bomb\"' in html, 'B-29 bomb release control is missing'
           print('Startup, catalog, tech tree, audio assets, and flight-dynamics checks passed')
           PY
