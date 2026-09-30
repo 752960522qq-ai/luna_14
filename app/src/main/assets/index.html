@@ -183,7 +183,7 @@ function updateChaseCamera(dt){
   if(Math.abs(cameraOrbitPitch)<.002)cameraOrbitPitch=0
  }
  const orbit=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),cameraOrbitYaw).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),cameraOrbitPitch));
- const tailDistance=(player.userData.lengthMeters*.5+7)/METERS_PER_UNIT;
+ const tailOffsetMeters=playerPlane==='b29'?7:3,tailDistance=(player.userData.lengthMeters*.5+tailOffsetMeters)/METERS_PER_UNIT;
  const offset=new THREE.Vector3(0,7/METERS_PER_UNIT,tailDistance).applyQuaternion(orbit).applyQuaternion(player.quaternion);
  const desiredPosition=player.position.clone().add(offset),forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion),aircraftUp=new THREE.Vector3(0,1,0).applyQuaternion(player.quaternion);
  let angularRate=0;

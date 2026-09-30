@@ -58,6 +58,7 @@ jobs:
           assert 'f86:{mg:{rpm:600,damage:34,speed:945' in html, 'M3 muzzle speed is incorrect'
           assert 'meteor:{hispano:{rpm:600,damage:85,speed:880' in html, 'Hispano muzzle speed is incorrect'
           assert 'new THREE.Vector3(0,7/METERS_PER_UNIT,tailDistance)' in html, 'Chase camera 7 m offset is missing'
+          assert "tailOffsetMeters=playerPlane==='b29'?7:3" in html, 'Jet fighter chase distance is incorrect'
           assert 'turnDrag=.006*turnLoad*turnLoad' in html, 'Sustained-turn speed loss is missing'
           assert 'maxHeadingStep=turnRateForPlane(data.type,afterForcesSpeed)*dt' not in html, 'Hard flight-path cutoff must stay removed'
           assert 'function updateDroppedBombs(dt)' in html and 'data-key=\"bomb\"' in html, 'B-29 bomb release control is missing'
