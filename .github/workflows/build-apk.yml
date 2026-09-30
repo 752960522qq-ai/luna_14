@@ -62,6 +62,14 @@ jobs:
           assert 'turnDrag=.006*turnLoad*turnLoad' in html, 'Sustained-turn speed loss is missing'
           assert 'maxHeadingStep=turnRateForPlane(data.type,afterForcesSpeed)*dt' not in html, 'Hard flight-path cutoff must stay removed'
           assert 'function updateDroppedBombs(dt)' in html and 'data-key=\"bomb\"' in html, 'B-29 bomb release control is missing'
+          ammo_ui = html[html.index('function updateAmmoUI()'):html.index('\nfunction ', html.index('function updateAmmoUI()'))]
+          assert 'updateThrottleUI()' not in ammo_ui, 'Ammo updates must not refresh the throttle UI'
+          assert 'if(!isEnemy&&ammoChanged)updateAmmoUI()' in html, 'Regular weapon ammo UI must refresh only after spending ammo'
+          assert 'data.bomberArcCheckRemaining=.075' in html, 'B-29 turret firing arcs must be cached at 75 ms intervals'
+          assert 'if(!isEnemy&&ammoSpent>0)updateAmmoUI()' in html, 'B-29 ammo UI must refresh only after rounds are spent'
+          assert "playSfx('b29Gun',.28)" not in html and 'bomberGunAudio.loop=true' in html, 'B-29 gun sound must use a dedicated looping audio element'
+          assert 'function updateBomberGunAudio(dt)' in html and 'bomberGunAudio.volume=bomberGunVolume' in html, 'B-29 gun loop must fade smoothly'
+          assert 'function triggerDamageFlash()' in html and 'damageFlashNextAt=now+200' in html, 'Damage flash must be throttled to 200 ms'
           print('Startup, catalog, tech tree, audio assets, and flight-dynamics checks passed')
           PY
       - name: Build debug APK
