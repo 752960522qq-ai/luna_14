@@ -43,6 +43,11 @@ jobs:
           audio_dir = Path('app/src/main/assets/audio')
           required_audio = ('jet_engine.mp3', 'b29_engine.mp3', 'f86_gun.mp3', 'b29_gun.mp3', 'mig23_gun.mp3', 'mig37_gun.mp3', 'meteor20_gun.mp3', 'bomb_drop.mp3', 'kill_confirm.mp3')
           assert all((audio_dir / name).is_file() for name in required_audio), 'A referenced aircraft sound asset is missing'
+          assert all(token in html for token in ('horizontalTurnRateDps:17.3,verticalTurnRateDps:22', 'horizontalTurnRateDps:15,verticalTurnRateDps:25', 'horizontalTurnRateDps:18,verticalTurnRateDps:20.5', 'horizontalTurnRateDps:4.2,verticalTurnRateDps:5.5')), 'Aircraft turning rates are incomplete'
+          assert 'function verticalTurnRateForPlane(type)' in html, 'Vertical turn rates are missing'
+          assert 'verticalRateTarget=controls.pitch*verticalTurnRateForPlane(playerPlane)' in html, 'Vertical turn input does not use aircraft-specific rates'
+          assert 'function steerAircraftToward(aircraft,targetDirection,dt)' in html and 'data.aiPitchRate=THREE.MathUtils.damp' in html, 'AI steering must respect horizontal and vertical rates'
+          assert '水平持续转弯' in html and '垂直瞬时转弯' in html, 'Aircraft turn rates must appear in the catalog'
           assert 'function turnRateForPlane(type,airspeedMps)' in html, 'Published turn time/radius limit is missing'
           assert 'function softLimitRate(value,limit)' in html, 'Progressive turn response is missing'
           assert 'bankTarget=controls.x*bankEnvelope' in html, 'Horizontal joystick must command bank angle'
