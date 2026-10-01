@@ -1,0 +1,257 @@
+{
+  "result": "passed",
+  "method": "Final MiG-3 gear, underside doors and source/catalog isolation in native GLTF/WebGL.",
+  "tailHidden": true,
+  "migPreview": {
+    "texturedMeshes": 62,
+    "standardMeshes": 69,
+    "materialSamples": [
+      {
+        "name": "stv_gl01-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "st_gl_02-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "Torus04-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "stv_xv01-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "xvost_fonar-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      }
+    ],
+    "type": "mig3",
+    "context": "preview",
+    "attached": true,
+    "error": false,
+    "length": 8.25,
+    "modelSize": [
+      10.230410315498201,
+      3.2880197597670593,
+      8.25
+    ],
+    "propAxis": [
+      0,
+      0,
+      -1
+    ],
+    "propeller": true,
+    "gear": null,
+    "sourceUnchanged": true
+  },
+  "migCombat": {
+    "texturedMeshes": 62,
+    "standardMeshes": 85,
+    "materialSamples": [
+      {
+        "name": "st_gl_02-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "stv_xv01-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "xvost_fonar-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      },
+      {
+        "name": "Line01-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": false,
+        "image": false
+      },
+      {
+        "name": "ChamferBox01-FACES_1",
+        "material": "MeshStandardMaterial",
+        "map": true,
+        "image": true,
+        "imageType": "ImageBitmap"
+      }
+    ],
+    "type": "mig3",
+    "context": "combat",
+    "attached": true,
+    "error": false,
+    "length": 8.25,
+    "modelSize": [
+      10.230410315498201,
+      3.07269434496562,
+      8.25
+    ],
+    "propAxis": [
+      0,
+      0,
+      -1
+    ],
+    "propeller": true,
+    "gear": {
+      "state": "stowed",
+      "assemblies": [
+        {
+          "name": "MiG3MainGearLeft",
+          "parts": [
+            "Cylinder11",
+            "Box04",
+            "Cylinder12",
+            "Box02",
+            "Cylinder18",
+            "Torus04"
+          ],
+          "before": [
+            -0.13817298133961226,
+            -0.1302828683687417,
+            -0.16580267297952023
+          ],
+          "after": [
+            -0.08055813719234342,
+            -0.03257073045643677,
+            -0.16580267297952023
+          ],
+          "angle": 90,
+          "axis": "z",
+          "doorSegments": 3,
+          "doorState": "closed"
+        },
+        {
+          "name": "MiG3MainGearRight",
+          "parts": [
+            "Cylinder16",
+            "Box06",
+            "Cylinder15",
+            "Box05",
+            "Cylinder14",
+            "Torus03"
+          ],
+          "before": [
+            0.13817298133961226,
+            -0.1302828683687417,
+            -0.16580262223864406
+          ],
+          "after": [
+            0.08055813719234342,
+            -0.03257073045643677,
+            -0.16580262223864406
+          ],
+          "angle": -90,
+          "axis": "z",
+          "doorSegments": 3,
+          "doorState": "closed"
+        },
+        {
+          "name": "MiG3TailGear",
+          "parts": [
+            "Cylinder10",
+            "Cylinder09",
+            "Cylinder07",
+            "Box01",
+            "Torus02",
+            "Cylinder02"
+          ],
+          "before": [
+            0,
+            -0.03128017495349185,
+            0.31612702039552676
+          ],
+          "after": [
+            0,
+            0.016498659590213238,
+            0.335873362808434
+          ],
+          "angle": -90,
+          "axis": "x",
+          "doorSegments": 2,
+          "doorState": "closed"
+        }
+      ]
+    },
+    "sourceUnchanged": true
+  },
+  "orientation": {
+    "spinner": [
+      0,
+      0.153656961152967,
+      -3.825313393966786
+    ],
+    "fin": [
+      -0.00007361157991525244,
+      0.9667273692687168,
+      2.8404438818585733
+    ]
+  },
+  "cameras": [
+    {
+      "type": "mig15",
+      "local": [
+        0,
+        0.9999999999999432,
+        6.05
+      ]
+    },
+    {
+      "type": "f86",
+      "local": [
+        0,
+        0.9999999999999432,
+        6.7
+      ]
+    },
+    {
+      "type": "meteor",
+      "local": [
+        0,
+        0.9999999999999432,
+        7.3
+      ]
+    },
+    {
+      "type": "b29",
+      "local": [
+        0,
+        0.9999999999999432,
+        16.09
+      ]
+    },
+    {
+      "type": "mig3",
+      "local": [
+        0,
+        2.69999999999996,
+        6.825
+      ]
+    }
+  ],
+  "pageErrors": [],
+  "httpErrors": []
+}

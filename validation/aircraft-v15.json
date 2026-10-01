@@ -1,0 +1,101 @@
+{
+  "result": "passed",
+  "checks": [
+    "All supplied F3F-2 dimensions, health, speed, climb, turn and two-gun data match; BR 1.3 opponents remain within ±1.0",
+    "Two independent gun cadences, projectile speed/damage and empty-ammunition behavior pass at 30/60/120 fps",
+    "New aircraft remains finite and normalized in both control modes at low/high frame rates",
+    "Fully-spooled level flight settles within 1 km/h of the supplied 425 km/h",
+    "Loaded high-speed turns lose more energy than the same maneuver without the F3F-2 turn-drag setting",
+    "MiG-3 supplied stats, Soviet Rank II/BR 2.3, ±1.0 matching, UBS cadence and two independent 1800 RPM ShKAS barrels pass"
+  ],
+  "cadence": [
+    {
+      "fps": 30,
+      "seconds": 2,
+      "spent": {
+        "m2": 25,
+        "mg762": 34
+      }
+    },
+    {
+      "fps": 60,
+      "seconds": 2,
+      "spent": {
+        "m2": 25,
+        "mg762": 34
+      }
+    },
+    {
+      "fps": 120,
+      "seconds": 2,
+      "spent": {
+        "m2": 25,
+        "mg762": 34
+      }
+    },
+    {
+      "type": "mig3",
+      "fps": 30,
+      "seconds": 2,
+      "spent": {
+        "ubs": 34,
+        "shkas": 122
+      }
+    },
+    {
+      "type": "mig3",
+      "fps": 60,
+      "seconds": 2,
+      "spent": {
+        "ubs": 34,
+        "shkas": 122
+      }
+    },
+    {
+      "type": "mig3",
+      "fps": 120,
+      "seconds": 2,
+      "spent": {
+        "ubs": 34,
+        "shkas": 120
+      }
+    }
+  ],
+  "flight": [
+    {
+      "mode": "cursor",
+      "fps": 30,
+      "seconds": 10,
+      "endSpeedKmh": 120.97865374428306,
+      "aoaDegrees": -0.04906166821488394
+    },
+    {
+      "mode": "cursor",
+      "fps": 120,
+      "seconds": 10,
+      "endSpeedKmh": 120.96758506293666,
+      "aoaDegrees": -0.16909126446742315
+    },
+    {
+      "mode": "joystick",
+      "fps": 30,
+      "seconds": 10,
+      "endSpeedKmh": 368.73241087362396,
+      "aoaDegrees": 3.19746461485642
+    },
+    {
+      "mode": "joystick",
+      "fps": 120,
+      "seconds": 10,
+      "endSpeedKmh": 368.71597639748126,
+      "aoaDegrees": 3.1104726513563636
+    }
+  ],
+  "levelSpeedKmh": 424.9993029500568,
+  "highSpeedTurn": {
+    "withAdditionalLossKmh": 428.4496727628052,
+    "withoutAdditionalLossKmh": 430.23853891271534,
+    "seconds": 4
+  },
+  "mig3LevelSpeedKmh": 639.9989503247904
+}

@@ -1,0 +1,28 @@
+{
+  "result": "passed",
+  "sourceSha256": "daceecb29a4a87ae636e3e4c4a0f128a8025acd4a93dd7371942dfcd0ff56133",
+  "outputSha256": "cdd1e769c332b8f6591133e813eeadea50ab4b04630982eefed3d3f429582861",
+  "lengthMeters": 8.25,
+  "sizeMeters": [
+    10.230410315498203,
+    3.2860268521603073,
+    8.25
+  ],
+  "axes": {
+    "nose": "-Z",
+    "up": "+Y"
+  },
+  "uniformScale": 1.0015183994643166,
+  "materials": 68,
+  "texturedMaterials": 61,
+  "embeddedImages": 23,
+  "allMaterialsMetallicRoughness": true,
+  "extensionsRequired": [],
+  "binaryMeshesAndTexturesUnchanged": true,
+  "propellerBladeNodes": [
+    42,
+    46,
+    120
+  ],
+  "bytes": 2185996
+}
