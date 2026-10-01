@@ -1,0 +1,16 @@
+{
+  "method": "Entire embedded module executed in Node VM with DOM/WebGL/media adapters. No rendered WebGL or Android device test.",
+  "result": "passed",
+  "renders": 80,
+  "checks": [
+    "Full embedded module initializes and renders with graphics/media adapters",
+    "Home settings switch and persist joystick mode",
+    "AI sortie starts with 100% throttle and requested controls",
+    "Full animation connects shared physics and HUD",
+    "Joystick lead appears through actual animation HUD/camera functions",
+    "Actual pause/resume flow freezes warning countdown",
+    "Full animation executes self destruction and result screen after 15 active seconds",
+    "Restart clears previous boundary state",
+    "Campaign setup and full animation remain exempt from duel desertion rules"
+  ]
+}

@@ -1,0 +1,164 @@
+{
+  "result": "passed",
+  "method": "Local v12 page in Chromium with native Web Audio/PCM decoder, OfflineAudioContext and SwiftShader WebGL; animation frames controlled by harness. No Android device or subjective listening.",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Nine slices decoded using native browser decoder",
+    "Pointer tap makes one short F-86 sample; release does not add sounds",
+    "Throttle changes preserve one stationary looping engine node",
+    "Offline gun outputs have silence after the one-shot tail",
+    "Three engine loops render three continuous periods without quiet startup/shutdown sections",
+    "Pause, resume and menu stop/restart the engine at the correct lifecycle"
+  ],
+  "initial": {
+    "playing": true,
+    "context": "running",
+    "buffers": [
+      {
+        "name": "f86Gun",
+        "duration": 0.07498866213151928,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "pv1Gun",
+        "duration": 0.12598639455782312,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "b29Gun",
+        "duration": 0.11199546485260771,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "mig23Gun",
+        "duration": 0.14099773242630387,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "mig37Gun",
+        "duration": 0.25798185941043084,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "meteorGun",
+        "duration": 0.33997732426303856,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "jetEngine",
+        "duration": 11.699977324263038,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "b29Engine",
+        "duration": 11.699977324263038,
+        "sampleRate": 44100,
+        "channels": 1
+      },
+      {
+        "name": "i15Engine",
+        "duration": 11.699977324263038,
+        "sampleRate": 44100,
+        "channels": 1
+      }
+    ],
+    "engine": {
+      "type": "jet",
+      "loop": true,
+      "duration": 11.699977324263038
+    },
+    "voices": 0
+  },
+  "offline": [
+    {
+      "name": "f86Gun",
+      "loop": false,
+      "duration": 0.07498866213151928,
+      "peak": 0.7785481810569763,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "pv1Gun",
+      "loop": false,
+      "duration": 0.12598639455782312,
+      "peak": 0.8200406432151794,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "b29Gun",
+      "loop": false,
+      "duration": 0.11199546485260771,
+      "peak": 0.7281006574630737,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "mig23Gun",
+      "loop": false,
+      "duration": 0.14099773242630387,
+      "peak": 0.8077513575553894,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "mig37Gun",
+      "loop": false,
+      "duration": 0.25798185941043084,
+      "peak": 0.8595830202102661,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "meteorGun",
+      "loop": false,
+      "duration": 0.33997732426303856,
+      "peak": 0.7964397072792053,
+      "afterShotPeak": 0,
+      "minRms": null,
+      "rmsRatio": null
+    },
+    {
+      "name": "jetEngine",
+      "loop": true,
+      "duration": 11.699977324263038,
+      "peak": 0.34699708223342896,
+      "afterShotPeak": 0,
+      "minRms": 0.09430750129226781,
+      "rmsRatio": 1.0712960136275125
+    },
+    {
+      "name": "b29Engine",
+      "loop": true,
+      "duration": 11.699977324263038,
+      "peak": 0.557719349861145,
+      "afterShotPeak": 0,
+      "minRms": 0.1431708535451064,
+      "rmsRatio": 1.1920728504818185
+    },
+    {
+      "name": "i15Engine",
+      "loop": true,
+      "duration": 11.699977324263038,
+      "peak": 0.5237525105476379,
+      "afterShotPeak": 0,
+      "minRms": 0.13674540769727525,
+      "rmsRatio": 1.1601443060007812
+    }
+  ],
+  "pageErrors": [],
+  "httpErrors": []
+}

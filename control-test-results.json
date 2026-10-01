@@ -1,0 +1,69 @@
+{
+  "method": "Actual shipped Three.js and game functions in Node VM; DOM/camera/physics checks, not Android runtime",
+  "flight": [
+    {
+      "plane": "i15bis",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 1.001185546665759,
+      "maxSpeedStepMps": 0.15354364239739482
+    },
+    {
+      "plane": "bf109b1",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 1,
+      "maxSpeedStepMps": 0.18788922121369467
+    },
+    {
+      "plane": "p36a",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 1.0011790323731966,
+      "maxSpeedStepMps": 0.20364783546095566
+    },
+    {
+      "plane": "mig15",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.6461862682786061,
+      "maxSpeedStepMps": 0.28671337751970327
+    },
+    {
+      "plane": "f86",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.741134105027547,
+      "maxSpeedStepMps": 0.28467336241510566
+    },
+    {
+      "plane": "meteor",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.7109428547186484,
+      "maxSpeedStepMps": 0.2978638387265278
+    },
+    {
+      "plane": "b29",
+      "initialErrorDeg": 18.656765500035174,
+      "finalErrorDeg": 0.0000019090959104164224,
+      "maxTurnRatio": 0.9999295026706754,
+      "maxSpeedStepMps": 0.2323369196036964
+    }
+  ],
+  "otherChecks": [
+    "persistent modes and malformed settings",
+    "free joystick roll preserved",
+    "touch-down without snap",
+    "pointer ownership and cancellation",
+    "free look independence",
+    "throttle independence",
+    "locked target survives fire release",
+    "lead matches actual straight non-inherited projectiles",
+    "out-of-range lead hidden",
+    "destroyed target invalidated",
+    "commanded direction and real gunsight remain separate until the aircraft turns",
+    "pause resume retains health, kills and position",
+    "unique HTML IDs"
+  ]
+}

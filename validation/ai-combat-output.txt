@@ -1,0 +1,12 @@
+new aircraft and country specs pass
+duel state transitions, reacquisition, hysteresis and ammo independent pursuit pass
+escort early return and moving center threat gates pass
+Bf-109 30/60fps 2s fire { rounds: 80, remaining: 920 } { rounds: 80, remaining: 920 }
+30s duel 162 162 states GUARD,INTERCEPT,ALIGN,FIRE_PASS,BREAK minDot 0.99 reverseSeconds 0.00
+35s Bf-109 duel 84 states GUARD,INTERCEPT,ALIGN,FIRE_PASS,BREAK minDot 0.99
+reverse recovery bestDot 1.00 maxVelocityStep 0.081
+lateral recovery 150.0 -> 0.7 m/s state entered false dot 0.99
+30s escort guard maxCenterDistance 929.5 minDot 0.99 opening states GUARD
+engagement states INTERCEPT,ALIGN,FIRE_PASS,BREAK,REJOIN return max/final 1152.8 [ 376, 401, 411, 331, 619 ] minDot 0.99 reverse aircraft-seconds 0.00
+5min B-29 map extent 283.94
+AI v11 combat acceptance passed

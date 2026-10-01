@@ -1,0 +1,9 @@
+{
+  "name": "sky-duel-f3f2-v13-patch",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check game.mjs && node validation/check-source-v13.mjs && node validation/check-aircraft-v13.mjs && node validation/check-audio-v13.mjs && node validation/check-flight-v13.mjs && node validation/check-integration-v13.mjs",
+    "check:browser": "node validation/check-browser-aircraft-v13.cjs"
+  }
+}

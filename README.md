@@ -1,30 +1,68 @@
 # 天空决斗 / Sky Duel
 
-一款为手机横屏设计的 3D 喷气式战机空战原型，驾驶 F-86 佩刀或米格-15，在海面与云层上空同敌机缠斗。
+离线 Android 3D 空战游戏，适配手机横屏。本仓库现已恢复到 v13：包含 MiG-15、F-86F-2、Meteor、B-29、I-15bis、Bf-109 B-1、P-36A 和 F3F-2，以及海面和朝鲜地形。
+
+## v13
+
+- F3F-2：美系 I 级，权重 1.3，耐久 360，机长 7.06 m。满油门平飞调校至 425 km/h，失速临界 118 km/h，爬升参数 14 m/s，水平回转参数 16.5 s，垂直转向参数 10.1 s。
+- 两挺独立机枪：M2 为 860 m/s、750 发/分、200 发、伤害 34；7.62 mm 为 810 m/s、1000 发/分、500 发、伤害 13。
+- F3F-2 与 P-36A 在战斗中向后收起主轮和尾轮；图鉴保留原始模型姿态。克隆实例独立设置，不改写模型模板。
+- F3F-2 的黄色机翼模型与原上传文件字节一致，运行时按 7.06 m 缩放，机头 -Z、上方 +Y。追尾相机位于机尾后 2.3 m、机体上方 2.3 m。
+- 活塞飞机支持螺旋桨启动、油门/RPM、发动机关停和击毁减速，以及高速模糊。
+
+v10–v12 的瞄准环/摇杆切换、真实枪口准星与预瞄点、统一玩家/AI 飞行控制、AI 追击与护航、权重 ±1.0 匹配、越界倒计时以及短枪声音效和稳定发动机循环均已包含。
+
+完整数据和验证限制见 [v13 更新说明](docs/v13-update.md)，音效说明见 [v12 音效说明](docs/v12-audio-update.md)。
 
 ## 操作
 
-- 方向键：控制俯仰与转向
-- 开火：按住发射机炮
-- 加力：短时提高速度，可自动恢复
-- 击落 3 架敌机完成 sortie
+主页面设置可切换摇杆或瞄准环，并保存灵敏度。战斗中按住开火键射击，油门控制发动机输出；桌面调试支持 WASD/方向键和空格开火。AI 对战匹配权重相近的飞机；“米格之舞”沿用 MiG-15 拦截 B-29 编队与 F-86 护航的战役规则。
+
+## 源码与验证
+
+`app/src/main/assets/index.html` 是 Android 实际加载的完整页面；`game.mjs` 是同一嵌入模块的副本。所有模型、音效、Three.js 和 Draco 解码器已包含，游戏无需网络读取资源。
+
+需要 Python 3 和 Node.js 18+，逻辑检查不需要安装 npm 依赖：
+
+```bash
+python3 update-v13.py
+npm run check
+```
+
+`update-v13.py` 使用锁定的 `baseline/v12-index.html` 和 `aircraft-systems-v13.mjs` 生成 v13 页面。检查覆盖原机型配置、新机双武器/飞行、音效、机动和完整页面流程。`validation/` 包含可重复执行的脚本、结果及战斗/图鉴外观截图。
+
+浏览器模型检查需要 Playwright 与 Chromium：
+
+```bash
+npm install --no-save --package-lock=false playwright
+npx playwright install chromium
+SKY_DUEL_CHROME=/absolute/path/to/chromium npm run check:browser
+```
+
+也可用 `CODEX_PRIMARY_RUNTIME_NODE_MODULES` 指定已有 Playwright 模块目录。浏览器检查使用真实 GLTF/Draco 解码、Web Audio 和 SwiftShader WebGL，并控制动画帧；未进行 Android 真机安装测试。
 
 ## 构建 APK
 
-在 GitHub Actions 的 **Build Android APK** 工作流中手动运行，或推送至 `main` 自动构建。生成的 `sky-duel-debug-apk` artifact 内含可安装的 debug APK。
+GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `main` 的 PR 和手动运行时执行源码生成检查、逻辑检查及 Android 构建。构建环境为 JDK 17、Gradle 8.9、Android SDK 35。产物 `sky-duel-v13-debug-apk` 内含 `app-debug.apk`。
 
-Three.js 已随 APK 一同打包，游戏运行无需网络。
-## B-29 超级堡垒
+本地安装相同工具后可运行：
 
-仓库现已加入美系 B-29（BR 6.7），默认载弹为 18×1000 磅，可在仓库切换为 20×500、40×500、8×2000 或 4×4000 磅。12挺12.7 mm机枪由5座炮塔自动控制，每挺450发/分、单发伤害20；按各自射界和250 m距离限制自动开火，炮塔不能手动操控。
+```bash
+gradle --no-daemon assembleDebug
+```
 
-B-29 GLB 模型由 Sketchfab 用户 manilov.ap 提供，采用 CC BY 4.0 许可：[模型来源](https://sketchfab.com/3d-models/b29-48aa117b88a34c5194370e868114484c)。
+已交付的 `sky-duel-f3f2-v13.apk` 使用与 v12 相同的原游戏签名，可覆盖 v12；Actions 生成的默认 debug APK 使用构建环境的调试签名，证书可能不同。仓库不包含签名私钥或密码。
 
-## 战役：米格之舞
+保留原生壳、使用已交付 v12 APK 更新资源的复现方式：
 
-首页“出战”进入模式选择。AI对战沿用原有空战；战役强制使用 MiG-15，在300秒内击落3架耐久5000的 B-29。轰炸机以320 km/h沿固定航线三角编队飞行且不使用炮塔；5架 F-86F-2主动护航，速度限制在400–500 km/h并大幅降低转向与滚转响应，每发伤害12；被击落后30秒内补充，活动上限5架。HUD同时显示所有敌机的紧凑红框与编号。MiG-15弹药每50秒自动补满。超时或玩家被击落则战役失败。
+```bash
+python3 package-v13.py /absolute/path/sky-duel-audio-v12.apk
+zipalign -f -p 4 unsigned-v13.apk aligned-v13.apk
+apksigner sign --ks /absolute/path/authorized-game-key.p12 --ks-pass file:/absolute/path/password-file --out sky-duel-f3f2-v13.apk aligned-v13.apk
+apksigner verify --verbose --print-certs sky-duel-f3f2-v13.apk
+zipalign -c -p 4 sky-duel-f3f2-v13.apk
+```
 
+v12 基线 SHA-256：`d3ce5696d2dd523fff08ad0561205879a4887761a80c2cac95ebf85b5245f187`。
 
-## 航空科技树与图鉴
-
-研发页采用分国家、分等级的科技树卡片布局，区分轰炸机与战斗机路线；卡片显示机型、等级、BR 和入库状态，可直接切换出战机。图鉴会显示所选机型的性能参数与对应 3D 预览。
+B-29 模型由 Sketchfab 用户 manilov.ap 提供，采用 CC BY 4.0 许可：[模型来源](https://sketchfab.com/3d-models/b29-48aa117b88a34c5194370e868114484c)。其他新飞机模型由用户提供。音效来源见 [SOUNDS_CREDITS.md](SOUNDS_CREDITS.md)。

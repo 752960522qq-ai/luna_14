@@ -1,0 +1,27 @@
+{
+  "result": "passed",
+  "unchangedExistingConfigs": [
+    "AIRCRAFT_SPECS",
+    "PROPELLER_SPECS",
+    "AIRCRAFT_TREE",
+    "planeInfo",
+    "weaponInfo",
+    "AI_FIGHTER",
+    "AUDIO_FILES"
+  ],
+  "unchangedCoreFunctions": [
+    "moveCursorDirection",
+    "steerAircraftToward",
+    "advanceAircraft",
+    "updatePlayerFlightControls",
+    "updateCursorTarget",
+    "updateFlightAimingHUD",
+    "updateDuelBoundary",
+    "enforceDuelAIBoundary",
+    "updateFighterAI",
+    "solveBulletIntercept",
+    "updatePropeller",
+    "sweptAircraftHit"
+  ],
+  "flightModelDifferences": "Only F3F-2-configured level-drag compensation and loaded high-speed turn drag; both default to zero for existing aircraft."
+}

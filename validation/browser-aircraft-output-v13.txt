@@ -1,0 +1,502 @@
+{
+  "result": "passed",
+  "method": "Actual generated v13 page with native GLTF/Draco decoding, Web Audio, SwiftShader WebGL and UI interactions; controlled animation frames. No Android device.",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Existing v12 profile receives F3F-2 and retains its selected aircraft",
+    "Research/hangar/catalog expose eight aircraft",
+    "Both aircraft have rearward/upward combat gear and untouched catalog source transforms",
+    "F3F-2 model length and forward propeller axis match game axes",
+    "F3F-2 sortie has 360 HP, 200/500 ammunition, propeller engine and 2.3 m chase height/offset",
+    "Two actual projectiles have the supplied speed and damage",
+    "F3F-2 propeller starts and stops with RPM"
+  ],
+  "profile": {
+    "unlocked": [
+      "f86",
+      "mig15",
+      "meteor",
+      "b29",
+      "i15bis",
+      "bf109b1",
+      "p36a",
+      "f3f2"
+    ],
+    "selected": "p36a"
+  },
+  "models": [
+    {
+      "preview": {
+        "type": "f3f2",
+        "context": "preview",
+        "attached": true,
+        "error": false,
+        "length": 7.06,
+        "modelSize": [
+          9.807017014379365,
+          3.2346967340824295,
+          7.06
+        ],
+        "propAxis": [
+          0,
+          0,
+          -1
+        ],
+        "propeller": true,
+        "gear": null,
+        "sourceUnchanged": true
+      },
+      "combat": {
+        "type": "f3f2",
+        "context": "combat",
+        "attached": true,
+        "error": false,
+        "length": 7.06,
+        "modelSize": [
+          9.807017014379365,
+          3.2346967340824295,
+          7.06
+        ],
+        "propAxis": [
+          0,
+          0,
+          -1
+        ],
+        "propeller": true,
+        "gear": {
+          "state": "stowed",
+          "assemblies": [
+            {
+              "name": "FlightGear_Left",
+              "parts": [
+                "gear_l2",
+                "gear_l1",
+                "gear_l",
+                "wheel_l",
+                "gear_l3",
+                "gear_l4",
+                "gear_l6",
+                "gear_l5"
+              ],
+              "before": [
+                -0.050206170576075966,
+                -0.08252681436041151,
+                -0.20863378720921655
+              ],
+              "after": [
+                -0.033,
+                -0.03999999999999998,
+                -0.09343329669767034
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Right",
+              "parts": [
+                "gear_r1",
+                "gear_r2",
+                "gear_r",
+                "wheel_r",
+                "gear_r3",
+                "gear_r4",
+                "gear_r6",
+                "gear_r5"
+              ],
+              "before": [
+                0.0502061553461,
+                -0.08252681000898981,
+                -0.20863380461490336
+              ],
+              "after": [
+                0.033,
+                -0.04000000000000002,
+                -0.09343514442011155
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Tail",
+              "parts": [
+                "gear_c",
+                "wheel_c",
+                "gear_c2",
+                "gear_c1"
+              ],
+              "before": [
+                -1.1150518117349073e-8,
+                -0.044069669497317845,
+                0.241390175835897
+              ],
+              "after": [
+                0,
+                0.010347869119885639,
+                0.2632809012884054
+              ],
+              "angle": -90
+            }
+          ]
+        },
+        "sourceUnchanged": true
+      }
+    },
+    {
+      "preview": {
+        "type": "p36a",
+        "context": "preview",
+        "attached": true,
+        "error": false,
+        "length": 8.7,
+        "modelSize": [
+          10.581712589649099,
+          3.8273314104404452,
+          8.7
+        ],
+        "propAxis": [
+          0,
+          1,
+          0
+        ],
+        "propeller": true,
+        "gear": null,
+        "sourceUnchanged": true
+      },
+      "combat": {
+        "type": "p36a",
+        "context": "combat",
+        "attached": true,
+        "error": false,
+        "length": 8.7,
+        "modelSize": [
+          10.581712589649099,
+          3.4357962745265755,
+          8.7
+        ],
+        "propAxis": [
+          0,
+          1,
+          0
+        ],
+        "propeller": true,
+        "gear": {
+          "state": "stowed",
+          "assemblies": [
+            {
+              "name": "FlightGear_Left",
+              "parts": [
+                "left_gear_thing001_6",
+                "left_gear_Undercarriage_fairing_door001_7",
+                "left_gear_upper_rod_right001_8",
+                "left_gear_wheel001_9",
+                "left_gear_wheel_cover001_10",
+                "left_gearUndercarriage_fairing001_11",
+                "Cylinder_29"
+              ],
+              "before": [
+                -0.10563309353038111,
+                -0.15474040547415516,
+                -0.22002495019584423
+              ],
+              "after": [
+                -0.019999999999999997,
+                0.007000000000000003,
+                -0.0861711079382414
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Right",
+              "parts": [
+                "right_gear_wheel_0",
+                "right_gear_wheel_cover_1",
+                "Right_gearUndercarriage_fairing_2",
+                "Right_gear_thing_3",
+                "Right_gear_Undercarriage_fairing_door_4",
+                "right_gear_upper_rod_right_5",
+                "Cylinder001_30"
+              ],
+              "before": [
+                0.10748480570536763,
+                -0.15446537296021692,
+                -0.22014270051666562
+              ],
+              "after": [
+                0.020000000000000007,
+                0.007000000000000003,
+                -0.08656388995809067
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Tail",
+              "parts": [
+                "tail_Gear_comp_front_12",
+                "tail_gear_comp_back_13",
+                "tail_Wheel_14",
+                "Tail_Wheel_Ax_15",
+                "Tail_gear_left_door_16",
+                "Tail_Gear_right_door_17"
+              ],
+              "before": [
+                -0.00007111265398250435,
+                -0.03354889638293278,
+                0.30633216798366275
+              ],
+              "after": [
+                0,
+                0.04595746810709012,
+                0.3429304213491888
+              ],
+              "angle": -90
+            }
+          ]
+        },
+        "sourceUnchanged": true
+      }
+    }
+  ],
+  "fight": {
+    "playing": true,
+    "type": "f3f2",
+    "hp": 360,
+    "ammo": {
+      "mg": 0,
+      "m2": 200,
+      "mg762": 500,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "engine": "prop",
+    "root": {
+      "type": "f3f2",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 7.06,
+      "modelSize": [
+        9.807017014379365,
+        3.2346967340824606,
+        7.06
+      ],
+      "propAxis": [
+        0,
+        0,
+        -1
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "gear_l2",
+              "gear_l1",
+              "gear_l",
+              "wheel_l",
+              "gear_l3",
+              "gear_l4",
+              "gear_l6",
+              "gear_l5"
+            ],
+            "before": [
+              -0.050206170576075966,
+              -0.08252681436041151,
+              -0.20863378720921655
+            ],
+            "after": [
+              -0.033,
+              -0.039999999999999813,
+              -0.09343329669766318
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "gear_r1",
+              "gear_r2",
+              "gear_r",
+              "wheel_r",
+              "gear_r3",
+              "gear_r4",
+              "gear_r6",
+              "gear_r5"
+            ],
+            "before": [
+              0.0502061553461,
+              -0.08252681000898981,
+              -0.20863380461490336
+            ],
+            "after": [
+              0.033,
+              -0.0399999999999973,
+              -0.0934351444201087
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "gear_c",
+              "wheel_c",
+              "gear_c2",
+              "gear_c1"
+            ],
+            "before": [
+              -1.1150518117349073e-8,
+              -0.044069669497317845,
+              0.241390175835897
+            ],
+            "after": [
+              0,
+              0.010347869119884001,
+              0.26328090128841053
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    "enemy": {
+      "type": "f3f2",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 7.06,
+      "modelSize": [
+        9.807017014379365,
+        3.2346967340824606,
+        7.06
+      ],
+      "propAxis": [
+        0,
+        0,
+        -1
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "gear_l2",
+              "gear_l1",
+              "gear_l",
+              "wheel_l",
+              "gear_l3",
+              "gear_l4",
+              "gear_l6",
+              "gear_l5"
+            ],
+            "before": [
+              -0.050206170576075966,
+              -0.08252681436041151,
+              -0.20863378720921655
+            ],
+            "after": [
+              -0.033,
+              -0.039999999999999813,
+              -0.09343329669766318
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "gear_r1",
+              "gear_r2",
+              "gear_r",
+              "wheel_r",
+              "gear_r3",
+              "gear_r4",
+              "gear_r6",
+              "gear_r5"
+            ],
+            "before": [
+              0.0502061553461,
+              -0.08252681000898981,
+              -0.20863380461490336
+            ],
+            "after": [
+              0.033,
+              -0.0399999999999973,
+              -0.0934351444201087
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "gear_c",
+              "wheel_c",
+              "gear_c2",
+              "gear_c1"
+            ],
+            "before": [
+              -1.1150518117349073e-8,
+              -0.044069669497317845,
+              0.241390175835897
+            ],
+            "after": [
+              0,
+              0.010347869119884001,
+              0.26328090128841053
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    "cameraLocal": [
+      0,
+      2.2999999999999687,
+      5.829999999999984
+    ]
+  },
+  "fired": {
+    "ammo": {
+      "mg": 0,
+      "m2": 199,
+      "mg762": 499,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "bullets": [
+      {
+        "weapon": "m2",
+        "speed": 860,
+        "damage": 34
+      },
+      {
+        "weapon": "mg762",
+        "speed": 810,
+        "damage": 13
+      }
+    ]
+  },
+  "propeller": {
+    "running": {
+      "rpm": 678.5714285714287,
+      "blur": false,
+      "quaternion": [
+        0,
+        0,
+        -0.8262387743159966,
+        0.5633200580636196
+      ]
+    },
+    "highRpm": {
+      "rpm": 1900,
+      "blur": true
+    },
+    "stopped": {
+      "rpm": 0,
+      "blur": false
+    }
+  },
+  "pageErrors": [],
+  "httpErrors": []
+}

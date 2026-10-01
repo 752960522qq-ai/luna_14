@@ -1,0 +1,12 @@
+.gradle/
+local.properties
+**/build/
+node_modules/
+*.apk
+*.apk.idsig
+*.jks
+*.keystore
+*.p12
+*.pfx
+__pycache__/
+validation/flight-series-*.csv

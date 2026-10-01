@@ -1,0 +1,13 @@
+{
+  "result": "passed",
+  "baseSha256": "d3ce5696d2dd523fff08ad0561205879a4887761a80c2cac95ebf85b5245f187",
+  "unsignedBytes": 43963816,
+  "changed": [
+    "assets/index.html",
+    "AndroidManifest.xml"
+  ],
+  "addedModel": "assets/f3f2_yellow_wings.glb",
+  "addedModelSha256": "9bf83ee270d4aa92d18868a48724af2f20c184bbee7fb6ef2c1b9381cc5efdde",
+  "unchangedPayloadCount": 64,
+  "unchangedV12Audio": true
+}
