@@ -1,0 +1,11 @@
+{
+  "file": "sky-duel-airspace-v14.apk",
+  "bytes": 43989212,
+  "sha256": "414ab8a3050367d1bc1a000ea593fbecb9d95a1b3a27f954bb524914e597b96e",
+  "package": "com.luna.skyduel",
+  "versionCode": 14,
+  "versionName": "1.0",
+  "sameSignatureAsV13": true,
+  "certificateSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "zipAligned": true
+}

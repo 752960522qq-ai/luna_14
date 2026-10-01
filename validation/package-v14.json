@@ -1,0 +1,11 @@
+{
+  "result": "passed",
+  "baseSha256": "94bb52cbe867026467b3932fe41030f59019372b557c945489b39adbddaa2d3f",
+  "unsignedBytes": 43974244,
+  "changed": [
+    "assets/index.html",
+    "AndroidManifest.xml"
+  ],
+  "unchangedPayloadCount": 65,
+  "unchangedModelsAudioAndNativeShell": true
+}

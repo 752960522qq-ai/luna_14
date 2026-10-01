@@ -1,0 +1,2379 @@
+{
+  "result": "passed",
+  "method": "Actual generated v14 page with native GLTF/Draco decoding, Web Audio, SwiftShader WebGL and UI interactions; controlled animation frames. No Android device.",
+  "browser": "154.0.8037.92",
+  "checks": [
+    "Existing v12 profile receives F3F-2 and retains its selected aircraft",
+    "Research/hangar/catalog expose eight aircraft",
+    "Both aircraft have rearward/upward combat gear and untouched catalog source transforms",
+    "F3F-2 model length and forward propeller axis match game axes",
+    "F3F-2 sortie has 360 HP, 200/500 ammunition, propeller engine and 2.3 m chase height/offset",
+    "Two actual projectiles have the supplied speed and damage",
+    "F3F-2 propeller starts and stops with RPM",
+    "All eight actual GLB models decode; catalogs use unified turn labels and cleaned speed values",
+    "Airspace UI starts 8v8 with zero capture and score and correctly stowed combat gear",
+    "Three seconds of real flight remain finite; player death preserves the roster and exposes allied observation controls",
+    "Touch spectator switching and pause/resume preserve the dead player; landscape mobile layout renders"
+  ],
+  "profile": {
+    "unlocked": [
+      "f86",
+      "mig15",
+      "meteor",
+      "b29",
+      "i15bis",
+      "bf109b1",
+      "p36a",
+      "f3f2"
+    ],
+    "selected": "p36a"
+  },
+  "models": [
+    {
+      "preview": {
+        "type": "f3f2",
+        "context": "preview",
+        "attached": true,
+        "error": false,
+        "length": 7.06,
+        "modelSize": [
+          9.807017014379365,
+          3.2346967340824295,
+          7.06
+        ],
+        "propAxis": [
+          0,
+          0,
+          -1
+        ],
+        "propeller": true,
+        "gear": null,
+        "sourceUnchanged": true
+      },
+      "combat": {
+        "type": "f3f2",
+        "context": "combat",
+        "attached": true,
+        "error": false,
+        "length": 7.06,
+        "modelSize": [
+          9.807017014379365,
+          3.2346967340824295,
+          7.06
+        ],
+        "propAxis": [
+          0,
+          0,
+          -1
+        ],
+        "propeller": true,
+        "gear": {
+          "state": "stowed",
+          "assemblies": [
+            {
+              "name": "FlightGear_Left",
+              "parts": [
+                "gear_l2",
+                "gear_l1",
+                "gear_l",
+                "wheel_l",
+                "gear_l3",
+                "gear_l4",
+                "gear_l6",
+                "gear_l5"
+              ],
+              "before": [
+                -0.050206170576075966,
+                -0.08252681436041151,
+                -0.20863378720921655
+              ],
+              "after": [
+                -0.033,
+                -0.03999999999999998,
+                -0.09343329669767034
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Right",
+              "parts": [
+                "gear_r1",
+                "gear_r2",
+                "gear_r",
+                "wheel_r",
+                "gear_r3",
+                "gear_r4",
+                "gear_r6",
+                "gear_r5"
+              ],
+              "before": [
+                0.0502061553461,
+                -0.08252681000898981,
+                -0.20863380461490336
+              ],
+              "after": [
+                0.033,
+                -0.04000000000000002,
+                -0.09343514442011155
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Tail",
+              "parts": [
+                "gear_c",
+                "wheel_c",
+                "gear_c2",
+                "gear_c1"
+              ],
+              "before": [
+                -1.1150518117349073e-08,
+                -0.044069669497317845,
+                0.241390175835897
+              ],
+              "after": [
+                0,
+                0.010347869119885639,
+                0.2632809012884054
+              ],
+              "angle": -90
+            }
+          ]
+        },
+        "sourceUnchanged": true
+      }
+    },
+    {
+      "preview": {
+        "type": "p36a",
+        "context": "preview",
+        "attached": true,
+        "error": false,
+        "length": 8.7,
+        "modelSize": [
+          10.581712589649099,
+          3.8273314104404452,
+          8.7
+        ],
+        "propAxis": [
+          0,
+          1,
+          0
+        ],
+        "propeller": true,
+        "gear": null,
+        "sourceUnchanged": true
+      },
+      "combat": {
+        "type": "p36a",
+        "context": "combat",
+        "attached": true,
+        "error": false,
+        "length": 8.7,
+        "modelSize": [
+          10.581712589649099,
+          3.4357962745265755,
+          8.7
+        ],
+        "propAxis": [
+          0,
+          1,
+          0
+        ],
+        "propeller": true,
+        "gear": {
+          "state": "stowed",
+          "assemblies": [
+            {
+              "name": "FlightGear_Left",
+              "parts": [
+                "left_gear_thing001_6",
+                "left_gear_Undercarriage_fairing_door001_7",
+                "left_gear_upper_rod_right001_8",
+                "left_gear_wheel001_9",
+                "left_gear_wheel_cover001_10",
+                "left_gearUndercarriage_fairing001_11",
+                "Cylinder_29"
+              ],
+              "before": [
+                -0.10563309353038111,
+                -0.15474040547415516,
+                -0.22002495019584423
+              ],
+              "after": [
+                -0.019999999999999997,
+                0.007000000000000003,
+                -0.0861711079382414
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Right",
+              "parts": [
+                "right_gear_wheel_0",
+                "right_gear_wheel_cover_1",
+                "Right_gearUndercarriage_fairing_2",
+                "Right_gear_thing_3",
+                "Right_gear_Undercarriage_fairing_door_4",
+                "right_gear_upper_rod_right_5",
+                "Cylinder001_30"
+              ],
+              "before": [
+                0.10748480570536763,
+                -0.15446537296021692,
+                -0.22014270051666562
+              ],
+              "after": [
+                0.020000000000000007,
+                0.007000000000000003,
+                -0.08656388995809067
+              ],
+              "angle": -90
+            },
+            {
+              "name": "FlightGear_Tail",
+              "parts": [
+                "tail_Gear_comp_front_12",
+                "tail_gear_comp_back_13",
+                "tail_Wheel_14",
+                "Tail_Wheel_Ax_15",
+                "Tail_gear_left_door_16",
+                "Tail_Gear_right_door_17"
+              ],
+              "before": [
+                -7.111265398250435e-05,
+                -0.03354889638293278,
+                0.30633216798366275
+              ],
+              "after": [
+                0,
+                0.04595746810709012,
+                0.3429304213491888
+              ],
+              "angle": -90
+            }
+          ]
+        },
+        "sourceUnchanged": true
+      }
+    }
+  ],
+  "allModels": [
+    {
+      "type": "f3f2",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 7.06,
+      "modelSize": [
+        9.807017014379365,
+        3.2346967340824295,
+        7.06
+      ],
+      "propAxis": [
+        0,
+        0,
+        -1
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "gear_l2",
+              "gear_l1",
+              "gear_l",
+              "wheel_l",
+              "gear_l3",
+              "gear_l4",
+              "gear_l6",
+              "gear_l5"
+            ],
+            "before": [
+              -0.050206170576075966,
+              -0.08252681436041151,
+              -0.20863378720921655
+            ],
+            "after": [
+              -0.033,
+              -0.03999999999999998,
+              -0.09343329669767034
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "gear_r1",
+              "gear_r2",
+              "gear_r",
+              "wheel_r",
+              "gear_r3",
+              "gear_r4",
+              "gear_r6",
+              "gear_r5"
+            ],
+            "before": [
+              0.0502061553461,
+              -0.08252681000898981,
+              -0.20863380461490336
+            ],
+            "after": [
+              0.033,
+              -0.04000000000000002,
+              -0.09343514442011155
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "gear_c",
+              "wheel_c",
+              "gear_c2",
+              "gear_c1"
+            ],
+            "before": [
+              -1.1150518117349073e-08,
+              -0.044069669497317845,
+              0.241390175835897
+            ],
+            "after": [
+              0,
+              0.010347869119885639,
+              0.2632809012884054
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    {
+      "type": "i15bis",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 6.28,
+      "modelSize": [
+        10.06358905741616,
+        3.3927412125782084,
+        6.28
+      ],
+      "propAxis": [
+        0,
+        1,
+        0
+      ],
+      "propeller": true,
+      "gear": null
+    },
+    {
+      "type": "p36a",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 8.7,
+      "modelSize": [
+        10.581712589649099,
+        3.4357962745265755,
+        8.7
+      ],
+      "propAxis": [
+        0,
+        1,
+        0
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "left_gear_thing001_6",
+              "left_gear_Undercarriage_fairing_door001_7",
+              "left_gear_upper_rod_right001_8",
+              "left_gear_wheel001_9",
+              "left_gear_wheel_cover001_10",
+              "left_gearUndercarriage_fairing001_11",
+              "Cylinder_29"
+            ],
+            "before": [
+              -0.10563309353038111,
+              -0.15474040547415516,
+              -0.22002495019584423
+            ],
+            "after": [
+              -0.019999999999999997,
+              0.007000000000000003,
+              -0.0861711079382414
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "right_gear_wheel_0",
+              "right_gear_wheel_cover_1",
+              "Right_gearUndercarriage_fairing_2",
+              "Right_gear_thing_3",
+              "Right_gear_Undercarriage_fairing_door_4",
+              "right_gear_upper_rod_right_5",
+              "Cylinder001_30"
+            ],
+            "before": [
+              0.10748480570536763,
+              -0.15446537296021692,
+              -0.22014270051666562
+            ],
+            "after": [
+              0.020000000000000007,
+              0.007000000000000003,
+              -0.08656388995809067
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "tail_Gear_comp_front_12",
+              "tail_gear_comp_back_13",
+              "tail_Wheel_14",
+              "Tail_Wheel_Ax_15",
+              "Tail_gear_left_door_16",
+              "Tail_Gear_right_door_17"
+            ],
+            "before": [
+              -7.111265398250435e-05,
+              -0.03354889638293278,
+              0.30633216798366275
+            ],
+            "after": [
+              0,
+              0.04595746810709012,
+              0.3429304213491888
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    {
+      "type": "bf109b1",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 8.55,
+      "modelSize": [
+        9.640105242254842,
+        3.01208534749601,
+        8.55
+      ],
+      "propAxis": [
+        0,
+        1,
+        0
+      ],
+      "propeller": true,
+      "gear": null
+    },
+    {
+      "type": "mig15",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 10.1,
+      "modelSize": [
+        10.128015279211162,
+        3.19907725976766,
+        10.100000000000001
+      ],
+      "propeller": false,
+      "gear": null
+    },
+    {
+      "type": "f86",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 11.4,
+      "modelSize": [
+        11.311573814383372,
+        3.990324659655431,
+        11.400000000000002
+      ],
+      "propeller": false,
+      "gear": null
+    },
+    {
+      "type": "meteor",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 12.6,
+      "modelSize": [
+        13.20193254003348,
+        2.9650307960272415,
+        12.600000000000001
+      ],
+      "propeller": false,
+      "gear": null
+    },
+    {
+      "type": "b29",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 30.18,
+      "modelSize": [
+        42.73967746223873,
+        8.640966505138291,
+        30.18
+      ],
+      "propeller": false,
+      "gear": null
+    }
+  ],
+  "catalogs": [
+    {
+      "type": "f3f2",
+      "intro": "美军末代舰载双翼战斗机，拥有极为优秀的水平盘旋能力，低空机动灵活；极速偏低，高速下能量损耗严重，适合低速缠斗，不适合与高速单翼机进行俯冲交战。",
+      "specs": [
+        [
+          "系别",
+          "美国"
+        ],
+        [
+          "战机权重",
+          "美系 1.3"
+        ],
+        [
+          "机体耐久",
+          "360"
+        ],
+        [
+          "机长",
+          "7.06 m"
+        ],
+        [
+          "最大航速",
+          "425 km/h"
+        ],
+        [
+          "最小航速",
+          "118 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.0 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "16.5 s · 21.82°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "10.1 s · 35.64°/s"
+        ],
+        [
+          "武器",
+          "1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁"
+        ],
+        [
+          "备弹",
+          "M2：200发；7.62 mm：500发"
+        ],
+        [
+          "射速",
+          "M2：750发/分；7.62 mm：1000发/分"
+        ],
+        [
+          "单发伤害",
+          "M2：34；7.62 mm：13"
+        ],
+        [
+          "弹速",
+          "M2：860 m/s；7.62 mm：810 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "i15bis",
+      "intro": "早期双翼战斗机，低速盘旋性能极强，速度平庸，高空性能较差。四挺 PV-1 机枪适合近距狗斗。",
+      "specs": [
+        [
+          "战机权重",
+          "中系 1.0"
+        ],
+        [
+          "机体耐久",
+          "320"
+        ],
+        [
+          "机长",
+          "6.28 m"
+        ],
+        [
+          "最大航速",
+          "380 km/h"
+        ],
+        [
+          "最小航速",
+          "112 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.2 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "24.2°/s · 360° 14.88 s · 半径 约250 m"
+        ],
+        [
+          "垂直转弯性能",
+          "26.0°/s"
+        ],
+        [
+          "武器",
+          "4挺 7.62 mm PV-1 机枪"
+        ],
+        [
+          "总备弹",
+          "3050发 · 四挺合计"
+        ],
+        [
+          "射速",
+          "每挺750发/分"
+        ],
+        [
+          "单发伤害",
+          "13"
+        ],
+        [
+          "弹速",
+          "820 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "p36a",
+      "intro": "三十年代后期的单翼战斗机，盘旋性能优秀，水平狗斗强势；武器配置较弱，高空功率衰减明显，适合中低空缠斗。",
+      "specs": [
+        [
+          "系别",
+          "美国"
+        ],
+        [
+          "战机权重",
+          "美系 1.3"
+        ],
+        [
+          "机体耐久",
+          "320"
+        ],
+        [
+          "机长",
+          "8.70 m"
+        ],
+        [
+          "最大航速",
+          "504 km/h"
+        ],
+        [
+          "最小航速",
+          "120 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.0 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "21.0°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "22.5°/s"
+        ],
+        [
+          "武器",
+          "1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁"
+        ],
+        [
+          "备弹",
+          "M2：200发；7.62 mm：500发"
+        ],
+        [
+          "射速",
+          "M2：750发/分；7.62 mm：1000发/分"
+        ],
+        [
+          "单发伤害",
+          "M2：32；7.62 mm：14"
+        ],
+        [
+          "弹速",
+          "M2：860 m/s；7.62 mm：810 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "bf109b1",
+      "intro": "早期Bf-109，搭载Jumo-210D发动机，火力偏弱，以能量战术为主。水平盘旋一般，高速性能尚可；仅有机鼻机枪，无机翼机枪。",
+      "specs": [
+        [
+          "战机权重",
+          "德系 1.3"
+        ],
+        [
+          "机体耐久",
+          "310"
+        ],
+        [
+          "机长",
+          "8.55 m"
+        ],
+        [
+          "最大航速",
+          "465 km/h"
+        ],
+        [
+          "最小航速",
+          "135 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "13.2 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "15.6°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "19.0°/s"
+        ],
+        [
+          "武器",
+          "2挺 7.92 mm MG-17机枪（机鼻）"
+        ],
+        [
+          "总备弹",
+          "1000发 · 两挺合计"
+        ],
+        [
+          "射速",
+          "每挺1200发/分"
+        ],
+        [
+          "单发伤害",
+          "14"
+        ],
+        [
+          "弹速",
+          "790 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "mig15",
+      "intro": "苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大。",
+      "specs": [
+        [
+          "机体耐久",
+          "600"
+        ],
+        [
+          "最大航速",
+          "1076 km/h"
+        ],
+        [
+          "最小航速",
+          "220 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "50 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 20.7 s · 17.3°/s · 半径 245 m"
+        ],
+        [
+          "垂直转弯性能",
+          "22°/s"
+        ],
+        [
+          "37 mm N-37",
+          "1门 · 备弹40 · 400发/分 · 伤害304 · 弹速690 m/s"
+        ],
+        [
+          "23 mm NS-23",
+          "2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速610 m/s"
+        ],
+        [
+          "射击模式",
+          "N-37 / 双NS-23 / 三炮齐射"
+        ]
+      ]
+    },
+    {
+      "type": "f86",
+      "intro": "美国早期喷气式战斗机，六挺勃朗宁机枪形成密集弹幕。",
+      "specs": [
+        [
+          "机体耐久",
+          "700"
+        ],
+        [
+          "最大航速",
+          "1106 km/h"
+        ],
+        [
+          "最小航速",
+          "240 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "46.7 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 24.0 s · 15°/s · 半径 310 m"
+        ],
+        [
+          "垂直转弯性能",
+          "25°/s"
+        ],
+        [
+          "武器",
+          "6挺 12.7 mm 勃朗宁机枪"
+        ],
+        [
+          "总备弹",
+          "1800发 · 6挺合计"
+        ],
+        [
+          "射速",
+          "每挺600发/分"
+        ],
+        [
+          "单发伤害",
+          "34"
+        ],
+        [
+          "弹速",
+          "945 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "meteor",
+      "intro": "英国系短翼流星 F.4 喷气式战斗机，四门 Hispano Mk.II 20 mm 机炮。",
+      "specs": [
+        [
+          "战机权重",
+          "8.0"
+        ],
+        [
+          "机体耐久",
+          "560"
+        ],
+        [
+          "机长",
+          "12.6 m"
+        ],
+        [
+          "最大航速",
+          "912 km/h"
+        ],
+        [
+          "最小航速",
+          "290 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "30.9 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 20.0 s · 18°/s · 半径 282 m"
+        ],
+        [
+          "垂直转弯性能",
+          "20.5°/s"
+        ],
+        [
+          "武器",
+          "4门 20 mm Hispano Mk.II"
+        ],
+        [
+          "总备弹",
+          "720发 · 每门180发"
+        ],
+        [
+          "射速",
+          "每门600发/分"
+        ],
+        [
+          "单发伤害",
+          "85"
+        ],
+        [
+          "弹速",
+          "880 m/s"
+        ]
+      ]
+    },
+    {
+      "type": "b29",
+      "intro": "美系重型战略轰炸机。5座炮塔共12挺12.7 mm机枪，敌机进入250 m且落入对应射界时自动射击；炮塔不能手动操控。载弹量可在仓库调整。",
+      "specs": [
+        [
+          "战机权重",
+          "美系 6.7"
+        ],
+        [
+          "机体耐久",
+          "1200"
+        ],
+        [
+          "机长",
+          "30.18 m"
+        ],
+        [
+          "最大航速",
+          "575 km/h"
+        ],
+        [
+          "最小航速",
+          "180 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "8.5 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 约85.7 s · 4.2°/s · 半径 1150 m"
+        ],
+        [
+          "垂直转弯性能",
+          "5.5°/s"
+        ],
+        [
+          "防御武器",
+          "5座炮塔 · 12挺 12.7 mm机枪"
+        ],
+        [
+          "前上炮塔",
+          "4挺 · 前半球上方，下俯限2.5°"
+        ],
+        [
+          "后上炮塔",
+          "2挺 · 后半球水平线以上"
+        ],
+        [
+          "前下炮塔",
+          "2挺 · 前半球下方，仰角限5°"
+        ],
+        [
+          "后下炮塔",
+          "2挺 · 后半球下方，仰角限5°"
+        ],
+        [
+          "尾炮塔",
+          "2挺 · 后向±30°，俯仰±30°"
+        ],
+        [
+          "射速",
+          "每挺450发/分"
+        ],
+        [
+          "单发伤害",
+          "20"
+        ],
+        [
+          "机枪弹速",
+          "945 m/s"
+        ],
+        [
+          "命中率",
+          "约50%"
+        ],
+        [
+          "自动开火距离",
+          "250 m"
+        ],
+        [
+          "机枪备弹",
+          "12000发 · 炮塔自动使用"
+        ],
+        [
+          "炸弹挂载",
+          "20×500 / 40×500 / 18×1000 / 8×2000 / 4×4000 磅"
+        ]
+      ]
+    }
+  ],
+  "airspace": {
+    "playing": true,
+    "ended": false,
+    "mode": "airspace",
+    "spectating": false,
+    "observed": null,
+    "hp": 360,
+    "counts": {
+      "blue": 0,
+      "red": 0
+    },
+    "progress": 0,
+    "scores": {
+      "blue": 0,
+      "red": 0
+    },
+    "units": [
+      {
+        "id": "blue-0",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -260,
+          109.3275260925293,
+          260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-1",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -271.31370849898474,
+          109.3275260925293,
+          260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-2",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -260,
+          109.3275260925293,
+          271.31370849898474
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-3",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -282.6274169979695,
+          109.3275260925293,
+          260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-4",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -260,
+          109.3275260925293,
+          282.6274169979695
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-5",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -293.9411254969543,
+          109.3275260925293,
+          260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-6",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -260,
+          109.3275260925293,
+          293.9411254969543
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-7",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -279.7989898732233,
+          109.3275260925293,
+          279.7989898732233
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-0",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          260,
+          109.3275260925293,
+          -260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-1",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          271.31370849898474,
+          109.3275260925293,
+          -260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-2",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          260,
+          109.3275260925293,
+          -271.31370849898474
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-3",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          282.6274169979695,
+          109.3275260925293,
+          -260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-4",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          260,
+          109.3275260925293,
+          -282.6274169979695
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-5",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          293.9411254969543,
+          109.3275260925293,
+          -260
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-6",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          260,
+          109.3275260925293,
+          -293.9411254969543
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-7",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          279.7989898732233,
+          109.3275260925293,
+          -279.7989898732233
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      }
+    ]
+  },
+  "beforeWatch": {
+    "playing": true,
+    "ended": false,
+    "mode": "airspace",
+    "spectating": true,
+    "observed": "blue-1",
+    "hp": 0,
+    "counts": {
+      "blue": 0,
+      "red": 0
+    },
+    "progress": 0,
+    "scores": {
+      "blue": 0,
+      "red": 0
+    },
+    "units": [
+      {
+        "id": "blue-0",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 0,
+        "dead": true,
+        "position": [
+          -242.43581538612014,
+          109.3275260925293,
+          242.43581538612014
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-1",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -253.69982336131076,
+          109.33877829216136,
+          242.91326332318226
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-2",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -242.91326332318226,
+          109.33877829216136,
+          253.69982336131076
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-3",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -264.76744074480666,
+          109.3666582374911,
+          243.18654741144678
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-4",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -243.18654741144678,
+          109.3666582374911,
+          264.76744074480666
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-5",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -275.84375177504734,
+          109.401350470945,
+          243.46564625481116
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-6",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -243.46564625481116,
+          109.401350470945,
+          275.84375177504734
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-7",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -262.44380445441067,
+          109.3275260925293,
+          262.44380445441067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-0",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          242.64481458118806,
+          109.3275260925293,
+          -242.64481458118806
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-1",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          253.69982336131076,
+          109.33877829216136,
+          -242.91326332318226
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-2",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          242.91326332318226,
+          109.33877829216136,
+          -253.69982336131076
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-3",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          264.76744074480666,
+          109.3666582374911,
+          -243.18654741144678
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-4",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          243.18654741144678,
+          109.3666582374911,
+          -264.7674407448067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-5",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          275.84375177504734,
+          109.401350470945,
+          -243.46564625481116
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-6",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          243.46564625481116,
+          109.401350470945,
+          -275.84375177504734
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-7",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          262.44380445441067,
+          109.3275260925293,
+          -262.44380445441067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      }
+    ]
+  },
+  "afterWatch": {
+    "playing": true,
+    "ended": false,
+    "mode": "airspace",
+    "spectating": true,
+    "observed": "blue-2",
+    "hp": 0,
+    "counts": {
+      "blue": 0,
+      "red": 0
+    },
+    "progress": 0,
+    "scores": {
+      "blue": 0,
+      "red": 0
+    },
+    "units": [
+      {
+        "id": "blue-0",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 0,
+        "dead": true,
+        "position": [
+          -242.43581538612014,
+          109.3275260925293,
+          242.43581538612014
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-1",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -253.69982336131076,
+          109.33877829216136,
+          242.91326332318226
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-2",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -242.91326332318226,
+          109.33877829216136,
+          253.69982336131076
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-3",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -264.76744074480666,
+          109.3666582374911,
+          243.18654741144678
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-4",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -243.18654741144678,
+          109.3666582374911,
+          264.76744074480666
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-5",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -275.84375177504734,
+          109.401350470945,
+          243.46564625481116
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-6",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -243.46564625481116,
+          109.401350470945,
+          275.84375177504734
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "blue-7",
+        "team": "blue",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          -262.44380445441067,
+          109.3275260925293,
+          262.44380445441067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-0",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          242.64481458118806,
+          109.3275260925293,
+          -242.64481458118806
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-1",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          253.69982336131076,
+          109.33877829216136,
+          -242.91326332318226
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-2",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          242.91326332318226,
+          109.33877829216136,
+          -253.69982336131076
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-3",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          264.76744074480666,
+          109.3666582374911,
+          -243.18654741144678
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-4",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          243.18654741144678,
+          109.3666582374911,
+          -264.7674407448067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-5",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          275.84375177504734,
+          109.401350470945,
+          -243.46564625481116
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-6",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          243.46564625481116,
+          109.401350470945,
+          -275.84375177504734
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      },
+      {
+        "id": "red-7",
+        "team": "red",
+        "type": "f3f2",
+        "health": 360,
+        "dead": false,
+        "position": [
+          262.44380445441067,
+          109.3275260925293,
+          -262.44380445441067
+        ],
+        "attached": true,
+        "gear": "stowed",
+        "ammo": {
+          "mg": 0,
+          "m2": 200,
+          "mg762": 500,
+          "n37": 0,
+          "ns23": 0,
+          "hispano": 0
+        }
+      }
+    ]
+  },
+  "fight": {
+    "playing": true,
+    "type": "f3f2",
+    "hp": 360,
+    "ammo": {
+      "mg": 0,
+      "m2": 200,
+      "mg762": 500,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "engine": "prop",
+    "root": {
+      "type": "f3f2",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 7.06,
+      "modelSize": [
+        9.807017014379364,
+        3.2346967340823896,
+        7.059999999999999
+      ],
+      "propAxis": [
+        0,
+        0,
+        -1
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "gear_l2",
+              "gear_l1",
+              "gear_l",
+              "wheel_l",
+              "gear_l3",
+              "gear_l4",
+              "gear_l6",
+              "gear_l5"
+            ],
+            "before": [
+              -0.05020617057607596,
+              -0.08252681436041151,
+              -0.2086337872092165
+            ],
+            "after": [
+              -0.03299999999995934,
+              -0.03999999999999977,
+              -0.09343329669767739
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "gear_r1",
+              "gear_r2",
+              "gear_r",
+              "wheel_r",
+              "gear_r3",
+              "gear_r4",
+              "gear_r6",
+              "gear_r5"
+            ],
+            "before": [
+              0.050206155346099984,
+              -0.08252681000898981,
+              -0.20863380461490333
+            ],
+            "after": [
+              0.03299999999998374,
+              -0.04000000000000438,
+              -0.0934351444201229
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "gear_c",
+              "wheel_c",
+              "gear_c2",
+              "gear_c1"
+            ],
+            "before": [
+              -1.1150518117565913e-08,
+              -0.044069669497317845,
+              0.24139017583589695
+            ],
+            "after": [
+              6.130079083233042e-16,
+              0.010347869119891065,
+              0.2632809012883821
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    "enemy": {
+      "type": "f3f2",
+      "context": "combat",
+      "attached": true,
+      "error": false,
+      "length": 7.06,
+      "modelSize": [
+        9.807017014379367,
+        3.2346967340823896,
+        7.06
+      ],
+      "propAxis": [
+        0,
+        0,
+        -1
+      ],
+      "propeller": true,
+      "gear": {
+        "state": "stowed",
+        "assemblies": [
+          {
+            "name": "FlightGear_Left",
+            "parts": [
+              "gear_l2",
+              "gear_l1",
+              "gear_l",
+              "wheel_l",
+              "gear_l3",
+              "gear_l4",
+              "gear_l6",
+              "gear_l5"
+            ],
+            "before": [
+              -0.05020617057607596,
+              -0.08252681436043993,
+              -0.2086337872092166
+            ],
+            "after": [
+              -0.032999999999959354,
+              -0.03999999999999988,
+              -0.09343329669767736
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Right",
+            "parts": [
+              "gear_r1",
+              "gear_r2",
+              "gear_r",
+              "wheel_r",
+              "gear_r3",
+              "gear_r4",
+              "gear_r6",
+              "gear_r5"
+            ],
+            "before": [
+              0.050206155346100026,
+              -0.08252681000901824,
+              -0.20863380461490338
+            ],
+            "after": [
+              0.03299999999998378,
+              -0.04000000000000445,
+              -0.09343514442012289
+            ],
+            "angle": -90
+          },
+          {
+            "name": "FlightGear_Tail",
+            "parts": [
+              "gear_c",
+              "wheel_c",
+              "gear_c2",
+              "gear_c1"
+            ],
+            "before": [
+              -1.1150518140551e-08,
+              -0.04406966949734627,
+              0.24139017583589706
+            ],
+            "after": [
+              5.859028540111666e-16,
+              0.010347869119891148,
+              0.26328090128832526
+            ],
+            "angle": -90
+          }
+        ]
+      }
+    },
+    "cameraLocal": [
+      1.3877787807814457e-16,
+      2.30000000000004,
+      5.830000000000155
+    ]
+  },
+  "fired": {
+    "ammo": {
+      "mg": 0,
+      "m2": 199,
+      "mg762": 499,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "bullets": [
+      {
+        "weapon": "m2",
+        "speed": 860,
+        "damage": 34
+      },
+      {
+        "weapon": "mg762",
+        "speed": 810,
+        "damage": 13
+      }
+    ]
+  },
+  "propeller": {
+    "running": {
+      "rpm": 678.5714285714287,
+      "blur": false,
+      "quaternion": [
+        0,
+        0,
+        -0.8262387743159966,
+        0.5633200580636196
+      ]
+    },
+    "highRpm": {
+      "rpm": 1900,
+      "blur": true
+    },
+    "stopped": {
+      "rpm": 0,
+      "blur": false
+    }
+  },
+  "pageErrors": [],
+  "httpErrors": []
+}

@@ -1,0 +1,16 @@
+{
+  "result": "passed",
+  "method": "Entire embedded v14 module in Node VM with DOM/WebGL/audio adapters; actual game state, physics and combat functions.",
+  "checks": [
+    "Entire generated module initializes with DOM, media and graphics adapters",
+    "All eight catalog entries are cleaned; all aircraft generate one player + seven allied AI vs eight enemy AI, with independent ammunition and BR ±1.0",
+    "6 km square bounds and opposite diagonal bases contain every initial aircraft; headings and velocities point toward A",
+    "A needs exactly 15 seconds from neutral and 30 from the enemy; objective and scores agree at 30/60/120 fps",
+    "A uses a true 300 m 3D sphere including its boundary; ties/empty/dead units never advance occupation",
+    "Own base restores 10% maximum health/ammunition per second with fractional ammunition accounting; enemy bases and dead units cannot replenish",
+    "Allied AI and enemy AI spend their own ammo; projectiles ignore friendlies and hit the first hostile along a swept path",
+    "Player death preserves the match with no respawn; observation switches/live target fallback work; dead player cannot fire and pause/resume cannot revive them",
+    "Boundary death enters spectating; team elimination, 100-point victory and simultaneous elimination finish correctly; restart creates a clean roster",
+    "The original campaign still starts its three bombers and five escorts and runs its own animation"
+  ]
+}

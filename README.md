@@ -1,6 +1,16 @@
 # 天空决斗 / Sky Duel
 
-离线 Android 3D 空战游戏，适配手机横屏。本仓库现已恢复到 v13：包含 MiG-15、F-86F-2、Meteor、B-29、I-15bis、Bf-109 B-1、P-36A 和 F3F-2，以及海面和朝鲜地形。
+离线 Android 3D 空战游戏，适配手机横屏。v14 包含 MiG-15、F-86F-2、Meteor、B-29、I-15bis、Bf-109 B-1、P-36A 和 F3F-2，以及空域争夺与“米格之舞”战役。
+
+## v14
+
+- 图鉴统一使用“水平转弯性能”和“垂直转弯性能”；航速值去除括号说明，删除追尾视角、起落架项目及介绍中的低速失速句。
+- 空域争夺模式为玩家与 7 架我方 AI 对抗 8 架敌方 AI。双方 AI 均从玩家飞机 BR ±1.0 的机型池匹配。
+- 地图为 6 × 6 km，基地位于两个对角，中央为 A。标记显示 A 的高度；半径 300 m 的三维球形占领范围不显示。
+- 初始进度及双方积分均为 0。人数更多的一方推进占领，平局或无人时冻结进度；中立点需 15 秒，敌占点需 30 秒。占领方每秒获得 1 分，先到 100 分或全歼对方获胜。
+- 回到己方基地 300 m 内，每秒恢复最大生命和弹药的 10%。每架飞机独立管理生命、弹药、冷却和目标；AI 会在生命或弹药不足时返航。
+- 全员不可复活。玩家阵亡后观战存活队友，可用左右按钮或 Q/E 切换；暂停和继续不会复活玩家。
+- 保留 F3F-2、战斗起落架、原机型数值、飞行物理、音效和战役。详情及验证限制见 [v14 更新说明](docs/v14-update.md)。
 
 ## v13
 
@@ -16,7 +26,7 @@ v10–v12 的瞄准环/摇杆切换、真实枪口准星与预瞄点、统一玩
 
 ## 操作
 
-主页面设置可切换摇杆或瞄准环，并保存灵敏度。战斗中按住开火键射击，油门控制发动机输出；桌面调试支持 WASD/方向键和空格开火。AI 对战匹配权重相近的飞机；“米格之舞”沿用 MiG-15 拦截 B-29 编队与 F-86 护航的战役规则。
+主页面设置可切换摇杆或瞄准环，并保存灵敏度。战斗中按住开火键射击，油门控制发动机输出；桌面调试支持 WASD/方向键和空格开火。“米格之舞”沿用 MiG-15 拦截 B-29 编队与 F-86 护航的战役规则。
 
 ## 源码与验证
 
@@ -25,11 +35,12 @@ v10–v12 的瞄准环/摇杆切换、真实枪口准星与预瞄点、统一玩
 需要 Python 3 和 Node.js 18+，逻辑检查不需要安装 npm 依赖：
 
 ```bash
-python3 update-v13.py
+python3 update-v14.py
 npm run check
+node validation/check-simulation-v14.mjs
 ```
 
-`update-v13.py` 使用锁定的 `baseline/v12-index.html` 和 `aircraft-systems-v13.mjs` 生成 v13 页面。检查覆盖原机型配置、新机双武器/飞行、音效、机动和完整页面流程。`validation/` 包含可重复执行的脚本、结果及战斗/图鉴外观截图。
+`update-v14.py` 使用锁定的 `baseline/v13-index.html` 和 `airspace-systems-v14.mjs` 生成 v14 页面。检查覆盖八机型匹配、三维球、15/30 秒占领、补给、无复活、观战、暂停、胜负、原战役，以及飞行、双武器和音效。`validation/` 保存可重复执行的脚本与结果。
 
 浏览器模型检查需要 Playwright 与 Chromium：
 
@@ -43,7 +54,7 @@ SKY_DUEL_CHROME=/absolute/path/to/chromium npm run check:browser
 
 ## 构建 APK
 
-GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `main` 的 PR 和手动运行时执行源码生成检查、逻辑检查及 Android 构建。构建环境为 JDK 17、Gradle 8.9、Android SDK 35。产物 `sky-duel-v13-debug-apk` 内含 `app-debug.apk`。
+GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `main` 的 PR 和手动运行时执行源码生成检查、逻辑检查及 Android 构建。构建环境为 JDK 17、Gradle 8.9、Android SDK 35。产物 `sky-duel-v14-debug-apk` 内含 `app-debug.apk`。
 
 本地安装相同工具后可运行：
 
@@ -51,18 +62,18 @@ GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `ma
 gradle --no-daemon assembleDebug
 ```
 
-已交付的 `sky-duel-f3f2-v13.apk` 使用与 v12 相同的原游戏签名，可覆盖 v12；Actions 生成的默认 debug APK 使用构建环境的调试签名，证书可能不同。仓库不包含签名私钥或密码。
+已交付的 `sky-duel-airspace-v14.apk` 使用原游戏签名，versionCode 为 14，可覆盖原签名的旧版；Actions 生成的默认 debug APK 使用构建环境的调试签名，证书可能不同。仓库不包含签名私钥或密码。
 
-保留原生壳、使用已交付 v12 APK 更新资源的复现方式：
+保留原生壳、使用已交付 v13 APK 更新资源的复现方式：
 
 ```bash
-python3 package-v13.py /absolute/path/sky-duel-audio-v12.apk
-zipalign -f -p 4 unsigned-v13.apk aligned-v13.apk
-apksigner sign --ks /absolute/path/authorized-game-key.p12 --ks-pass file:/absolute/path/password-file --out sky-duel-f3f2-v13.apk aligned-v13.apk
-apksigner verify --verbose --print-certs sky-duel-f3f2-v13.apk
-zipalign -c -p 4 sky-duel-f3f2-v13.apk
+python3 package-v14.py /absolute/path/sky-duel-f3f2-v13.apk
+zipalign -f -p 4 unsigned-v14.apk aligned-v14.apk
+apksigner sign --ks /absolute/path/authorized-game-key.p12 --ks-pass file:/absolute/path/password-file --out sky-duel-airspace-v14.apk aligned-v14.apk
+apksigner verify --verbose --print-certs sky-duel-airspace-v14.apk
+zipalign -c -p 4 sky-duel-airspace-v14.apk
 ```
 
-v12 基线 SHA-256：`d3ce5696d2dd523fff08ad0561205879a4887761a80c2cac95ebf85b5245f187`。
+v13 基线 SHA-256：`94bb52cbe867026467b3932fe41030f59019372b557c945489b39adbddaa2d3f`。打包验证只有页面与 manifest 改变，65 个模型、音效、解码器和原生壳文件内容不变。
 
 B-29 模型由 Sketchfab 用户 manilov.ap 提供，采用 CC BY 4.0 许可：[模型来源](https://sketchfab.com/3d-models/b29-48aa117b88a34c5194370e868114484c)。其他新飞机模型由用户提供。音效来源见 [SOUNDS_CREDITS.md](SOUNDS_CREDITS.md)。

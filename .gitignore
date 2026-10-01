@@ -10,3 +10,4 @@ node_modules/
 *.pfx
 __pycache__/
 validation/flight-series-*.csv
+validation/*-v14.png

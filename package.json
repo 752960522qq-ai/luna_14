@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check game.mjs && node validation/check-source-v13.mjs && node validation/check-aircraft-v13.mjs && node validation/check-audio-v13.mjs && node validation/check-flight-v13.mjs && node validation/check-integration-v13.mjs",
-    "check:browser": "node validation/check-browser-aircraft-v13.cjs"
+    "check": "node --check game.mjs && node validation/check-source-v14.mjs && node validation/check-aircraft-v13.mjs && node validation/check-audio-v13.mjs && node validation/check-flight-v13.mjs && node validation/check-airspace-v14.mjs",
+    "check:browser": "node validation/check-browser-v14.cjs"
   }
 }

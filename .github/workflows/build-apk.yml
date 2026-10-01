@@ -18,11 +18,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Verify generated v13 source
+      - name: Verify generated v14 source
         run: |
-          python3 update-v13.py
+          python3 update-v14.py
           git diff --exit-code -- game.mjs app/src/main/assets/index.html app/build.gradle
-      - name: Check flight, weapons, audio and screen integration
+      - name: Check flight, weapons, audio and 8v8 rules
         run: npm run check
       - uses: actions/setup-java@v4
         with:
@@ -42,7 +42,7 @@ jobs:
         run: gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
         with:
-          name: sky-duel-v13-debug-apk
+          name: sky-duel-v14-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30

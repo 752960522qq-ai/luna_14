@@ -1,0 +1,537 @@
+{
+  "result": "passed",
+  "method": "Shared physical simulation at 60 Hz, seeded 8v8 matches for up to six simulated minutes; additional B-29 navigation-only test.",
+  "reports": [
+    {
+      "type": "f3f2",
+      "wallSeconds": 8.61341599,
+      "history": [
+        {
+          "second": 0.016666666666666666,
+          "owner": null,
+          "progress": 0,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 8,
+          "red": 8,
+          "ammunitionSpent": false,
+          "closest": 3675.6169428855223
+        },
+        {
+          "second": 30.016666666666243,
+          "owner": null,
+          "progress": 0,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 8,
+          "red": 8,
+          "ammunitionSpent": false,
+          "closest": 586.8991169674864
+        },
+        {
+          "second": 60.01666666666454,
+          "owner": null,
+          "progress": 0.13444444444444414,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 4,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 420.2109529394378
+        },
+        {
+          "second": 90.01666666666284,
+          "owner": null,
+          "progress": 0.22111111111111137,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 504.0421235916677
+        },
+        {
+          "second": 120.01666666666114,
+          "owner": null,
+          "progress": 0.22111111111111137,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 828.9951378922592
+        },
+        {
+          "second": 150.0166666666782,
+          "owner": null,
+          "progress": 0.22111111111111137,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 859.8992736634605
+        },
+        {
+          "second": 180.01666666670206,
+          "owner": null,
+          "progress": 0.22111111111111137,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 514.1219530640317
+        },
+        {
+          "second": 210.01666666672594,
+          "owner": null,
+          "progress": 0.22111111111111137,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 404.60779752804257
+        },
+        {
+          "second": 240.0166666667498,
+          "owner": "blue",
+          "progress": 1,
+          "counts": {
+            "blue": 1,
+            "red": 0
+          },
+          "scores": {
+            "blue": 7.499999999999979,
+            "red": 0
+          },
+          "blue": 2,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 173.2333984015067
+        }
+      ],
+      "last": {
+        "ended": true,
+        "winner": "blue",
+        "finite": true,
+        "scores": {
+          "blue": 20.433333333333454,
+          "red": 0
+        },
+        "elapsed": 252.95000000009344,
+        "roster": 16,
+        "maxOutside": 0
+      }
+    },
+    {
+      "type": "mig15",
+      "wallSeconds": 4.5934445230000005,
+      "history": [
+        {
+          "second": 0.016666666666666666,
+          "owner": null,
+          "progress": 0,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 8,
+          "red": 8,
+          "ammunitionSpent": false,
+          "closest": 3673.47303581691
+        },
+        {
+          "second": 30.016666666666243,
+          "owner": null,
+          "progress": -0.04777777777777778,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 1992.8741434334202
+        },
+        {
+          "second": 60.01666666666454,
+          "owner": null,
+          "progress": 0.012222222222222232,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 1488.3087998187307
+        },
+        {
+          "second": 90.01666666666284,
+          "owner": null,
+          "progress": 0.012222222222222232,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 652.0716027384151
+        },
+        {
+          "second": 120.01666666666114,
+          "owner": null,
+          "progress": 0.012222222222222232,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 1194.9583084070964
+        },
+        {
+          "second": 150.0166666666782,
+          "owner": null,
+          "progress": -0.03666666666666665,
+          "counts": {
+            "blue": 1,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 69.89400513147615
+        },
+        {
+          "second": 180.01666666670206,
+          "owner": null,
+          "progress": -0.08555555555555541,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 407.92787361163346
+        },
+        {
+          "second": 210.01666666672594,
+          "owner": null,
+          "progress": -0.08555555555555541,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 725.1297544287968
+        },
+        {
+          "second": 240.0166666667498,
+          "owner": null,
+          "progress": -0.08555555555555541,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 658.8907797970791
+        },
+        {
+          "second": 270.01666666674976,
+          "owner": null,
+          "progress": 0.14111111111111085,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 1,
+          "red": 1,
+          "ammunitionSpent": true,
+          "closest": 660.4904610913459
+        }
+      ],
+      "last": {
+        "ended": true,
+        "winner": "red",
+        "finite": true,
+        "scores": {
+          "blue": 0,
+          "red": 0
+        },
+        "elapsed": 286.93333333340104,
+        "roster": 16,
+        "maxOutside": 0
+      }
+    },
+    {
+      "type": "b29",
+      "wallSeconds": 9.277959385,
+      "history": [
+        {
+          "second": 0.016666666666666666,
+          "owner": null,
+          "progress": 0,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 8,
+          "red": 8,
+          "ammunitionSpent": false,
+          "closest": 3675.144917096884
+        },
+        {
+          "second": 30.016666666666243,
+          "owner": null,
+          "progress": 0.03222222222222222,
+          "counts": {
+            "blue": 3,
+            "red": 3
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 8,
+          "red": 8,
+          "ammunitionSpent": false,
+          "closest": 92.1960993403023
+        },
+        {
+          "second": 60.01666666666454,
+          "owner": null,
+          "progress": 0.012222222222222218,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 5,
+          "red": 5,
+          "ammunitionSpent": true,
+          "closest": 2277.734143074672
+        },
+        {
+          "second": 90.01666666666284,
+          "owner": null,
+          "progress": 0.012222222222222218,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 4,
+          "red": 4,
+          "ammunitionSpent": true,
+          "closest": 2321.9706889266417
+        },
+        {
+          "second": 120.01666666666114,
+          "owner": null,
+          "progress": 0.2655555555555561,
+          "counts": {
+            "blue": 3,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 4,
+          "red": 3,
+          "ammunitionSpent": true,
+          "closest": 238.7356662763098
+        },
+        {
+          "second": 150.0166666666782,
+          "owner": null,
+          "progress": 0.3555555555555567,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 4,
+          "red": 3,
+          "ammunitionSpent": true,
+          "closest": 2170.9275724249887
+        },
+        {
+          "second": 180.01666666670206,
+          "owner": null,
+          "progress": 0.3555555555555567,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 1395.9942871461546
+        },
+        {
+          "second": 210.01666666672594,
+          "owner": null,
+          "progress": 0.45222222222222397,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 447.10629543908897
+        },
+        {
+          "second": 240.0166666667498,
+          "owner": null,
+          "progress": 0.45222222222222397,
+          "counts": {
+            "blue": 0,
+            "red": 0
+          },
+          "scores": {
+            "blue": 0,
+            "red": 0
+          },
+          "blue": 3,
+          "red": 2,
+          "ammunitionSpent": true,
+          "closest": 2107.846253928185
+        }
+      ],
+      "last": {
+        "ended": true,
+        "winner": "blue",
+        "finite": true,
+        "scores": {
+          "blue": 0,
+          "red": 0
+        },
+        "elapsed": 266.06666666675335,
+        "roster": 16,
+        "maxOutside": 0
+      }
+    }
+  ],
+  "heavyAircraftNavigation": "15 AI survive three minutes; altitude variation remains bounded within 600 m of the objective flight level"
+}

@@ -1,4 +1,119 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"><meta name="theme-color" content="#07111d"><title>天空决斗</title>
+<style>
+:root{--cyan:#76e3f7;--gold:#ffcf71;--red:#ff6d70}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111d;color:#fff;font-family:system-ui,"Noto Sans SC",sans-serif;touch-action:none;user-select:none}canvas{display:block}#scene{position:fixed;inset:0}#vignette{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 45%,#0209138c 100%)}.hud{position:fixed;inset:0;pointer-events:none}.top{position:absolute;left:3.2%;right:3.2%;top:3%;display:flex;justify-content:space-between;align-items:flex-start}.brand{font-size:clamp(12px,2vw,17px);letter-spacing:.18em;color:#a9bbc9}.brand b{display:block;font-size:clamp(20px,3.2vw,30px);letter-spacing:.06em;color:white}.readout{display:flex;gap:clamp(12px,3vw,34px);text-align:right}.readout label{display:block;font-size:10px;letter-spacing:.18em;color:#8a9eae}.readout strong{font:700 clamp(16px,3vw,25px)/1.2 monospace}.readout strong.warning{color:#ff9a78;text-shadow:0 0 12px #ff634866}.reticle{position:absolute;left:50%;top:50%;width:48px;height:48px;transform:translate(-50%,-50%);opacity:.85}.reticle:before,.reticle:after{content:"";position:absolute;background:#d8f6ff}.reticle:before{width:1px;height:48px;left:23px}.reticle:after{height:1px;width:48px;top:23px}.reticle i{position:absolute;inset:13px;border:1px solid #d8f6ff;border-radius:50%}.bottom-left{position:absolute;left:3.2%;bottom:calc(5% + clamp(108px,18vw,150px));width:min(27%,220px);max-width:220px}.bar-label{display:flex;justify-content:space-between;font:11px monospace;color:#bfd1dc;margin:7px 0 4px}.bar{height:5px;background:#ffffff24;border-radius:9px;overflow:hidden}.bar span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#46d9ef,#d7faff);transition:width .15s}.bar.health span{background:linear-gradient(90deg,#ff606d,#ffc06d)}.controls{position:absolute;inset:0;pointer-events:none}.joystick{position:absolute;left:3.2%;bottom:5%;width:clamp(112px,19vw,154px);aspect-ratio:1;border:1px solid #b6d5e566;border-radius:50%;background:radial-gradient(circle,#16334cbb,#091928aa);box-shadow:inset 0 0 22px #55d8ec20,0 8px 24px #0005;backdrop-filter:blur(8px);pointer-events:auto;touch-action:none}.joystick:before,.joystick:after{content:"";position:absolute;background:#b6d5e533;pointer-events:none}.joystick:before{left:50%;top:13%;bottom:13%;width:1px}.joystick:after{top:50%;left:13%;right:13%;height:1px}.joystick-knob{position:absolute;left:50%;top:50%;width:43%;height:43%;transform:translate(-50%,-50%);border:2px solid #b9f6ffcc;border-radius:50%;background:radial-gradient(circle at 35% 30%,#78e8f4dd,#1683a4bb);box-shadow:0 0 22px #46c8db77;pointer-events:none;will-change:transform}.ctrl{pointer-events:auto;border:1px solid #b6d5e544;background:#11243c99;color:#eaf8ff;border-radius:14px;font-size:clamp(18px,3vw,25px);backdrop-filter:blur(8px);touch-action:none}.ctrl:active,.ctrl.on{background:#46c8db99;border-color:#b8fbff}.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.action{position:absolute;right:12%;bottom:8%;display:flex;gap:12px;align-items:end}.fire{width:clamp(74px,13vw,112px);height:clamp(74px,13vw,112px);border-radius:50%;border:2px solid #ff9b7899;background:radial-gradient(circle,#ff8658cc,#8c2f356e);font-weight:900;letter-spacing:.12em;color:white;box-shadow:0 0 26px #ff654644}.throttle-control{position:absolute;right:2.4%;top:25%;bottom:25%;width:66px;pointer-events:auto;touch-action:none;color:#d9f5ff;font:9px monospace;text-align:center;text-shadow:0 1px 4px #000}.throttle-title{position:absolute;top:-20px;left:0;right:0;color:#8fe4f2;font-weight:800;letter-spacing:.15em}.throttle-max,.throttle-zero{position:absolute;left:0;right:0;white-space:nowrap;font-size:9px}.throttle-max{top:0;color:#ffcf71}.throttle-zero{bottom:0;color:#d5e2e8}.throttle-track{position:absolute;left:25px;right:25px;top:23px;bottom:24px;border:1px solid #b9eaf077;border-radius:10px;background:linear-gradient(180deg,#18374eaa,#071421dd);box-shadow:0 0 12px #0006;touch-action:none}.throttle-fill{position:absolute;left:0;right:0;bottom:0;height:75%;border-radius:0 0 9px 9px;background:linear-gradient(0deg,#34c4d688,#79e6f055);pointer-events:none}.throttle-min-mark{position:absolute;left:-5px;right:-5px;bottom:22%;height:1px;background:#ffd16f;box-shadow:0 0 5px #ffd16f;pointer-events:none}.throttle-min-mark i{position:absolute;left:20px;top:-6px;white-space:nowrap;color:#ffe2a0;font:8px monospace;font-style:normal;text-shadow:0 1px 5px #000}.throttle-thumb{position:absolute;left:50%;bottom:75%;width:28px;height:15px;transform:translate(-50%,50%);border:2px solid #d9fbff;border-radius:5px;background:#54d6e9;box-shadow:0 0 12px #50dcf5aa;pointer-events:none}.target{position:absolute;right:16%;top:38%;width:clamp(110px,20vw,190px);text-align:right}.target .bar{height:4px}.target small{display:block;color:#ffaaa8;font:11px monospace;letter-spacing:.16em;margin-bottom:5px}.radar-box{position:absolute;left:auto;right:3.2%;top:10%;bottom:auto;transform:none;width:clamp(64px,8vw,88px);padding:7px 7px 6px;border:1px solid #b4e9f044;border-radius:12px;background:#0615229c;backdrop-filter:blur(8px);text-align:center;pointer-events:none}.radar-box span{display:block;color:#90dfee;font:9px monospace;letter-spacing:.2em;margin-bottom:3px}.radar-box canvas{display:block;width:100%;height:auto;aspect-ratio:1}.radar-box small{display:block;color:#c3d3da;font:9px monospace;margin-top:2px}.enemy-marker{position:absolute;left:50%;top:50%;width:36px;height:26px;transform:translate(-50%,-50%);pointer-events:none;color:#ff7971}.enemy-marker:before{content:"";position:absolute;inset:0;border:1px solid currentColor;box-shadow:0 0 12px #ff574c66}.enemy-marker:after{content:"";position:absolute;left:50%;top:50%;width:4px;height:4px;background:currentColor;border-radius:50%;transform:translate(-50%,-50%)}.enemy-marker .marker-label{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:2px;white-space:nowrap;color:#ffd3cf;font:8px monospace;letter-spacing:.12em;text-shadow:0 1px 5px #000}.enemy-marker.offscreen{width:22px;height:22px}.enemy-marker.offscreen:before{inset:4px;border:0;width:0;height:0;left:50%;top:50%;transform:translate(-50%,-50%) rotate(var(--arrow-angle,0deg));border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:15px solid currentColor;box-shadow:none}.enemy-marker.offscreen:after,.enemy-marker.offscreen .marker-label{display:none}.toast{position:absolute;left:50%;top:20%;transform:translateX(-50%);font-size:clamp(14px,2.8vw,23px);letter-spacing:.2em;color:#dbf9ff;text-shadow:0 2px 15px #00c8ff;opacity:0;transition:opacity .3s}.toast.show{opacity:1}.screen{position:fixed;inset:0;z-index:5;display:grid;place-items:center;background:linear-gradient(110deg,#07111deb,#081624aa 55%,#09111de8)}.panel{width:min(88vw,670px);padding:clamp(20px,4vw,44px);border:1px solid #a8d8eb33;background:#071524c9;box-shadow:0 20px 90px #0009;backdrop-filter:blur(14px)}.eyebrow{color:#73daed;font-size:11px;letter-spacing:.32em}.panel h1{font-size:clamp(34px,7vw,64px);line-height:1;margin:10px 0 8px;letter-spacing:.06em}.panel p{color:#a8bdcc;font-size:clamp(12px,2vw,15px);line-height:1.7;margin:0 0 22px}.planes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}.plane-option{flex:1;text-align:left;padding:14px;border:1px solid #ffffff2b;background:#102237;color:white;border-radius:4px}.plane-option.active{border-color:var(--cyan);box-shadow:inset 0 0 20px #53cde414}.plane-option b{display:block;font-size:18px}.plane-option span{font-size:11px;color:#9db4c4}.start{width:100%;padding:15px;border:0;background:linear-gradient(100deg,#69d8e9,#a5edee);color:#06202c;font-weight:900;letter-spacing:.23em;font-size:15px}.hint{margin-top:14px!important;font-size:11px!important}.encyclopedia-open,.catalog-close{width:100%;padding:12px;margin:0 0 10px;border:1px solid #7fd9e866;background:#11243c;color:#d9f7ff;font-weight:700;letter-spacing:.12em;pointer-events:auto}.weapon-select{width:78px;height:44px;border:1px solid #f4d58199;background:#554622b8;color:#ffe9b4;border-radius:12px;font-size:11px;pointer-events:auto}.bomb{width:72px;height:48px;border:1px solid #ffc96a99;background:#704c22c9;color:#fff0c6;border-radius:12px;font-size:13px;font-weight:800;pointer-events:auto}.encyclopedia-panel{max-height:94dvh;overflow:auto;touch-action:pan-y}.encyclopedia-panel h2{margin:12px 0 6px;font-size:22px}.preview-frame{height:clamp(150px,27vh,260px);position:relative;border:1px solid #9bd8ec38;border-radius:8px;overflow:hidden;background:#132638}.preview-frame canvas{width:100%;height:100%;display:block;touch-action:pan-y}.preview-frame span{position:absolute;right:10px;bottom:8px;color:#b8ced8;font-size:10px;text-shadow:0 1px 4px #000}.spec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 16px}.spec-item{padding:9px 11px;background:#102237;border:1px solid #ffffff1b;border-radius:5px}.spec-item b{display:block;color:#79deef;font-size:10px;margin-bottom:3px}.spec-item span{font-size:12px;line-height:1.4;color:#e8f3f6}.catalog-actions{display:flex;gap:10px}.catalog-actions .start,.catalog-actions .catalog-close{margin:0;flex:1}.hidden{display:none!important}.damage{animation:flash .2s}@keyframes flash{50%{filter:brightness(2)}}
+@media(max-width:640px){.panel{width:min(94vw,670px)}.menu-grid{grid-template-columns:1fr 1fr}.research-track{min-width:520px}.hangar-list{grid-template-columns:1fr}}.home-panel,.section-panel{max-height:94dvh;overflow:auto;touch-action:pan-y}.menu-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0}.menu-action{min-height:74px;border:1px solid #83dbed55;background:linear-gradient(135deg,#132b40,#0c1a2a);color:#eafaff;font-size:clamp(18px,3vw,24px);font-weight:800;letter-spacing:.12em}.menu-action:first-child{background:linear-gradient(110deg,#69d8e9,#a5edee);color:#06202c}.hangar-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.hangar-card{padding:16px;border:1px solid #7fd9e866;background:#102237}.hangar-card.selected{border-color:var(--cyan);box-shadow:inset 0 0 22px #53cde41c}.hangar-card h3{margin:0 0 5px;font-size:20px}.hangar-card p{margin:0 0 12px;font-size:12px}.hangar-card button,.tree-card button,.nation-chip{padding:9px 12px;border:1px solid #76e3f788;background:#112b40;color:#dffaff;font-weight:700}.hangar-card.selected button{background:#76e3f7;color:#08212c}.payload-control{display:grid;gap:5px;margin:12px 0;color:#9db4c4;font-size:11px}.payload-control select{width:100%;padding:9px 10px;border:1px solid #f4d58199;background:#302b1f;color:#ffe9b4;border-radius:6px;font:inherit}.payload-note{font-size:10px!important;margin:0 0 12px!important}.screen-actions,.nation-tabs{display:flex;gap:10px}.screen-actions>*{flex:1}.research-panel{max-height:94dvh;overflow:auto;touch-action:pan-y}.nation-tabs{margin:16px 0}.nation-chip.active{background:#76e3f7;color:#08212c}.nation-tree{margin:12px 0;padding:12px;border:1px solid #ffffff24;background:#0b1c2b}.nation-tree h3{margin:0 0 5px}.nation-tree p{font-size:11px;margin:0 0 10px;color:#a8bdcc}.research-track{height:164px;position:relative;overflow:hidden;background:linear-gradient(180deg,#0d2234,#102b3d);border:1px solid #ffffff22}.research-axis{position:absolute;left:4%;right:4%;top:70px;height:3px;background:#79d8e8aa}.research-axis:before,.research-axis:after{position:absolute;top:10px;color:#b8ced8;font:11px monospace}.research-axis:before{content:'1.0';left:0}.research-axis:after{content:'14.7';right:0}.tree-card{position:absolute;top:18px;left:51.1%;transform:translateX(-50%);width:min(230px,44vw);padding:10px;border:1px solid #80dceb88;background:#132e43;text-align:center}.tree-card strong,.tree-card span{display:block}.tree-card span{font-size:11px;color:#b4c8d1;margin:3px 0 8px}.tree-card button{padding:5px 9px;font-size:11px}.br-range{display:flex;justify-content:space-between;font:10px monospace;color:#87a6b8;margin:5px 2px 0}.screen-actions .catalog-close{margin:0}.end-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mode-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:22px 0}.mode-card{display:grid;gap:8px;min-height:100px;padding:18px;text-align:left;border:1px solid #83dbed66;background:linear-gradient(135deg,#132b40,#0c1a2a);color:#eafaff}.mode-card strong{font-size:clamp(18px,3vw,24px);color:#76e3f7}.mode-card span{font-size:12px;color:#b8cbd8;line-height:1.55}.mission-copy{max-height:55dvh;overflow:auto;padding:14px 16px;border:1px solid #ffffff20;background:#091a29;color:#c4d3dd;line-height:1.7;touch-action:pan-y}.mission-copy h2{font-size:16px;color:#76e3f7;margin:8px 0}.mission-copy p{font-size:12px;margin:6px 0 14px}.mission-status{position:absolute;left:50%;top:12%;transform:translateX(-50%);padding:8px 12px;border:1px solid #a8d8eb66;border-radius:8px;background:#071827d9;color:#dffaff;font:700 clamp(10px,2.4vw,14px) monospace;white-space:nowrap;backdrop-filter:blur(6px)}.mission-status b{color:#ffcf71}@media(max-width:640px){.mode-grid{grid-template-columns:1fr}.mission-copy{max-height:48dvh}.mission-status{top:13%;max-width:94vw;overflow:hidden;text-overflow:ellipsis}}.enemy-marker-layer{position:absolute;inset:0;pointer-events:none;z-index:4}.enemy-marker.campaign-target-marker{width:30px;height:22px;color:#ff6d70}.enemy-marker.campaign-target-marker:after{width:3px;height:3px}.enemy-marker.campaign-target-marker .marker-label{font:8px monospace;color:#ff8580;letter-spacing:.02em;margin-top:2px;text-shadow:0 1px 3px #000,0 0 6px #ff3f37}.enemy-marker.campaign-target-marker.offscreen{width:21px;height:21px}.enemy-marker .marker-leader{position:absolute;left:50%;top:50%;height:1px;width:var(--leader-length,0px);background:#ff777788;transform-origin:0 50%;transform:rotate(var(--leader-angle,0rad));pointer-events:none}
+.tech-panel{width:min(96vw,1280px);max-height:96dvh;padding:clamp(16px,2.2vw,28px);overflow:auto;touch-action:pan-y;background:linear-gradient(145deg,#101a20f5,#18262bf2);border:1px solid #91a7ad55;box-shadow:0 24px 90px #000b}
+.tech-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 2px 16px;border-bottom:1px solid #89989d55}
+.tech-header h1{font-size:clamp(30px,5vw,48px);margin:5px 0}
+.tech-header p{margin:0;color:#aab8bb}
+.tech-summary{min-width:150px;padding:12px 16px;border:1px solid #8ba1a844;background:#0b161d;text-align:center}
+.tech-summary span,.tech-summary small{display:block;color:#93a4a8;font-size:10px;letter-spacing:.12em}
+.tech-summary strong{display:block;margin:3px 0;font-size:22px;color:#e5edf0}
+.tech-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0}
+.tech-toolbar .nation-tabs{margin:0;flex-wrap:wrap}
+.tech-panel .nation-chip{padding:8px 14px;border-radius:2px;border-color:#71878e77;background:#233238;color:#d6e1e4}
+.tech-panel .nation-chip.active{background:#bdcbd0;color:#132126;border-color:#d3e0e3}
+.tree-legend{display:flex;gap:15px;color:#aab8bb;font-size:11px;white-space:nowrap}
+.tree-legend span{display:flex;align-items:center;gap:6px}
+.tree-legend i{width:9px;height:9px;border-radius:50%;display:inline-block;background:#8ed1e4;box-shadow:0 0 8px #7dd2e466}
+.tree-legend .legend-owned{background:#d4b975;box-shadow:0 0 8px #dabf7866}
+.tech-content{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;align-items:start}
+.tech-main{min-width:0;display:grid;gap:13px}
+.nation-map{padding:12px;background:#202d31;border:1px solid #82919566;box-shadow:inset 0 1px #ffffff08}
+.nation-map-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 9px;padding:0 1px 8px;border-bottom:1px solid #c1cacc33}
+.nation-map-head strong{font-size:15px;letter-spacing:.08em;color:#e0e7e8}
+.nation-map-head span{font-size:10px;color:#9aabad}
+.rank-band{display:grid;grid-template-columns:50px minmax(0,1fr);gap:9px;margin:8px 0;padding:8px 0;border-top:1px solid #aab8bb2b}
+.rank-stamp{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:86px;background:#29383d;color:#a8b5b8;border:1px solid #70818755}
+.rank-stamp b{font-size:22px;line-height:1;color:#d8e0e2}
+.rank-stamp span{margin-top:4px;font:8px monospace;letter-spacing:.12em}
+.rank-lanes{display:grid;gap:7px;min-width:0}
+.branch-row{display:grid;grid-template-columns:92px minmax(0,1fr);align-items:center;gap:8px;min-height:86px}
+.branch-label{font-size:10px;line-height:1.3;color:#91a4a8}
+.branch-vehicles{position:relative;display:flex;align-items:center;gap:12px;min-width:0;min-height:72px}
+.branch-vehicles:before{content:"";position:absolute;left:-8px;top:50%;width:8px;height:2px;background:#8ab4c0}
+.branch-vehicles:after{content:"";position:absolute;left:-3px;top:calc(50% - 3px);border-left:5px solid #8ab4c0;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.tech-node{position:relative;display:grid;grid-template-columns:77px minmax(0,1fr);align-items:center;gap:8px;width:min(100%,330px);min-height:76px;padding:7px;border:1px solid #8ecce055;background:linear-gradient(110deg,#233d49,#29434c);color:#eef4f5;text-align:left;cursor:pointer}
+.tech-node:hover,.tech-node:focus-visible{border-color:#a9e5f2;outline:none;box-shadow:0 0 0 1px #8ed9e977}
+.tech-node.selected{border-color:#e3c777;background:linear-gradient(110deg,#433c29,#383a33);box-shadow:inset 0 0 20px #e4c56a18}
+.node-art{display:grid;place-items:center;width:77px;height:59px;background:linear-gradient(135deg,#667b7777,#24383c77);overflow:hidden}
+.node-art svg{width:100%;height:100%;filter:drop-shadow(1px 2px 2px #0008)}
+.node-copy{display:grid;gap:3px;min-width:0}
+.node-copy small{font:10px monospace;color:#c6d0d1}
+.node-copy strong{font-size:12px;line-height:1.25;white-space:normal}
+.node-copy em{font-size:9px;font-style:normal;color:#9fb2b5}
+.node-state{position:absolute;right:5px;top:5px;padding:2px 4px;background:#142329b8;color:#b3d7df;font:8px monospace}
+.tech-node.selected .node-state{color:#f1d990;background:#342f21}
+.tech-side{position:sticky;top:0;padding:13px;border:1px solid #bda56d55;background:#2a2a25}
+.side-heading{display:flex;align-items:center;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid #d2c79a44}
+.side-heading .eyebrow{font-size:9px;color:#d8bf79}
+.side-heading h2{margin:2px 0 0;font-size:17px;color:#f1e8c8}
+.side-count{font:16px monospace;color:#d8c683}
+.tech-side>p{margin:8px 0;color:#baaf8d;font-size:10px}
+.owned-list{display:grid;gap:7px}
+.owned-node{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:7px;width:100%;min-height:61px;padding:5px;border:1px solid #c8b47744;background:linear-gradient(110deg,#514b35,#38382f);color:#f2eddf;text-align:left;cursor:pointer}
+.owned-node:hover,.owned-node:focus-visible{border-color:#f0d990;outline:none}
+.owned-node.selected{border-color:#ffe391;box-shadow:inset 0 0 16px #ffe39121}
+.owned-node .node-art{width:62px;height:49px;background:#79735455}
+.owned-node strong{display:block;font-size:10px;line-height:1.2}
+.owned-node small{display:block;margin-top:4px;color:#d8cfae;font:9px monospace}
+.tech-panel>.catalog-close{margin:12px 0 0;background:#253238;border-color:#a3b1b344;color:#dbe4e6}
+@media(max-width:820px){.tech-content{grid-template-columns:minmax(0,1fr) 220px}.tech-side{padding:9px}.branch-row{grid-template-columns:74px minmax(0,1fr)}.tech-node{grid-template-columns:62px minmax(0,1fr)}.node-art{width:62px}}
+@media(max-width:640px){.tech-panel{width:96vw;padding:14px}.tech-header{align-items:flex-start}.tech-summary{min-width:80px;padding:8px}.tech-summary strong{font-size:17px}.tech-summary small{font-size:8px}.tech-toolbar{align-items:flex-start;flex-direction:column}.tree-legend{padding:0 3px}.tech-content{grid-template-columns:1fr}.tech-main{gap:9px}.nation-map{padding:8px}.nation-map-head strong{font-size:13px}.nation-map-head span{font-size:9px}.rank-band{grid-template-columns:39px minmax(0,1fr);gap:6px}.rank-stamp{min-height:80px}.branch-row{grid-template-columns:60px minmax(0,1fr);gap:5px;min-height:80px}.branch-label{font-size:9px}.branch-vehicles{min-height:68px}.tech-node{grid-template-columns:54px minmax(0,1fr);min-height:68px;padding:5px;gap:5px}.node-art{width:54px;height:50px}.node-copy strong{font-size:11px}.node-copy em{font-size:8px}.node-state{font-size:7px}.tech-side{position:static}.owned-list{grid-template-columns:repeat(2,minmax(0,1fr))}.owned-node{grid-template-columns:45px minmax(0,1fr);gap:4px;min-height:56px}.owned-node .node-art{width:45px;height:42px}.owned-node strong{font-size:9px}}
+.terrain-credit{font-size:11px;line-height:1.45;color:#aebbb9;margin:12px 0}.terrain-credit a{color:#d8d3b0}
+.nation-flag{display:inline-block;width:22px;height:15px;margin-right:6px;vertical-align:-3px;box-shadow:0 0 0 1px #ffffff4d;flex:none}.nation-chip .nation-flag{vertical-align:-3px}
+.engine-toggle{position:absolute;right:0;bottom:-32px;width:90px;padding:5px 3px;border:1px solid #8ee5ef99;border-radius:6px;background:#123546df;color:#e4faff;font:10px system-ui;touch-action:manipulation}.engine-toggle[aria-pressed="false"]{color:#ffd5a3;border-color:#efa96b99}.prop-rpm{position:absolute;left:-32px;right:-8px;top:-43px;white-space:nowrap;color:#e2e6d4;font:10px monospace}
+.settings-entry{grid-column:1/-1;min-height:58px}
+.settings-panel{width:min(94vw,720px)}
+.settings-panel h1{font-size:clamp(30px,5vw,44px)}
+.control-mode-options{margin:16px 0 20px;padding:0;border:0;display:grid;gap:10px;min-width:0}
+.control-mode-options legend{margin-bottom:10px;color:#b8d6e4;font-size:14px}
+.control-mode-choice{display:flex;align-items:center;gap:13px;padding:16px;border:1px solid #85cad84d;border-radius:8px;background:#102237;touch-action:pan-y;min-width:0}
+.control-mode-choice:has(input:checked){border-color:#76e3f7;background:#163749;box-shadow:inset 3px 0 #76e3f7}
+.control-mode-choice input{width:20px;height:20px;flex-shrink:0;accent-color:#76e3f7}
+.control-mode-choice strong{display:block;font-size:17px;color:#ecf9ff;margin-bottom:5px}
+.control-mode-choice small{display:block;font-size:12px;line-height:1.6;color:#b5cbd7}
+.sensitivity-label{display:flex;justify-content:space-between;gap:12px;font-size:14px;color:#d2eaf6}
+.sensitivity-label output{color:#76e3f7;font-variant-numeric:tabular-nums}
+.settings-range{width:100%;height:44px;margin:5px 0 14px;accent-color:#76e3f7;touch-action:none}
+.settings-range:disabled{opacity:.4}
+.settings-panel .control-instructions{font-size:12px;line-height:1.7;margin:0 0 16px;padding:12px;background:#07111d8c;border-radius:6px}
+.control-marker-guide{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:11px;color:#b7d1e1;margin:0 0 22px}
+.control-marker-guide span{display:flex;align-items:center;gap:7px}
+.guide-ring,.guide-lead{display:inline-block;width:15px;height:15px;border:2px solid #76e3f7;border-radius:50%}
+.guide-lead{width:11px;height:11px;border-color:#ffcf71}
+.guide-cross{display:inline-block;width:16px;height:16px;background:linear-gradient(#e4faff,#e4faff) center/2px 16px no-repeat,linear-gradient(#e4faff,#e4faff) center/16px 2px no-repeat}
+.aim-cursor{position:absolute;width:54px;height:54px;border:2px solid #d7faff;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;box-shadow:0 0 0 1px #07111d77,0 0 16px #76e3f733;display:none}
+.aim-cursor:after{content:'';position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;background:#d7faff;transform:translate(-50%,-50%)}
+.aim-cursor.at-edge{opacity:.5;border-style:dashed}
+.lead-indicator{position:absolute;width:18px;height:18px;transform:translate(-50%,-50%);border:2px solid #ffcf71;border-radius:50%;box-shadow:0 0 8px #ffcf7144;pointer-events:none;display:none}
+.lead-indicator.aligned{border-color:#8cffba;box-shadow:0 0 12px #8cffba66}
+.cursor-status{position:absolute;left:50%;bottom:3%;transform:translateX(-50%);max-width:60%;color:#d9f3ff;font:11px system-ui,sans-serif;text-align:center;text-shadow:0 1px 4px #000;pointer-events:none}
+.free-look{position:absolute;left:3.2%;bottom:6%;min-width:76px;min-height:48px;padding:10px 16px;border:1px solid #83dbed77;background:#0c2336bd;color:#dcf8ff;border-radius:12px;font-size:14px;pointer-events:auto;touch-action:none}
+.free-look.on{background:#287891;border-color:#c2f8ff}
+.home-panel #homeControlMode{color:#76e3f7}
+@media(max-width:640px){.control-mode-choice{padding:13px}.cursor-status{bottom:3%;max-width:58%;font-size:10px}.aim-cursor{width:46px;height:46px}}
 
+#throttlePercent{font:700 10px monospace;color:#a4eff5}.boundary-warning{position:absolute;left:50%;top:19%;transform:translateX(-50%);max-width:86%;padding:9px 16px;border:1px solid #ff8179;border-radius:8px;background:#5b1819df;color:#fff1dc;font-size:clamp(13px,2.4vw,19px);font-weight:800;text-align:center;pointer-events:none;text-shadow:0 1px 4px #000}.boundary-warning.hidden{display:none!important}
+</style></head><body><div id="scene"></div><div id="vignette"></div>
+<div class="hud hidden" id="hud"><div class="top"><div class="brand">FLIGHT SIMULATION<b>天空决斗 / SKY DUEL</b></div><div class="readout"><div><label>速度 IAS</label><strong id="speed">420</strong></div><div><label>高度 ALT</label><strong id="alt">1200</strong></div><div><label>攻角 AoA</label><strong id="aoa">0.0°</strong></div><div><label>击落 KILLS</label><strong id="kills">00</strong></div></div></div><div class="mission-status hidden" id="campaignHud">米格之舞 · <b id="campaignTimer">05:00</b> · B-29 <b id="campaignBomberCount">3</b> · 护航 <b id="campaignEscortCount">5</b> · 补弹 <b id="campaignResupply">50</b>s</div><div class="boundary-warning hidden" id="boundaryWarning" role="status" aria-live="polite"></div><div class="reticle" id="reticle"><i></i></div><div class="aim-cursor" id="aimCursor" aria-label="期望飞行方向"></div><div class="lead-indicator" id="leadIndicator" aria-label="弹道提前量"></div><div class="cursor-status hidden" id="cursorStatus"></div><div class="enemy-marker" id="enemyMarker"><span class="marker-label">MIG-15</span></div><div class="enemy-marker-layer hidden" id="campaignEnemyMarkers"></div><div class="radar-box"><span>RADAR</span><canvas id="radar" width="128" height="128"></canvas><small>A-B: 2000 m</small><small id="radarDistance">— m</small></div><div class="target"><small id="targetName">敌机 · MIG-15</small><div class="bar health"><span id="enemyHealth"></span></div></div><div class="throttle-control" id="throttleControl"><span class="throttle-title">油门 <b id="throttlePercent">100%</b></span><span class="prop-rpm hidden" id="propRpm">螺旋桨 0 RPM</span><span class="throttle-max" id="throttleMax">最大 1076 km/h</span><div class="throttle-track" id="throttleTrack"><div class="throttle-fill" id="throttleFill"></div><div class="throttle-min-mark" id="throttleMinMark"><i id="throttleMin">平飞 220</i></div><div class="throttle-thumb" id="throttleThumb"></div></div><span class="throttle-zero">0 km/h</span><button class="engine-toggle hidden" id="engineToggle" type="button" aria-pressed="false">启动发动机</button></div><div class="bottom-left"><div class="bar-label"><span>机体完整度</span><span id="hpText">100%</span></div><div class="bar health"><span id="playerHealth"></span></div><div class="bar-label"><span>剩余弹药</span><span id="ammo">120</span></div><div class="bar"><span id="ammoBar"></span></div></div><div class="toast" id="toast">目标锁定</div><div class="controls"><div class="joystick" id="joystick" role="application" aria-label="飞行摇杆"><div class="joystick-knob" id="joystickKnob"></div></div><button class="free-look hidden" id="freeLook" data-key="look" type="button">观察</button><div class="action"><button class="ctrl weapon-select hidden" id="weaponSelect">双炮</button><button class="ctrl fire" data-key="fire">开火</button><button class="ctrl bomb hidden" data-key="bomb">投弹</button></div></div></div>
+<div class="screen" id="menu"><div class="panel home-panel"><div class="eyebrow">VINTAGE AIR COMBAT · 3D MOBILE GAME</div><h1>天空决斗</h1><p>选择战机，研发机队，在近距空战中争夺制空权。</p><div class="menu-grid"><button class="menu-action" id="start">出战　→</button><button class="menu-action" id="openHangar">仓库</button><button class="menu-action" id="openResearch">研发</button><button class="menu-action" id="openEncyclopedia">图鉴</button><button class="menu-action settings-entry" id="openSettings">设置</button></div><p class="hint">当前出战机：<strong id="homeSelectedPlane">F-86 佩刀</strong><br>飞机操控：<strong id="homeControlMode">瞄准环操作</strong> · v13</p></div></div><div class="screen hidden" id="settings"><div class="panel section-panel settings-panel">
+  <div class="eyebrow">FLIGHT CONTROLS</div><h1>设置</h1><p>选择适合你的飞行操作方式，设置会自动保存。</p>
+  <fieldset class="control-mode-options"><legend>飞机操控</legend>
+    <label class="control-mode-choice"><input type="radio" name="flightControlMode" value="cursor"><span><strong>瞄准环操作</strong><small>拖动方向环，飞行教官控制飞机转向。准星显示真实射击方向。</small></span></label>
+    <label class="control-mode-choice"><input type="radio" name="flightControlMode" value="joystick"><span><strong>摇杆操作</strong><small>自由滚转与俯仰，保留原版飞机摇杆手感。</small></span></label>
+  </fieldset>
+  <label class="sensitivity-label" for="cursorSensitivity">瞄准环灵敏度 <output id="cursorSensitivityValue">1.0×</output></label>
+  <input id="cursorSensitivity" class="settings-range" type="range" min="0.5" max="1.8" step="0.1" value="1">
+  <p class="control-instructions" id="controlInstructions"></p>
+  <div class="control-marker-guide"><span><i class="guide-ring"></i>方向环：希望飞向哪里</span><span><i class="guide-cross"></i>准星：枪口实际方向</span><span><i class="guide-lead"></i>提前量圈：射击瞄准位置</span></div>
+  <button class="catalog-close" id="settingsHome" type="button">返回主界面</button>
+</div></div>
+
+<div class="screen hidden" id="modeSelect"><div class="panel section-panel"><div class="eyebrow">SORTIE SELECT</div><h1>选择作战模式</h1><p>选择一场历史战役，或进入原有的自由 AI 对战。</p><div class="mode-grid"><button class="mode-card" id="chooseCampaign"><strong>战役模式</strong><span>米格之舞 · 1951·朝鲜 · 6×6公里</span></button><button class="mode-card" id="chooseAIBattle"><strong>AI对战</strong><span>使用当前战机，随机抽取地图与权重相差不超过 1.0 的对手。</span></button></div><p class="terrain-credit">“Aerial Grassy and Rocky Mountain 3” 地形：Mike.xx / Sketchfab，CC BY 4.0；贴图已缩放。 <a href="https://sketchfab.com/3d-models/aerial-grassy-and-rocky-mountain-3-0dba72e32d0f448593f6cfb86742f696" target="_blank" rel="noopener">源模型</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">许可</a></p><button class="catalog-close" id="modeHome">返回主界面</button></div></div><div class="screen hidden" id="campaignBriefing"><div class="panel section-panel"><div class="eyebrow">CAMPAIGN · KOREAN WAR</div><h1>米格之舞</h1><div class="mission-copy"><h2>战役地图：1951·朝鲜（6×6公里）</h2><p>美军三架 B-29 重型战略轰炸机组成标准轰炸编队，携带重磅航弹，正高速飞向我方地面工业与防空枢纽，准备执行定点轰炸任务。编队配备 F-86 佩刀战斗机贴身护航，负责拦截我方战机、掩护轰炸机突进。</p><p>B-29 自卫火力密集、血量厚重，编队联动可互相补位防空；F-86 滚转和高速机动性能强，会主动俯冲缠斗、干扰瞄准。我方 MIG-15 爬升与爆发火力占优，是快速瓦解轰炸编队的关键。</p><h2>任务目标与规则</h2><p>5分钟内击落全部3架 B-29。5架护航 F-86 会全程主动攻击但不属于强制目标；护航机被击落后30秒内补充，活动数量上限5架。弹药每50秒自动补满一次。MIG-15 被击落或倒计时结束即任务失败。</p><h2>敌方编队</h2><p>3架 B-29，单机耐久5000，保持320 km/h平飞并沿固定航线飞行，不使用自卫炮塔。编队为长机居中、两架僚机左右后侧跟进。5架 F-86F-2 负责近距护航与缠斗。</p></div><div class="screen-actions"><button class="catalog-close" id="campaignBack">返回模式选择</button><button class="start" id="beginCampaign">开始战役　→</button></div></div></div><div class="screen hidden" id="hangar"><div class="panel section-panel"><div class="eyebrow">AIRCRAFT HANGAR</div><h1>仓库</h1><p>仓库显示已解锁战机；B-29的炸弹挂载可在此调整。选择出战机后点击“出战”进入空域。</p><div class="hangar-list" id="hangarList"></div><div class="screen-actions"><button class="catalog-close" id="hangarHome">返回主界面</button><button class="start" id="hangarSortie">出战　→</button></div></div></div><div class="screen hidden" id="research"><div class="panel tech-panel"><header class="tech-header"><div><div class="eyebrow">AIRCRAFT RESEARCH</div><h1>航空科技树</h1><p>选择国家查看分级研发路线，点击机型即可设为当前出战战机。</p></div><div class="tech-summary"><span>战机等级</span><strong>I—VII</strong><small>当前已开放 8 架机型</small></div></header><div class="tech-toolbar"><div class="nation-tabs"><button class="nation-chip active" data-nation-filter="all">全部国家</button><button class="nation-chip" data-nation-filter="cn">中系</button><button class="nation-chip" data-nation-filter="us">美系</button><button class="nation-chip" data-nation-filter="ussr">苏系</button><button class="nation-chip" data-nation-filter="uk">英系</button><button class="nation-chip" data-nation-filter="de">德系</button></div><div class="tree-legend"><span><i class="legend-research"></i>可用机型</span><span><i class="legend-owned"></i>已入库</span></div></div><div class="tech-content"><div class="tech-main" id="researchTree"></div><aside class="tech-side"><div class="side-heading"><div><span class="eyebrow">HANGAR</span><h2>已入库机型</h2></div><span class="side-count" id="ownedCount">07</span></div><p>点击卡片切换当前出战机</p><div id="researchOwned"></div></aside></div><button class="catalog-close" id="researchHome">返回主界面</button></div></div><div class="screen hidden" id="encyclopedia"><div class="panel encyclopedia-panel"><div class="eyebrow">AIRCRAFT ENCYCLOPEDIA · 3D PREVIEW</div><h1>战机图鉴</h1><div class="planes"><button class="plane-option active" data-preview-plane="mig15"><b>MIG-15</b><span>双武器 · 高火力</span></button><button class="plane-option" data-preview-plane="f86"><b>F-86 佩刀</b><span>六挺机枪 · 持续输出</span></button><button class="plane-option" data-preview-plane="meteor"><b>Meteor F.4 流星</b><span>英系 · 四门 20 mm 航炮</span></button><button class="plane-option" data-preview-plane="i15bis"><b>I-15bis</b><span>中系 1.0 · 四挺 PV-1</span></button><button class="plane-option" data-preview-plane="bf109b1"><b>Bf-109 B-1</b><span>德系 1.3 · 双MG-17</span></button><button class="plane-option" data-preview-plane="b29"><b>B-29 超级堡垒</b><span>美系 6.7 · 250 m自动炮塔</span></button><button class="plane-option" data-preview-plane="f3f2"><b>F3F-2</b><span>美系 1.3 · 舰载双翼战斗机</span></button><button class="plane-option" data-preview-plane="p36a"><b>P-36A</b><span>美系 1.3 · 双机枪 · 活塞式战机</span></button></div><div class="preview-frame"><canvas id="previewCanvas"></canvas><span>3D 模型预览 · 自动旋转</span></div><h2 id="catalogName">MIG-15</h2><p id="catalogIntro"></p><div class="spec-grid" id="catalogSpecs"></div><div class="catalog-actions"><button class="start" id="useCatalogPlane">选择此机　→</button><button class="catalog-close" id="closeEncyclopedia">返回</button></div></div></div><div class="screen hidden" id="end"><div class="panel"><div class="eyebrow">SORTIE COMPLETE</div><h1 id="resultTitle">击落确认</h1><p id="resultCopy">战斗结束。</p><div class="end-actions"><button class="start" id="again">再次升空　→</button><button class="catalog-close" id="returnHome">返回主界面</button></div></div></div>
+<script type="module">
 
 import * as THREE from './three.module.js';
 import { GLTFLoader } from './GLTFLoader.js';
@@ -9,328 +124,11 @@ let koreaTerrainBounds=null,duelDesertionRemaining=null;
 
 
 const $=s=>document.querySelector(s), sceneRoot=$('#scene');let scene,camera,renderer,clock,player,enemy,playerPlane='f86',enemyPlaneType='mig15',weaponMode='mg',enemyWeaponMode='both',playerAmmo={mg:1800,n37:40,ns23:160,hispano:720},enemyAmmo={mg:1800,n37:40,ns23:160,hispano:720},playerWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0},enemyWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0},playing=false,ended=false,kills=0,hp=700,eHp=600,throttleValue=1,hitFlash=0,worldTime=0,previewRenderer=null,previewScene=null,previewCamera=null,previewPlane=null,previewType='mig15';const keys={up:false,down:false,left:false,right:false,fire:false,bomb:false,look:false};const joystickInput={x:0,y:0};const FLIGHT_CONTROL={deadzone:.08,sideslipAssistRate:.85,sideslipAssistMaxFraction:.22,cameraPositionResponse:16,cameraRotationResponse:18};const AI_CONTROL={rollResponse:7,pitchResponse:7};let cameraOrbitYaw=0,cameraOrbitPitch=0,cameraInputAt=-1,cameraDragPointer=null,cameraPoseInitialized=false,filteredControlX=0,filteredControlY=0;const bullets=[],bulletPool=[],bulletResources={};const bombsInFlight=[];let bombKeyWasDown=false;const clouds=[];const tmp=new THREE.Vector3();
-const CAMPAIGN_DURATION=300,CAMPAIGN_RESUPPLY_INTERVAL=50,CAMPAIGN_ESCORT_LIMIT=5,CAMPAIGN_ESCORT_RESPAWN=30;let gameMode='airspace',campaignElapsed=0,campaignTimeRemaining=CAMPAIGN_DURATION,campaignResupplyRemaining=CAMPAIGN_RESUPPLY_INTERVAL,campaignEscortSerial=0,campaignBomberPhase=0;const campaignBombers=[],campaignEscorts=[],campaignRespawns=[],campaignMarkerNodes=new Map();
+const CAMPAIGN_DURATION=300,CAMPAIGN_RESUPPLY_INTERVAL=50,CAMPAIGN_ESCORT_LIMIT=5,CAMPAIGN_ESCORT_RESPAWN=30;let gameMode='duel',campaignElapsed=0,campaignTimeRemaining=CAMPAIGN_DURATION,campaignResupplyRemaining=CAMPAIGN_RESUPPLY_INTERVAL,campaignEscortSerial=0,campaignBomberPhase=0;const campaignBombers=[],campaignEscorts=[],campaignRespawns=[],campaignMarkerNodes=new Map();
 // Game coordinates: +X right, +Y up, nose toward -Z; 1 world unit = 10 m.
 const METERS_PER_UNIT=10,SPAWN_DISTANCE_METERS=2000;
 // v10: persistent flight controls; the direction ring commands the instructor,
 // while the real gunsight and lead indicator follow the existing projectile model.
-// Airspace uses the existing aircraft physics; distances below are in metres.
-const AIRSPACE_RULES={teamSize:8,mapMeters:6000,captureRadiusMeters:300,captureSeconds:15,baseRadiusMeters:300,supplyRate:.1,scoreRate:1,scoreToWin:100,stepSeconds:1/60};
-const airspaceUnits=[],airspaceMarkerNodes=new Map();
-let airspaceState=null,airspaceSpectating=false,airspaceObservedId=null,airspaceAccumulator=0,airspacePrepareToken=0;
-
-function createAirspaceState(){return{progress:0,owner:null,scores:{blue:0,red:0},counts:{blue:0,red:0},elapsed:0,winner:undefined,point:new THREE.Vector3(),bases:{blue:new THREE.Vector3(),red:new THREE.Vector3()}}}
-function airspaceLiveUnits(team=null){return airspaceUnits.filter(unit=>!unit.dead&&unit.health>0&&(!team||unit.team===team))}
-function airspaceUnitFor(root){return root?.userData.airspaceUnit||null}
-function airspacePlayerAlive(){return gameMode!=='airspace'||!!airspaceUnitFor(player)&&!airspaceUnitFor(player).dead}
-function airspaceWithin(point,center,radiusMeters){return point.distanceToSquared(center)<=(radiusMeters/METERS_PER_UNIT)**2+1e-9}
-
-// A signed meter takes 15 seconds from neutral and 30 from the opposite end.
-// Only a strict numerical advantage advances it; ties and an empty point freeze it.
-function advanceAirspaceObjective(state,units,dt){
- const counts={blue:0,red:0};
- for(const unit of units)if(!unit.dead&&unit.health>0&&airspaceWithin(unit.root.position,state.point,AIRSPACE_RULES.captureRadiusMeters))counts[unit.team]++;
- state.counts=counts;state.elapsed+=dt;
- const advantage=Math.sign(counts.blue-counts.red),oldOwner=state.owner,oldProgress=state.progress;
- if(advantage)state.progress=THREE.MathUtils.clamp(oldProgress+advantage*dt/AIRSPACE_RULES.captureSeconds,-1,1);
- if(state.progress>=1-1e-9){state.progress=1;state.owner='blue'}
- else if(state.progress<=-1+1e-9){state.progress=-1;state.owner='red'}
- // Split the step at the ownership change so scores do not depend on frame rate.
- if(oldOwner!==state.owner){
-  const transition=advantage?Math.min(dt,Math.abs((advantage-oldProgress)*AIRSPACE_RULES.captureSeconds)):dt;
-  if(oldOwner)state.scores[oldOwner]+=transition*AIRSPACE_RULES.scoreRate;
-  if(state.owner)state.scores[state.owner]+=(dt-transition)*AIRSPACE_RULES.scoreRate;
- }else if(state.owner)state.scores[state.owner]+=dt*AIRSPACE_RULES.scoreRate;
- for(const team of ['blue','red'])state.scores[team]=Math.min(AIRSPACE_RULES.scoreToWin,state.scores[team]);
-}
-function replenishAirspaceUnit(unit,base,dt){
- if(unit.dead||unit.health<=0||!airspaceWithin(unit.root.position,base,AIRSPACE_RULES.baseRadiusMeters))return false;
- unit.health=Math.min(unit.maxHealth,unit.health+unit.maxHealth*AIRSPACE_RULES.supplyRate*dt);
- for(const [id,capacity]of Object.entries(unit.maxAmmo)){
-  if(id==='bombWeightLb'||capacity<=0)continue;
-  if(unit.ammo[id]>=capacity){unit.supplyFractions[id]=0;continue}
-  const recovered=(unit.supplyFractions[id]||0)+capacity*AIRSPACE_RULES.supplyRate*dt,rounds=Math.floor(recovered+1e-9);
-  unit.supplyFractions[id]=recovered-rounds;unit.ammo[id]=Math.min(capacity,(unit.ammo[id]||0)+rounds);
- }
- return true
-}
-function airspaceAmmoFraction(unit){let have=0,capacity=0;for(const[id,max]of Object.entries(unit.maxAmmo)){if(id==='bombWeightLb'||id==='bombs')continue;have+=unit.ammo[id]||0;capacity+=max}return capacity?have/capacity:1}
-function airspaceWinner(state,units){
- const blue=units.some(u=>u.team==='blue'&&!u.dead&&u.health>0),red=units.some(u=>u.team==='red'&&!u.dead&&u.health>0);
- if(!blue&&!red)return null;
- if(!red)return 'blue';if(!blue)return 'red';
- if(state.scores.blue>=AIRSPACE_RULES.scoreToWin-1e-9)return 'blue';
- if(state.scores.red>=AIRSPACE_RULES.scoreToWin-1e-9)return 'red';
- return undefined
-}
-function clearAirspaceEntities(){
- for(const unit of airspaceUnits)scene.remove(unit.root);
- for(const node of airspaceMarkerNodes.values())node.remove();airspaceMarkerNodes.clear();airspaceUnits.length=0;
- airspaceState=null;airspaceSpectating=false;airspaceObservedId=null;airspaceAccumulator=0;
- $('#airspaceHud').classList.add('hidden');$('#airspaceMarkers').classList.add('hidden');$('#spectatorControls').classList.add('hidden');
- $('#hud').classList.remove('spectating','airspace');$('#throttleControl').classList.remove('hidden');
-}
-function makeAirspaceUnit(team,index,type,root){
- const isPlayer=root===player,ammo=isPlayer?playerAmmo:freshAmmo(type),mode=isPlayer?weaponMode:type==='mig15'?['n37','ns23','both'][Math.floor(Math.random()*3)]:type==='meteor'?'hispano':'mg';
- const unit={id:team+'-'+index,team,index,type,root,isPlayer,health:planeInfo[type].health,maxHealth:planeInfo[type].health,ammo,maxAmmo:{...ammo},supplyFractions:{},weaponMode:mode,weaponCooldowns:isPlayer?playerWeaponCooldowns:{mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0},dead:false,targetId:null,targetDecision:0,resupplying:false,patrolPhase:index*Math.PI/4};
- Object.assign(root.userData,{airspaceUnit:unit,team,ammo:unit.ammo,weaponMode:unit.weaponMode,weaponCooldowns:unit.weaponCooldowns,engineRunning:true});
- if(!isPlayer&&type!=='b29')initializeFighterAI(root,'airspace',index);
- airspaceUnits.push(unit);return unit
-}
-function startAirspaceBattle(){
- airspaceState=createAirspaceState();
- // A common flight level keeps the initial diagonal routes above the terrain.
- let highest=terrainHeightAt(0,0);
- for(let x=-280;x<=280;x+=40)for(let z=-280;z<=280;z+=40)highest=Math.max(highest,terrainHeightAt(x,z));
- const altitude=Math.max(terrainHeightAt(0,0)+70,highest+35);
- airspaceState.point.set(0,altitude,0);airspaceState.bases.blue.set(-260,altitude,260);airspaceState.bases.red.set(260,altitude,-260);
- const slots=[[0,0],[-8,8],[8,8],[-16,16],[16,16],[-24,24],[24,24],[0,28]];
- for(const team of ['blue','red']){
-  const base=airspaceState.bases[team],forward=airspaceState.point.clone().sub(base).normalize(),right=new THREE.Vector3().crossVectors(forward,new THREE.Vector3(0,1,0)).normalize();
-  for(let index=0;index<AIRSPACE_RULES.teamSize;index++){
-   const isPlayer=team==='blue'&&index===0,type=isPlayer?playerPlane:chooseDuelOpponent(playerPlane),root=isPlayer?player:aircraft(false,type);
-   root.position.copy(base).addScaledVector(right,slots[index][0]).addScaledVector(forward,-slots[index][1]);
-   root.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,-1),forward);
-   root.userData.velocity.copy(forward).multiplyScalar(root.userData.airspeed/METERS_PER_UNIT);
-   root.userData.throttle=isPlayer?throttleValue:.82;
-   if(PROPELLER_SPECS[type])root.userData.propRpm=PROPELLER_SPECS[type].idleRpm+(PROPELLER_SPECS[type].maxRpm-PROPELLER_SPECS[type].idleRpm)*root.userData.throttle;
-   if(!isPlayer)scene.add(root);makeAirspaceUnit(team,index,type,root);
-  }
- }
- enemy=airspaceLiveUnits('red')[0].root;enemyPlaneType=enemy.userData.type;eHp=airspaceUnitFor(enemy).health;
- airspaceSpectating=false;airspaceObservedId=null;airspaceAccumulator=0;resetCursorControl();
- $('#hud').classList.add('airspace');$('#airspaceHud').classList.remove('hidden');$('#airspaceMarkers').classList.remove('hidden');$('#spectatorControls').classList.add('hidden');
- $('#radarScale').textContent='6 × 6 km';updateAirspaceHUD();
-}
-async function prepareAirspaceBattle(){
- const token=++airspacePrepareToken,button=$('#chooseAIBattle');button.disabled=true;$('#airspaceLoadStatus').textContent='正在加载空域与编队…';
- try{
-  const [terrain]=await Promise.all([loadKoreaTerrain(),...duelOpponentsFor(selectedAircraft).map(loadPlaneModel)]);
-  if(token!==airspacePrepareToken)return;
-  if(!terrain)throw new Error('地图未加载');
-  if(!koreaHeightGrid)koreaHeightGrid=buildKoreaHeightGrid(terrain);
-  gameMode='airspace';reset();
- }catch(error){if(token===airspacePrepareToken){console.error('空域加载失败',error);$('#airspaceLoadStatus').textContent='加载失败，请重新进入空域。'}}
- finally{if(token===airspacePrepareToken){button.disabled=false;if(playing)$('#airspaceLoadStatus').textContent=''}}
-}
-function nearestAirspaceHostile(unit){
- let closest=null,distance=Infinity;
- for(const candidate of airspaceLiveUnits())if(candidate.team!==unit.team){const d=unit.root.position.distanceToSquared(candidate.root.position);if(d<distance){distance=d;closest=candidate}}
- return closest
-}
-function airspaceViewUnit(){
- if(!airspaceSpectating)return airspaceUnitFor(player);
- const allies=airspaceLiveUnits('blue');let unit=allies.find(u=>u.id===airspaceObservedId);
- if(!unit){unit=allies[0]||null;airspaceObservedId=unit?.id||null;cameraPoseInitialized=false}return unit
-}
-function cycleAirspaceSpectator(direction){
- if(!airspaceSpectating||!playing)return;
- const allies=airspaceLiveUnits('blue');if(!allies.length)return;
- const index=allies.findIndex(u=>u.id===airspaceObservedId),next=(Math.max(0,index)+direction+allies.length)%allies.length;
- airspaceObservedId=allies[next].id;resetCameraTracking();updateAirspaceHUD()
-}
-function enterAirspaceSpectator(){
- airspaceSpectating=true;clearFlightInputs();resetDuelBoundary();cursorTarget=null;stopEngineSound();stopGunSounds();resetCameraTracking();airspaceViewUnit();
- $('#hud').classList.add('spectating');$('#spectatorControls').classList.remove('hidden');$('#throttleControl').classList.add('hidden');
- for(const id of ['reticle','aimCursor','leadIndicator'])$('#'+id).style.display='none';
- $('#cursorStatus').classList.add('hidden');toast('战机已被击落 · 进入队友观战')
-}
-function damageAirspaceUnit(unit,amount,shooterId=null){
- if(!unit||unit.dead||!Number.isFinite(amount)||amount<=0||ended)return;
- unit.health=Math.max(0,unit.health-amount);
- if(unit.isPlayer){hp=unit.health;triggerDamageFlash()}
- if(unit.root===enemy)eHp=unit.health;
- if(unit.health<=0){
-  unit.dead=true;unit.targetId=null;retireAircraft(unit.root);
-  const shooter=airspaceUnits.find(u=>u.id===shooterId);
-  if(shooter?.isPlayer&&shooter.team!==unit.team){kills++;$('#kills').textContent=String(kills).padStart(2,'0');playSfx('kill',.35);toast('敌机击落 · '+planeInfo[unit.type].name)}
-  if(unit.isPlayer)enterAirspaceSpectator();
- }
-}
-function finishAirspaceBattle(winner){
- airspaceState.winner=winner;resetDuelBoundary();battlePaused=false;clearFlightInputs();playing=false;ended=true;
- for(const unit of airspaceUnits)unit.root.userData.engineRunning=false;
- stopGunSounds();stopEngineSound();$('#spectatorControls').classList.add('hidden');$('#again').textContent='再次升空　→';
- $('#resultTitle').textContent=winner===null?'双方全灭':winner==='blue'?'空域争夺胜利':'空域争夺失败';
- const scores=airspaceState.scores,reason=winner===null?'双方载具均已被击落。':scores[winner]>=AIRSPACE_RULES.scoreToWin-1e-9?'据点积分达到100分。':'对方编队已被全歼。';
- $('#resultCopy').textContent=`${reason} 我方 ${Math.floor(scores.blue+1e-9)} : ${Math.floor(scores.red+1e-9)} 敌方 · 个人击落 ${kills} 架。`;
- updateAirspaceHUD();$('#end').classList.remove('hidden')
-}
-function airspaceNavigationGoal(unit,dt){
- const ammo=airspaceAmmoFraction(unit);
- if(!unit.resupplying&&(unit.health<unit.maxHealth*.45||ammo<.15))unit.resupplying=true;
- if(unit.resupplying&&unit.health>=unit.maxHealth*.95&&ammo>=.95)unit.resupplying=false;
- const center=unit.resupplying?airspaceState.bases[unit.team]:airspaceState.point,root=unit.root,data=root.userData,distance=root.position.distanceTo(center)*METERS_PER_UNIT;
- let goal=center.clone();
- if(distance<260){
-  // A small orbit lets nimble aircraft accumulate capture and supply time.
-  const radial=root.position.clone().sub(center).setY(0);if(radial.lengthSq()<.01)radial.set(unit.team==='blue'?1:-1,0,0);
-  const tangent=new THREE.Vector3(-radial.z,0,radial.x).normalize();radial.normalize();
-  goal.addScaledVector(radial,13).addScaledVector(tangent,13);goal.y=center.y;
- }
- const min=planeInfo[unit.type].minLevelFlightKmh,max=planeInfo[unit.type].maxSpeedKmh;
- data.airspaceNavigationThrottle=THREE.MathUtils.clamp((distance<650?min*1.4:max*.82)/max,.3,.9);
- return goal
-}
-function airspaceFlightDirection(root,goal){
- // A waypoint behind the aircraft commands a banked turn, with a separate,
- // gentle altitude correction. It must not command a pitch loop over the point.
- const data=root.userData,toGoal=goal.clone().sub(root.position),travel=data.velocity.clone().setY(0);
- if(travel.lengthSq()<.001)travel.set(0,0,-1).applyQuaternion(root.quaternion).setY(0);travel.normalize();
- const desired=toGoal.clone().setY(0);if(desired.lengthSq()<.001)desired.copy(travel);desired.normalize();
- const angle=Math.atan2(new THREE.Vector3().crossVectors(travel,desired).y,THREE.MathUtils.clamp(travel.dot(desired),-1,1));
- const headingLimit=Math.min(.14,turnRateForPlane(data.type,Math.max(data.airspeed,1))*.8);
- const direction=travel.applyAxisAngle(new THREE.Vector3(0,1,0),THREE.MathUtils.clamp(angle,-headingLimit,headingLimit));
- const speed=Math.max(data.airspeed,data.minFlightSpeedMps),climbFraction=Math.min(.22,data.bestClimbMps*.8/speed),slope=THREE.MathUtils.clamp(toGoal.y*METERS_PER_UNIT/Math.max(600,speed*4),-climbFraction,climbFraction);
- return direction.multiplyScalar(Math.sqrt(1-slope*slope)).setY(slope)
-}
-function updateAirspaceAI(unit,dt){
- const root=unit.root,data=root.userData,goal=airspaceNavigationGoal(unit,dt);unit.targetDecision-=dt;
- let target=airspaceUnits.find(u=>u.id===unit.targetId&&!u.dead);
- if(unit.targetDecision<=0||!target){
-  const nearest=nearestAirspaceHostile(unit);
-  if(!target||nearest&&root.position.distanceToSquared(nearest.root.position)<root.position.distanceToSquared(target.root.position)*.65)target=nearest;
-  unit.targetId=target?.id||null;unit.targetDecision=.3+unit.index*.01;
- }
- const nearObjective=root.position.distanceTo(airspaceState.point)*METERS_PER_UNIT<650,enemyNearPoint=target&&target.root.position.distanceTo(airspaceState.point)*METERS_PER_UNIT<650;
- const targetRange=target?root.position.distanceTo(target.root.position)*METERS_PER_UNIT:Infinity;
- const combat=!unit.resupplying&&target&&(targetRange<850||enemyNearPoint&&nearObjective);
- if(unit.type!=='b29'&&target){
-  updateFighterAI(root,target.root,airspaceState.point,dt,combat?null:goal);
- }else{
-  data.throttle=data.airspaceNavigationThrottle;const safe=safeAIGoal(root,goal),boundary=duelBoundaryReturnGoal(root),direction=airspaceFlightDirection(root,boundary||safe);
-  const steps=Math.max(1,Math.ceil(dt/FLIGHT_PHYSICS.stepSeconds)),step=dt/steps;
-  for(let i=0;i<steps;i++){steerAircraftToward(root,direction,step);advanceAircraft(root,step);enforceDuelAIBoundary(root)}
- }
- if(unit.type==='b29')fireAirspaceBomberTurrets(unit,dt)
-}
-function fireAirspaceBomberTurrets(unit,dt){
- if(!unit||unit.dead||unit.type!=='b29')return;
- const root=unit.root,data=root.userData,ammo=unit.ammo;
- data.bomberArcCheckRemaining=(data.bomberArcCheckRemaining||0)-dt;
- if(data.bomberArcCheckRemaining<=0){
-  data.bomberArcCheckRemaining=.075;data.airspaceTurretTargets=[];
-  const inverse=root.quaternion.clone().invert(),hostiles=airspaceLiveUnits().filter(u=>u.team!==unit.team&&root.position.distanceToSquared(u.root.position)<26**2);
-  for(const turret of B29_TURRETS){let chosen=null,closest=Infinity;
-   for(const target of hostiles){const relative=target.root.position.clone().sub(root.position).applyQuaternion(inverse).sub(new THREE.Vector3(...turret.offset)),distance=relative.length()*METERS_PER_UNIT;
-    if(distance<=250&&distance<closest&&bomberTurretCanTrack(turret,relative)&&terrainLineClear(root.position,target.root.position)){chosen=target;closest=distance}}
-   if(chosen)data.airspaceTurretTargets.push({turret,target:chosen});
-  }
- }
- const active=(data.airspaceTurretTargets||[]).filter(item=>!item.target.dead);
- if(!active.length||ammo.b29mg<=0){data.bomberGunsActive=false;data.bomberGunClock=0;return}
- data.bomberGunsActive=true;data.bomberGunClock+=dt;const interval=60/450;
- while(data.bomberGunClock>=interval&&ammo.b29mg>0){
-  data.bomberGunClock-=interval;playGunShot('b29Gun',root,!unit.isPlayer,interval,true);
-  for(const{turret,target}of active){const rounds=Math.min(turret.guns,ammo.b29mg);ammo.b29mg-=rounds;let hits=0;for(let n=0;n<rounds;n++)if(Math.random()<.5)hits++;if(hits&&!target.dead)damageAirspaceUnit(target,hits*20,unit.id)}
- }
-}
-// Return a segment entry fraction, so overlapping shot paths hit the closest enemy.
-function airspaceHitFraction(start,end,root,radius){
- const half=root.userData.collisionHalfExtents;if(!half)return null;
- const previous=root.userData.frameStartPosition||root.position,movedStart=start.clone().add(root.position).sub(previous);
- const broadRadius=half.length()*Math.max(Math.abs(root.scale.x),Math.abs(root.scale.y),Math.abs(root.scale.z))+radius;
- const segment=end.clone().sub(movedStart),length=segment.lengthSq(),projection=length?THREE.MathUtils.clamp(root.position.clone().sub(movedStart).dot(segment)/length,0,1):0;
- if(movedStart.clone().addScaledVector(segment,projection).distanceToSquared(root.position)>broadRadius**2)return null;
- const a=root.worldToLocal(movedStart),b=root.worldToLocal(end.clone()),localRadius=radius/Math.max(.00001,Math.min(Math.abs(root.scale.x),Math.abs(root.scale.y),Math.abs(root.scale.z)));
- let enter=0,exit=1;
- for(const axis of ['x','y','z']){const extent=half[axis]+localRadius,delta=b[axis]-a[axis];if(Math.abs(delta)<1e-9){if(Math.abs(a[axis])>extent)return null;continue}let near=(-extent-a[axis])/delta,far=(extent-a[axis])/delta;if(near>far)[near,far]=[far,near];enter=Math.max(enter,near);exit=Math.min(exit,far);if(enter>exit)return null}
- return enter
-}
-function updateAirspaceBullets(dt){
- const live=airspaceLiveUnits();
- for(let i=bullets.length-1;i>=0;i--){const bullet=bullets[i];(bullet.previousPosition??=new THREE.Vector3()).copy(bullet.mesh.position);
-  bullet.mesh.position.addScaledVector(bullet.dir,bullet.speed*Math.min(dt,Math.max(0,bullet.life)));bullet.life-=dt;
-  let target=null,fraction=Infinity;
-  for(const unit of live){if(unit.dead||unit.team===bullet.team)continue;const hit=airspaceHitFraction(bullet.previousPosition,bullet.mesh.position,unit.root,bullet.radius);if(hit!==null&&hit<fraction){fraction=hit;target=unit}}
-  if(target)damageAirspaceUnit(target,bullet.damage,bullet.shooterId);
-  if(target||bullet.life<=0||bullet.mesh.position.y<terrainHeightAt(bullet.mesh.position.x,bullet.mesh.position.z))releaseBullet(i)
- }
-}
-function updateAirspaceBombs(dt){
- for(let i=bombsInFlight.length-1;i>=0;i--){const bomb=bombsInFlight[i],start=bomb.mesh.position.clone();bomb.velocity.y-=9.81/METERS_PER_UNIT*dt;bomb.mesh.position.addScaledVector(bomb.velocity,dt);bomb.life-=dt;
-  let target=null,fraction=Infinity;
-  for(const unit of airspaceLiveUnits('red')){const hit=airspaceHitFraction(start,bomb.mesh.position,unit.root,bomb.radius);if(hit!==null&&hit<fraction){fraction=hit;target=unit}}
-  if(target)damageAirspaceUnit(target,bomb.damage,airspaceUnitFor(player).id);
-  if(target||bomb.life<=0||bomb.mesh.position.y<=terrainHeightAt(bomb.mesh.position.x,bomb.mesh.position.z)){scene.remove(bomb.mesh);bomb.mesh.geometry.dispose();bomb.mesh.material.dispose();bombsInFlight.splice(i,1)}
- }
-}
-function updateAirspaceStep(dt){
- if(!playing||ended||!airspaceState)return;
- worldTime+=dt;rememberAircraftFrameStart();
- for(const unit of airspaceLiveUnits())updatePropeller(unit.root,dt);
- if(airspacePlayerAlive()){
-  updatePlayerFlightControls(dt);updateCursorTarget(dt);fireWeapons(player,false,dt,keys.fire);
-  if(keys.bomb&&!bombKeyWasDown)dropBomb();bombKeyWasDown=keys.bomb;fireAirspaceBomberTurrets(airspaceUnitFor(player),dt);
- }
- for(const unit of airspaceLiveUnits())if(!unit.isPlayer)updateAirspaceAI(unit,dt);
- for(const unit of airspaceLiveUnits())if(unit.root.position.y<=terrainHeightAt(unit.root.position.x,unit.root.position.z))damageAirspaceUnit(unit,unit.health);
- if(airspacePlayerAlive())updateDuelBoundary(dt);
- updateAirspaceBullets(dt);updateAirspaceBombs(dt);
- for(const unit of airspaceLiveUnits())replenishAirspaceUnit(unit,airspaceState.bases[unit.team],dt);
- if(airspacePlayerAlive())hp=airspaceUnitFor(player).health;
- advanceAirspaceObjective(airspaceState,airspaceUnits,dt);
- const winner=airspaceWinner(airspaceState,airspaceUnits);if(winner!==undefined)finishAirspaceBattle(winner)
-}
-function updateAirspaceFrame(elapsed,dt){
- if(playing){airspaceAccumulator+=elapsed;let steps=0;while(airspaceAccumulator>=AIRSPACE_RULES.stepSeconds-1e-9&&steps<24&&playing){updateAirspaceStep(AIRSPACE_RULES.stepSeconds);airspaceAccumulator-=AIRSPACE_RULES.stepSeconds;steps++}}
- const view=airspaceViewUnit();
- if(airspaceSpectating){if(view)updateAirspaceSpectatorCamera(view.root,dt)}else updateChaseCamera(dt);
- if(playing)updateAirspaceTacticalDisplay();updateAirspaceHUD();
- if(view){const data=view.root.userData;$('#speed').textContent=Math.round(data.airspeed*3.6);$('#alt').textContent=Math.max(0,Math.round((view.root.position.y+90)*METERS_PER_UNIT))+' m';$('#aoa').textContent=(data.aoa*180/Math.PI).toFixed(1)+'°';$('#aoa').classList.toggle('warning',Math.abs(data.aoa)>14*Math.PI/180)}
- if(!airspaceSpectating){updateEngineAudio();updateAmmoUI();updateHealthUI();updateEngineUI()}
-}
-function updateAirspaceSpectatorCamera(root,dt){
- if(!keys.look&&worldTime-cameraInputAt>=2){cameraOrbitYaw=THREE.MathUtils.damp(cameraOrbitYaw,0,2.8,dt);cameraOrbitPitch=THREE.MathUtils.damp(cameraOrbitPitch,0,2.8,dt)}
- const orbit=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),cameraOrbitYaw).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),cameraOrbitPitch)),pose=root.quaternion.clone().multiply(orbit),distance=Math.max(3,root.userData.lengthMeters*1.7/METERS_PER_UNIT),position=root.position.clone().add(new THREE.Vector3(0,distance*.35,distance).applyQuaternion(pose));
- const target=root.position.clone().add(new THREE.Vector3(0,0,-distance*2).applyQuaternion(pose)),look=new THREE.Matrix4().lookAt(position,target,new THREE.Vector3(0,1,0)),rotation=new THREE.Quaternion().setFromRotationMatrix(look);
- if(!cameraPoseInitialized){camera.position.copy(position);camera.quaternion.copy(rotation);cameraPoseInitialized=true}else{camera.position.lerp(position,1-Math.exp(-16*dt));camera.quaternion.slerp(rotation,1-Math.exp(-18*dt))}camera.updateMatrixWorld(true)
-}
-function updateAirspaceHealthUI(){
- const own=airspaceUnitFor(player),view=airspaceViewUnit();if(!own)return;
- $('#playerHealth').style.width=(own.health/own.maxHealth*100)+'%';$('#hpText').textContent=Math.round(own.health/own.maxHealth*100)+'%';
- const target=view&&nearestAirspaceHostile(view);enemy=target?.root||null;if(target){enemyPlaneType=target.type;eHp=target.health}
- $('#enemyHealth').style.width=(target?target.health/target.maxHealth*100:0)+'%';$('#targetName').textContent=target?'敌机 · '+planeInfo[target.type].name:'敌方编队已全灭'
-}
-function updateAirspaceHUD(){
- if(!airspaceState)return;
- const s=airspaceState,blue=airspaceLiveUnits('blue').length,red=airspaceLiveUnits('red').length;
- $('#blueAlive').textContent=blue;$('#redAlive').textContent=red;$('#blueScore').textContent=Math.floor(s.scores.blue+1e-9);$('#redScore').textContent=Math.floor(s.scores.red+1e-9);
- const owner=s.owner==='blue'?'我方占领':s.owner==='red'?'敌方占领':'中立';
- $('#aPointStatus').textContent='A · '+owner;$('#aCaptureBlue').style.width=(Math.max(0,s.progress)*50)+'%';$('#aCaptureRed').style.width=(Math.max(0,-s.progress)*50)+'%';
- const direction=Math.sign(s.counts.blue-s.counts.red),goal=direction>0?1:-1,remaining=direction?Math.max(0,Math.abs(goal-s.progress)*AIRSPACE_RULES.captureSeconds):0;
- $('#aCaptureText').textContent=`点内 ${s.counts.blue} : ${s.counts.red} · `+(direction&&remaining>.01?(direction>0?'我方':'敌方')+'占领 '+Math.ceil(remaining-1e-9)+'秒':direction?'占领完成':s.counts.blue||s.counts.red?'人数相等，进度暂停':'等待进入');
- $('#aPointStatus').style.color=s.owner==='blue'?'#76d5ff':s.owner==='red'?'#ff8580':'#ffcf71';
- const view=airspaceViewUnit();
- if(airspaceSpectating&&view){$('#spectatorLabel').textContent='观战 · '+planeInfo[view.type].name+' #'+(view.index+1)+' · '+Math.round(view.health/view.maxHealth*100)+'%';updateAirspaceHealthUI()}
- else if(!airspaceSpectating){const own=airspaceUnitFor(player),atBase=own&&!own.dead&&airspaceWithin(player.position,s.bases.blue,AIRSPACE_RULES.baseRadiusMeters);$('#baseSupplyStatus').textContent=atBase?'我方基地 · 生命与弹药补给中':'回我方基地补给 · 距离 '+Math.round(player.position.distanceTo(s.bases.blue)*METERS_PER_UNIT)+' m'}
-}
-function airspaceMarker(key,label,position,color,view){
- let node=airspaceMarkerNodes.get(key);if(!node){node=document.createElement('div');node.className='airspace-marker';node.innerHTML='<span class="marker-label"></span>';$('#airspaceMarkers').appendChild(node);airspaceMarkerNodes.set(key,node)}
- node.style.color=color;const anchor=projectEnemyMarkerPoint(position);node.classList.toggle('offscreen',!anchor.visible);node.style.left=(anchor.x/innerWidth*100)+'%';node.style.top=(anchor.y/innerHeight*100)+'%';
- node.querySelector('.marker-label').textContent=label+' · '+Math.round(position.distanceTo(view.root.position)*METERS_PER_UNIT)+' m';return node
-}
-function updateAirspaceTacticalDisplay(){
- const view=airspaceViewUnit();if(!view)return;camera.updateMatrixWorld(true);$('#enemyMarker').classList.add('hidden');$('#campaignEnemyMarkers').classList.add('hidden');
- const live=airspaceLiveUnits(),active=new Set(['A','base-blue','base-red']);
- // Spread the aircraft labels, leaving the objective and bases at their anchors.
- const occupied=[],offsets=[[0,0],[0,-28],[0,28],[65,0],[-65,0],[65,-28],[-65,-28],[65,28],[-65,28]];
- for(const unit of live)if(unit!==view){
-  active.add(unit.id);const node=airspaceMarker(unit.id,(unit.team==='blue'?'友':'敌')+' '+planeInfo[unit.type].name+' #'+(unit.index+1),unit.root.position,unit.team==='blue'?'#76d5ff':'#ff8580',view),anchor=projectEnemyMarkerPoint(unit.root.position);
-  if(anchor.visible){let x=anchor.x,y=anchor.y;for(const[dx,dy]of offsets){const nx=THREE.MathUtils.clamp(anchor.x+dx,24,innerWidth-24),ny=THREE.MathUtils.clamp(anchor.y+dy,innerHeight*.28,innerHeight-40);if(occupied.every(p=>Math.abs(nx-p.x)>62||Math.abs(ny-p.y)>24)&&Math.abs(nx-innerWidth*.5)+Math.abs(ny-innerHeight*.5)>38){x=nx;y=ny;break}}occupied.push({x,y});node.style.left=x/innerWidth*100+'%';node.style.top=y/innerHeight*100+'%'}
- }
- const owner=airspaceState.owner,aColor=owner==='blue'?'#76d5ff':owner==='red'?'#ff8580':'#ffcf71';
- airspaceMarker('A','A · '+Math.round((airspaceState.point.y+90)*METERS_PER_UNIT)+' m ALT',airspaceState.point,aColor,view);
- airspaceMarker('base-blue','我方基地',airspaceState.bases.blue,'#76d5ff',view);airspaceMarker('base-red','敌方基地',airspaceState.bases.red,'#ff8580',view);
- for(const[key,node]of airspaceMarkerNodes)if(!active.has(key)){node.remove();airspaceMarkerNodes.delete(key)}
- const canvas=$('#radar'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,extent=w*.43;
- ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(5,20,31,.8)';ctx.fillRect(0,0,w,h);ctx.strokeStyle='rgba(105,219,231,.43)';ctx.strokeRect(cx-extent,cy-extent,extent*2,extent*2);
- const plot=(position,color,label,size=2)=>{const x=cx+position.x/300*extent,y=cy+position.z/300*extent;ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();if(label){ctx.font='bold 9px monospace';ctx.textAlign='center';ctx.fillText(label,x,y-6)}};
- plot(airspaceState.point,aColor,'A',4);plot(airspaceState.bases.blue,'#76d5ff','友',4);plot(airspaceState.bases.red,'#ff8580','敌',4);
- for(const unit of live)plot(unit.root.position,unit===view?'#ffffff':unit.team==='blue'?'#76d5ff':'#ff8580',null,unit===view?3:2);
- $('#radarDistance').textContent='A '+Math.round(view.root.position.distanceTo(airspaceState.point)*METERS_PER_UNIT)+' m'
-}
-
 const CONTROL_SETTINGS_KEY='sky-duel.flight-controls.v1';
 const DEFAULT_CONTROL_SETTINGS={mode:'cursor',sensitivity:1};
 function loadControlSettings(){
@@ -402,13 +200,9 @@ function cursorViewQuaternion(){
   .multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0),pitch))
 }
 function availableCursorTargets(){
- if(gameMode==='airspace')return airspacePlayerAlive()?airspaceLiveUnits('red').map(unit=>unit.root):[];
-
  return gameMode==='campaign'?campaignTargets().filter(t=>t.health>0).map(t=>t.root):(enemy&&eHp>0?[enemy]:[])
 }
 function updateCursorTarget(dt){
- if(gameMode==='airspace'&&!airspacePlayerAlive()){cursorTarget=null;return}
-
  if(!playing){cursorTarget=null;return}
  const targets=availableCursorTargets(),isCursor=controlSettings.mode==='cursor';
  if(cursorTarget&&!targets.includes(cursorTarget))cursorTarget=null;
@@ -445,8 +239,6 @@ function placeFlightMarker(node,worldPoint,edgeHint=false){
  node.style.top=((1-THREE.MathUtils.clamp(point.y,-.92,.92))*.5*innerHeight)+'px';return visible
 }
 function updateFlightAimingHUD(){
- if(gameMode==='airspace'&&airspaceSpectating){for(const id of ['reticle','aimCursor','leadIndicator'])$('#'+id).style.display='none';$('#cursorStatus').classList.add('hidden');return}
-
  if(!player||!camera)return;
  const isCursor=controlSettings.mode==='cursor',gun=playerGunReference(),forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion).normalize(),origin=gun?.origin||player.position,reticle=$('#reticle'),ring=$('#aimCursor'),lead=$('#leadIndicator'),status=$('#cursorStatus');
  if(gun)placeFlightMarker(reticle,origin.clone().addScaledVector(forward,100));else reticle.style.display='none';
@@ -464,9 +256,9 @@ function updateFlightAimingHUD(){
 }
 function resumeBattle(){
  if(!battlePaused||ended)return;
- clearFlightInputs();battlePaused=false;playing=true;player.userData.engineRunning=airspacePlayerAlive()&&pausedEngineRunning;
+ clearFlightInputs();battlePaused=false;playing=true;player.userData.engineRunning=pausedEngineRunning;
  $('#end').classList.add('hidden');$('#again').textContent='再次升空　→';
- if(airspacePlayerAlive())startEngineSound(playerPlane);clock.getDelta();toast('继续战斗')
+ startEngineSound(playerPlane);clock.getDelta();toast('继续战斗')
 }
 
 const MAP_LIBRARY={openSea:{name:'远洋空域',sizeMeters:22000},korea1951:{name:'1951·朝鲜',modelFile:'./korea-1951-terrain.glb',sizeMeters:6000}};
@@ -485,14 +277,14 @@ const B29_TURRETS=[{id:'frontUpper',name:'前上炮塔',guns:4,offset:[0,.16,-.6
 function bomberTurretCanTrack(turret,local){const horizontal=Math.hypot(local.x,local.z),elevation=Math.atan2(local.y,horizontal)*180/Math.PI,yaw=horizontal<1e-4?turret.yawCenterDeg:Math.atan2(local.x,-local.z)*180/Math.PI,delta=((yaw-turret.yawCenterDeg+540)%360)-180;return Math.abs(delta)<=turret.yawHalfDeg+.001&&elevation>=turret.minElevationDeg-.001&&elevation<=turret.maxElevationDeg+.001;}
 const blueSpawn=new THREE.Vector3(0,60,SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT)),redSpawn=new THREE.Vector3(0,60,-SPAWN_DISTANCE_METERS/(2*METERS_PER_UNIT));
 const mat=(color,rough=.65,metal=.1)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:metal,flatShading:true});
-const planeInfo={f3f2:{name:'F3F-2',health:360,maxSpeedKmh:425,minLevelFlightKmh:118,bestClimbMps:14.0,turnTimeS:16.5,horizontalTurnRateDps:360/16.5,verticalTurnTimeS:10.1,verticalTurnRateDps:360/10.1,turnRadiusM:145,intro:'美军末代舰载双翼战斗机，拥有极为优秀的水平盘旋能力，低空机动灵活；极速偏低，高速下能量损耗严重，适合低速缠斗，不适合与高速单翼机进行俯冲交战。',specs:[['系别','美国'],['战机权重','美系 1.3'],['机体耐久','360'],['机长','7.06 m'],['最大航速','425 km/h'],['最小航速','118 km/h'],['最佳爬升率','14.0 m/s'],['水平转弯性能','16.5 s · 21.82°/s'],['垂直转弯性能','10.1 s · 35.64°/s'],['武器','1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁'],['备弹','M2：200发；7.62 mm：500发'],['射速','M2：750发/分；7.62 mm：1000发/分'],['单发伤害','M2：34；7.62 mm：13'],['弹速','M2：860 m/s；7.62 mm：810 m/s']]},
- i15bis:{name:'I-15bis',health:320,maxSpeedKmh:380,minLevelFlightKmh:112,bestClimbMps:14.2,turnTimeS:14.88,horizontalTurnRateDps:24.2,verticalTurnRateDps:26,turnRadiusM:250,intro:'早期双翼战斗机，低速盘旋性能极强，速度平庸，高空性能较差。四挺 PV-1 机枪适合近距狗斗。',specs:[['战机权重','中系 1.0'],['机体耐久','320'],['机长','6.28 m'],['最大航速','380 km/h'],['最小航速','112 km/h'],['最佳爬升率','14.2 m/s'],['水平转弯性能','24.2°/s · 360° 14.88 s · 半径 约250 m'],['垂直转弯性能','26.0°/s'],['武器','4挺 7.62 mm PV-1 机枪'],['总备弹','3050发 · 四挺合计'],['射速','每挺750发/分'],['单发伤害','13'],['弹速','820 m/s']]},
- p36a:{name:'P-36A',health:320,maxSpeedKmh:504,minLevelFlightKmh:120,bestClimbMps:14.0,turnTimeS:17.14,horizontalTurnRateDps:21,verticalTurnRateDps:22.5,turnRadiusM:300,intro:'三十年代后期的单翼战斗机，盘旋性能优秀，水平狗斗强势；武器配置较弱，高空功率衰减明显，适合中低空缠斗。',specs:[['系别','美国'],['战机权重','美系 1.3'],['机体耐久','320'],['机长','8.70 m'],['最大航速','504 km/h'],['最小航速','120 km/h'],['最佳爬升率','14.0 m/s'],['水平转弯性能','21.0°/s'],['垂直转弯性能','22.5°/s'],['武器','1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁'],['备弹','M2：200发；7.62 mm：500发'],['射速','M2：750发/分；7.62 mm：1000发/分'],['单发伤害','M2：32；7.62 mm：14'],['弹速','M2：860 m/s；7.62 mm：810 m/s']]},
- bf109b1:{name:'Bf-109 B-1',health:310,maxSpeedKmh:465,minLevelFlightKmh:135,bestClimbMps:13.2,turnTimeS:23.08,horizontalTurnRateDps:15.6,verticalTurnRateDps:19,turnRadiusM:300,intro:'早期Bf-109，搭载Jumo-210D发动机，火力偏弱，以能量战术为主。水平盘旋一般，高速性能尚可；仅有机鼻机枪，无机翼机枪。',specs:[['战机权重','德系 1.3'],['机体耐久','310'],['机长','8.55 m'],['最大航速','465 km/h'],['最小航速','135 km/h'],['最佳爬升率','13.2 m/s'],['水平转弯性能','15.6°/s'],['垂直转弯性能','19.0°/s'],['武器','2挺 7.92 mm MG-17机枪（机鼻）'],['总备弹','1000发 · 两挺合计'],['射速','每挺1200发/分'],['单发伤害','14'],['弹速','790 m/s']]},
- mig15:{name:'MIG-15',health:600,maxSpeedKmh:1076,minLevelFlightKmh:220,bestClimbMps:50,turnTimeS:20.7,horizontalTurnRateDps:17.3,verticalTurnRateDps:22,turnRadiusM:245,intro:'苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大。',specs:[['机体耐久','600'],['最大航速','1076 km/h'],['最小航速','220 km/h'],['最佳爬升率','50 m/s'],['水平转弯性能','360° 20.7 s · 17.3°/s · 半径 245 m'],['垂直转弯性能','22°/s'],['37 mm N-37','1门 · 备弹40 · 400发/分 · 伤害304 · 弹速690 m/s'],['23 mm NS-23','2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速610 m/s'],['射击模式','N-37 / 双NS-23 / 三炮齐射']]},
- f86:{name:'F-86 佩刀',health:700,maxSpeedKmh:1106,minLevelFlightKmh:240,bestClimbMps:46.7,turnTimeS:24,horizontalTurnRateDps:15,verticalTurnRateDps:25,turnRadiusM:310,intro:'美国早期喷气式战斗机，六挺勃朗宁机枪形成密集弹幕。',specs:[['机体耐久','700'],['最大航速','1106 km/h'],['最小航速','240 km/h'],['最佳爬升率','46.7 m/s'],['水平转弯性能','360° 24.0 s · 15°/s · 半径 310 m'],['垂直转弯性能','25°/s'],['武器','6挺 12.7 mm 勃朗宁机枪'],['总备弹','1800发 · 6挺合计'],['射速','每挺600发/分'],['单发伤害','34'],['弹速','945 m/s']]},
- meteor:{name:'Meteor F.4 G.41G 流星 F4 短翼型',health:560,maxSpeedKmh:912,minLevelFlightKmh:290,bestClimbMps:30.9,turnTimeS:20,horizontalTurnRateDps:18,verticalTurnRateDps:20.5,turnRadiusM:282,intro:'英国系短翼流星 F.4 喷气式战斗机，四门 Hispano Mk.II 20 mm 机炮。',specs:[['战机权重','8.0'],['机体耐久','560'],['机长','12.6 m'],['最大航速','912 km/h'],['最小航速','290 km/h'],['最佳爬升率','30.9 m/s'],['水平转弯性能','360° 20.0 s · 18°/s · 半径 282 m'],['垂直转弯性能','20.5°/s'],['武器','4门 20 mm Hispano Mk.II'],['总备弹','720发 · 每门180发'],['射速','每门600发/分'],['单发伤害','85'],['弹速','880 m/s']]},
- b29:{name:'B-29 超级堡垒',health:1200,maxSpeedKmh:575,minLevelFlightKmh:180,bestClimbMps:8.5,turnTimeS:85.7,horizontalTurnRateDps:4.2,verticalTurnRateDps:5.5,turnRadiusM:1150,intro:'美系重型战略轰炸机。5座炮塔共12挺12.7 mm机枪，敌机进入250 m且落入对应射界时自动射击；炮塔不能手动操控。载弹量可在仓库调整。',specs:[['战机权重','美系 6.7'],['机体耐久','1200'],['机长','30.18 m'],['最大航速','575 km/h'],['最小航速','180 km/h'],['最佳爬升率','8.5 m/s'],['水平转弯性能','360° 约85.7 s · 4.2°/s · 半径 1150 m'],['垂直转弯性能','5.5°/s'],['防御武器','5座炮塔 · 12挺 12.7 mm机枪'],['前上炮塔','4挺 · 前半球上方，下俯限2.5°'],['后上炮塔','2挺 · 后半球水平线以上'],['前下炮塔','2挺 · 前半球下方，仰角限5°'],['后下炮塔','2挺 · 后半球下方，仰角限5°'],['尾炮塔','2挺 · 后向±30°，俯仰±30°'],['射速','每挺450发/分'],['单发伤害','20'],['机枪弹速','945 m/s'],['命中率','约50%'],['自动开火距离','250 m'],['机枪备弹','12000发 · 炮塔自动使用'],['炸弹挂载','20×500 / 40×500 / 18×1000 / 8×2000 / 4×4000 磅']]}
+const planeInfo={f3f2:{name:'F3F-2',health:360,maxSpeedKmh:425,minLevelFlightKmh:118,bestClimbMps:14.0,turnTimeS:16.5,horizontalTurnRateDps:360/16.5,verticalTurnTimeS:10.1,verticalTurnRateDps:360/10.1,turnRadiusM:145,intro:'美军末代舰载双翼战斗机，拥有极为优秀的水平盘旋能力，低空机动灵活；极速偏低，高速下能量损耗严重，适合低速缠斗，不适合与高速单翼机进行俯冲交战，起落架可收放。',specs:[['系别','美国'],['战机权重','美系 1.3'],['机体耐久','360'],['机长','7.06 m'],['最大航速','425 km/h（4600 m）'],['最小航速','118 km/h（失速临界）'],['最佳爬升率','14.0 m/s'],['水平360°回转','16.5 s · 21.82°/s'],['垂直360°转向参数','10.1 s · 35.64°/s'],['武器','1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁'],['备弹','M2：200发；7.62 mm：500发'],['射速','M2：750发/分；7.62 mm：1000发/分'],['单发伤害','M2：34；7.62 mm：13'],['弹速','M2：860 m/s；7.62 mm：810 m/s'],['追尾视角','机后上方 2.3 m'],['起落架','战斗向后收起；图鉴保留原姿态']]},
+ i15bis:{name:'I-15bis',health:320,maxSpeedKmh:380,minLevelFlightKmh:112,bestClimbMps:14.2,turnTimeS:14.88,horizontalTurnRateDps:24.2,verticalTurnRateDps:26,turnRadiusM:250,intro:'早期双翼战斗机，低速盘旋性能极强，速度平庸，高空性能较差。四挺 PV-1 机枪适合近距狗斗。',specs:[['战机权重','中系 1.0'],['机体耐久','320'],['机长','6.28 m'],['最大航速','380 km/h'],['最小平飞航速','112 km/h'],['最佳爬升率','14.2 m/s'],['水平持续转弯','24.2°/s'],['俯仰响应上限','26.0°/s'],['360°回转时间','14.88 s'],['水平转弯半径','约250 m'],['武器','4挺 7.62 mm PV-1 机枪'],['总备弹','3050发 · 四挺合计'],['射速','每挺750发/分'],['单发伤害','13'],['弹速','820 m/s']]},
+ p36a:{name:'P-36A',health:320,maxSpeedKmh:504,minLevelFlightKmh:120,bestClimbMps:14.0,turnTimeS:17.14,horizontalTurnRateDps:21,verticalTurnRateDps:22.5,turnRadiusM:300,intro:'三十年代后期的单翼战斗机，盘旋性能优秀，水平狗斗强势；武器配置较弱，高空功率衰减明显，适合中低空缠斗。',specs:[['系别','美国'],['战机权重','美系 1.3'],['机体耐久','320'],['机长','8.70 m'],['最大航速','504 km/h'],['最小平飞航速','120 km/h'],['最佳爬升率','14.0 m/s'],['水平持续转弯','21.0°/s'],['俯仰响应上限','22.5°/s'],['武器','1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁'],['备弹','M2：200发；7.62 mm：500发'],['射速','M2：750发/分；7.62 mm：1000发/分'],['单发伤害','M2：32；7.62 mm：14'],['弹速','M2：860 m/s；7.62 mm：810 m/s'],['追尾视角','机后上方 3 m']]},
+ bf109b1:{name:'Bf-109 B-1',health:310,maxSpeedKmh:465,minLevelFlightKmh:135,bestClimbMps:13.2,turnTimeS:23.08,horizontalTurnRateDps:15.6,verticalTurnRateDps:19,turnRadiusM:300,intro:'早期Bf-109，搭载Jumo-210D发动机，火力偏弱，以能量战术为主。水平盘旋一般，高速性能尚可；仅有机鼻机枪，无机翼机枪。',specs:[['战机权重','德系 1.3'],['机体耐久','310'],['机长','8.55 m'],['最大航速','465 km/h（4000 m）'],['最小平飞航速','135 km/h'],['最佳爬升率','13.2 m/s'],['水平持续转弯','15.6°/s'],['俯仰响应上限','19.0°/s'],['武器','2挺 7.92 mm MG-17机枪（机鼻）'],['总备弹','1000发 · 两挺合计'],['射速','每挺1200发/分'],['单发伤害','14'],['弹速','790 m/s']]},
+ mig15:{name:'MIG-15',health:600,maxSpeedKmh:1076,minLevelFlightKmh:220,bestClimbMps:50,turnTimeS:20.7,horizontalTurnRateDps:17.3,verticalTurnRateDps:22,turnRadiusM:245,intro:'苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大；低于最小平飞速度后升力衰减并进入失速。',specs:[['机体耐久','600'],['最大航速','1076 km/h'],['最小平飞航速','220 km/h'],['最佳爬升率','50 m/s'],['360°回转时间','20.7 s'],['水平持续转弯','17.3°/s'],['俯仰响应上限','22°/s'],['水平转弯半径','245 m'],['37 mm N-37','1门 · 备弹40 · 400发/分 · 伤害304 · 弹速690 m/s'],['23 mm NS-23','2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速610 m/s'],['射击模式','N-37 / 双NS-23 / 三炮齐射']]},
+ f86:{name:'F-86 佩刀',health:700,maxSpeedKmh:1106,minLevelFlightKmh:240,bestClimbMps:46.7,turnTimeS:24,horizontalTurnRateDps:15,verticalTurnRateDps:25,turnRadiusM:310,intro:'美国早期喷气式战斗机，六挺勃朗宁机枪形成密集弹幕。低于最小平飞速度后升力衰减并进入失速。',specs:[['机体耐久','700'],['最大航速','1106 km/h'],['最小平飞航速','240 km/h'],['最佳爬升率','46.7 m/s'],['360°回转时间','24.0 s'],['水平持续转弯','15°/s'],['俯仰响应上限','25°/s'],['水平转弯半径','310 m'],['武器','6挺 12.7 mm 勃朗宁机枪'],['总备弹','1800发 · 6挺合计'],['射速','每挺600发/分'],['单发伤害','34'],['弹速','945 m/s']]},
+ meteor:{name:'Meteor F.4 G.41G 流星 F4 短翼型',health:560,maxSpeedKmh:912,minLevelFlightKmh:290,bestClimbMps:30.9,turnTimeS:20,horizontalTurnRateDps:18,verticalTurnRateDps:20.5,turnRadiusM:282,intro:'英国系短翼流星 F.4 喷气式战斗机，四门 Hispano Mk.II 20 mm 机炮。低于最小平飞速度后升力衰减并进入失速。',specs:[['战机权重','8.0'],['机体耐久','560'],['机长','12.6 m'],['最大航速','912 km/h'],['最小平飞航速','290 km/h'],['最佳爬升率','30.9 m/s'],['360°回转时间','20.0 s'],['水平持续转弯','18°/s'],['俯仰响应上限','20.5°/s'],['水平转弯半径','282 m'],['武器','4门 20 mm Hispano Mk.II'],['总备弹','720发 · 每门180发'],['射速','每门600发/分'],['单发伤害','85'],['弹速','880 m/s']]},
+ b29:{name:'B-29 超级堡垒',health:1200,maxSpeedKmh:575,minLevelFlightKmh:180,bestClimbMps:8.5,turnTimeS:85.7,horizontalTurnRateDps:4.2,verticalTurnRateDps:5.5,turnRadiusM:1150,intro:'美系重型战略轰炸机。5座炮塔共12挺12.7 mm机枪，敌机进入250 m且落入对应射界时自动射击；炮塔不能手动操控。载弹量可在仓库调整。',specs:[['战机权重','美系 6.7'],['机体耐久','1200'],['机长','30.18 m'],['最大平飞速度','575 km/h'],['最小平飞速度','180 km/h'],['最佳爬升率','8.5 m/s'],['360°回转时间','约85.7 s'],['水平持续转弯','4.2°/s'],['俯仰响应上限','5.5°/s'],['转弯半径','1150 m'],['防御武器','5座炮塔 · 12挺 12.7 mm机枪'],['前上炮塔','4挺 · 前半球上方，下俯限2.5°'],['后上炮塔','2挺 · 后半球水平线以上'],['前下炮塔','2挺 · 前半球下方，仰角限5°'],['后下炮塔','2挺 · 后半球下方，仰角限5°'],['尾炮塔','2挺 · 后向±30°，俯仰±30°'],['射速','每挺450发/分'],['单发伤害','20'],['机枪弹速','945 m/s'],['命中率','约50%'],['自动开火距离','250 m'],['机枪备弹','12000发 · 炮塔自动使用'],['炸弹挂载','20×500 / 40×500 / 18×1000 / 8×2000 / 4×4000 磅']]}
 };
 const weaponInfo={f3f2:{m2:{rpm:750,damage:34,speed:860,cost:1,count:1,radius:.08,color:0xffdf96,offsets:[[.018,-.040,-.30]]},mg762:{rpm:1000,damage:13,speed:810,cost:1,count:1,radius:.06,color:0xffdf96,offsets:[[-.018,-.040,-.30]]}},p36a:{m2:{rpm:750,damage:32,speed:860,cost:1,count:1,radius:.08,color:0xffdf96,offsets:[[.018,.005,-.36]]},mg762:{rpm:1000,damage:14,speed:810,cost:1,count:1,radius:.06,color:0xffdf96,offsets:[[-.018,.005,-.36]]}},i15bis:{mg:{rpm:750,damage:13,speed:820,cost:4,count:4,radius:.07,color:0xffdf96,offsets:[[-.22,-.015,-.27],[-.08,-.015,-.30],[.08,-.015,-.30],[.22,-.015,-.27]]}},bf109b1:{mg:{rpm:1200,damage:14,speed:790,cost:2,count:2,radius:.075,color:0xffe4ae,offsets:[[-.078,-.018,-.35],[.078,-.018,-.35]]}},f86:{mg:{rpm:600,damage:34,speed:945,cost:6,count:6,radius:.09,color:0x9df4ff,offsets:[[-.245,-.008,-.135],[-.205,-.008,-.11],[-.165,-.008,-.085],[.165,-.008,-.085],[.205,-.008,-.11],[.245,-.008,-.135]]}},mig15:{n37:{rpm:400,damage:304,speed:690,cost:1,count:1,radius:.22,color:0xffd36e,offsets:[[0,-.01,-.55]]},ns23:{rpm:550,damage:106,speed:610,cost:2,count:2,radius:.16,color:0xffef9b,offsets:[[-.032,-.01,-.53],[.032,-.01,-.53]]}},meteor:{hispano:{rpm:600,damage:85,speed:880,cost:4,count:4,radius:.15,color:0xffef9b,offsets:[[-.32,-.01,-.4],[-.24,-.01,-.42],[.24,-.01,-.42],[.32,-.01,-.4]]}}};
 const AI_TACTICS={decisionSeconds:.15,minStateSeconds:{GUARD:.4,INTERCEPT:.55,ALIGN:.35,FIRE_PASS:.45,BREAK:1.5,REJOIN:1.1,RECOVER:1.0},escortLeashMeters:1400,escortReturnTriggerMeters:1100,escortEngageMeters:1050,escortTargetExitMeters:1250,escortReturnMeters:750,groundClearanceMeters:260,recoveryEnterDot:.42,recoveryExitDot:.90,recoveryEnterSeconds:.3,recoveryStableSeconds:.4};
@@ -587,8 +379,9 @@ function updatePropeller(root,dt){
  }
 }
 function updateAllPropellers(dt){
- if(gameMode!=='airspace'){updatePropeller(player,dt);updatePropeller(enemy,dt);for(const target of campaignBombers)updatePropeller(target.root,dt);for(const target of campaignEscorts)updatePropeller(target.root,dt)}
- if(gameMode==='airspace'&&battlePaused)return;
+ updatePropeller(player,dt);updatePropeller(enemy,dt);
+ for(const target of campaignBombers)updatePropeller(target.root,dt);
+ for(const target of campaignEscorts)updatePropeller(target.root,dt);
  for(let i=wreckedAircraft.length-1;i>=0;i--){
   const wreck=wreckedAircraft[i];updatePropeller(wreck.root,dt);wreck.life-=dt;
   wreck.root.position.addScaledVector(wreck.root.userData.velocity,dt*.45);
@@ -649,7 +442,7 @@ function sweptAircraftHit(start,end,aircraftRoot,projectileRadius=0){
  return true
 }
 function rememberAircraftFrameStart(){
- const roots=gameMode==='airspace'?airspaceLiveUnits().map(unit=>unit.root):[player,...(gameMode==='campaign'?campaignTargets().map(t=>t.root):[enemy])];
+ const roots=[player,...(gameMode==='campaign'?campaignTargets().map(t=>t.root):[enemy])];
  for(const root of roots){if(!root)continue;(root.userData.frameStartPosition??=new THREE.Vector3()).copy(root.position)}
 }
 
@@ -696,17 +489,11 @@ function updateCampaignBomberFlight(dt){
 }
 function updateCampaign(dt){campaignElapsed+=dt;campaignTimeRemaining=Math.max(0,CAMPAIGN_DURATION-campaignElapsed);campaignResupplyRemaining-=dt;updateCampaignBomberFlight(dt);if(campaignResupplyRemaining<=0){campaignResupplyRemaining+=CAMPAIGN_RESUPPLY_INTERVAL;playerAmmo=freshAmmo('mig15');playerWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0};updateAmmoUI();toast('战役补给：弹药已补满')}for(let i=campaignRespawns.length-1;i>=0&&campaignEscorts.length<CAMPAIGN_ESCORT_LIMIT;i--){if(campaignRespawns[i]<=campaignElapsed){campaignRespawns.splice(i,1);spawnCampaignEscort();toast('F-86护航机已补入编队')}}updateCampaignHud();if(campaignTimeRemaining<=0){finish(false);return}updateCampaignEscortAI(dt)}
 function damageCampaignTarget(target,n){if(!target||target.health<=0)return;target.health=Math.max(0,target.health-n);if(target.health>0){updateHealthUI();return}retireAircraft(target.root);const list=target.isBomber?campaignBombers:campaignEscorts,index=list.indexOf(target);if(index>=0)list.splice(index,1);playSfx('kill',.35);kills++;$('#kills').textContent=String(kills).padStart(2,'0');if(target.isBomber)toast('B-29击落 · 剩余 '+campaignBombers.length+' 架');else{campaignRespawns.push(campaignElapsed+CAMPAIGN_ESCORT_RESPAWN);toast('F-86被击落 · 30秒内补充')}updateCampaignHud();updateHealthUI();if(campaignBombers.length===0)finish(true)}
-function updateHealthUI(){
- if(gameMode==='airspace'){updateAirspaceHealthUI();return}
-const playerMax=planeInfo[playerPlane].health;$('#playerHealth').style.width=(hp/playerMax*100)+'%';$('#hpText').textContent=Math.round(hp/playerMax*100)+'%';if(gameMode==='campaign'){const target=nearestCampaignTarget(),targetMax=target?.maxHealth||2000,targetHealth=target?.health||0;$('#enemyHealth').style.width=(targetHealth/targetMax*100)+'%';$('#targetName').textContent=target?(target.isBomber?'目标 · B-29 轰炸机':'护航 · F-86F-2'):'目标 · 编队已全歼';$('#enemyMarker .marker-label').textContent=target?(target.isBomber?'B-29':'F-86'):'目标完成';return}const enemyMax=planeInfo[enemyPlaneType].health;$('#enemyHealth').style.width=(eHp/enemyMax*100)+'%';$('#targetName').textContent='敌机 · '+planeInfo[enemyPlaneType].name;$('#enemyMarker .marker-label').textContent=enemyPlaneType==='mig15'?'MIG-15':enemyPlaneType==='meteor'?'Meteor F.4':enemyPlaneType==='b29'?'B-29':enemyPlaneType==='bf109b1'?'Bf-109 B-1':enemyPlaneType==='i15bis'?'I-15bis':enemyPlaneType==='p36a'?'P-36A':'F-86'}
+function updateHealthUI(){const playerMax=planeInfo[playerPlane].health;$('#playerHealth').style.width=(hp/playerMax*100)+'%';$('#hpText').textContent=Math.round(hp/playerMax*100)+'%';if(gameMode==='campaign'){const target=nearestCampaignTarget(),targetMax=target?.maxHealth||2000,targetHealth=target?.health||0;$('#enemyHealth').style.width=(targetHealth/targetMax*100)+'%';$('#targetName').textContent=target?(target.isBomber?'目标 · B-29 轰炸机':'护航 · F-86F-2'):'目标 · 编队已全歼';$('#enemyMarker .marker-label').textContent=target?(target.isBomber?'B-29':'F-86'):'目标完成';return}const enemyMax=planeInfo[enemyPlaneType].health;$('#enemyHealth').style.width=(eHp/enemyMax*100)+'%';$('#targetName').textContent='敌机 · '+planeInfo[enemyPlaneType].name;$('#enemyMarker .marker-label').textContent=enemyPlaneType==='mig15'?'MIG-15':enemyPlaneType==='meteor'?'Meteor F.4':enemyPlaneType==='b29'?'B-29':enemyPlaneType==='bf109b1'?'Bf-109 B-1':enemyPlaneType==='i15bis'?'I-15bis':enemyPlaneType==='p36a'?'P-36A':'F-86'}
 function spawnEnemy(position=null,orientation=null){enemyPlaneType=chooseDuelOpponent(playerPlane);enemy=aircraft(false,enemyPlaneType);enemy.userData.engineRunning=true;scene.add(enemy);enemy.position.copy(position||player.position.clone().add(new THREE.Vector3((Math.random()-.5)*35,Math.random()*12-6,-105)));enemy.quaternion.copy(orientation||player.quaternion);enemy.userData.velocity.set(0,0,-1).applyQuaternion(enemy.quaternion).multiplyScalar(enemy.userData.airspeed/METERS_PER_UNIT);eHp=planeInfo[enemyPlaneType].health;enemyAmmo=freshAmmo(enemyPlaneType);enemyWeaponMode=enemyPlaneType==='mig15'?['n37','ns23','both'][Math.floor(Math.random()*3)]:enemyPlaneType==='meteor'?'hispano':'mg';enemyWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0};if(enemyPlaneType==='b29')enemy.userData.patrolPhase=0;else initializeFighterAI(enemy,'duel',0);updateHealthUI()}
-function cycleWeaponMode(){
- if(gameMode==='airspace'&&!airspacePlayerAlive())return;
-if(playerPlane!=='mig15')return;weaponMode=weaponMode==='n37'?'ns23':weaponMode==='ns23'?'both':'n37';if(gameMode==='airspace'){const unit=airspaceUnitFor(player);if(unit)unit.weaponMode=weaponMode}updateAmmoUI();toast(weaponMode==='n37'?'武器切换：N-37单炮':weaponMode==='ns23'?'武器切换：NS-23双炮':'武器切换：三炮齐射')}
+function cycleWeaponMode(){if(playerPlane!=='mig15')return;weaponMode=weaponMode==='n37'?'ns23':weaponMode==='ns23'?'both':'n37';updateAmmoUI();toast(weaponMode==='n37'?'武器切换：N-37单炮':weaponMode==='ns23'?'武器切换：NS-23双炮':'武器切换：三炮齐射')}
 function fireWeapons(from,isEnemy,dt,enabled){
- const unit=gameMode==='airspace'?from.userData.airspaceUnit:null;
- const type=unit?.type||(isEnemy?(gameMode==='campaign'?(from.userData.type||'f86'):enemyPlaneType):playerPlane),state=unit?.ammo||(isEnemy?(gameMode==='campaign'?from.userData.ammo:enemyAmmo):playerAmmo),cooldowns=unit?.weaponCooldowns||(isEnemy?(gameMode==='campaign'?from.userData.weaponCooldowns:enemyWeaponCooldowns):playerWeaponCooldowns),mode=unit?(unit.isPlayer?weaponMode:unit.weaponMode):(isEnemy?(gameMode==='campaign'?from.userData.weaponMode:enemyWeaponMode):weaponMode);
- if(unit?.dead)return;
+ const type=isEnemy?(gameMode==='campaign'?(from.userData.type||'f86'):enemyPlaneType):playerPlane,state=isEnemy?(gameMode==='campaign'?from.userData.ammo:enemyAmmo):playerAmmo,cooldowns=isEnemy?(gameMode==='campaign'?from.userData.weaponCooldowns:enemyWeaponCooldowns):playerWeaponCooldowns,mode=isEnemy?(gameMode==='campaign'?from.userData.weaponMode:enemyWeaponMode):weaponMode;
  let ammoChanged=false;const active=selectedWeaponIds(type,mode);
  for(const id of ['mg','m2','mg762','n37','ns23','hispano']){
   cooldowns[id]=(cooldowns[id]||0)-dt;
@@ -722,7 +509,7 @@ function fireWeapons(from,isEnemy,dt,enabled){
     bullet.mesh.geometry=resource.geometry;bullet.mesh.material=resource.material;
     bullet.mesh.position.copy(from.position).add(new THREE.Vector3(offset[0],offset[1],offset[2]).multiplyScalar(from.scale.x).applyQuaternion(q));
     bullet.dir.set(0,0,-1).applyQuaternion(q);bullet.speed=spec.speed/METERS_PER_UNIT;bullet.radius=spec.radius/METERS_PER_UNIT;
-    bullet.life=2.1;bullet.enemy=isEnemy;bullet.team=unit?.team||(isEnemy?'red':'blue');bullet.shooterId=unit?.id||null;bullet.damage=bulletDamage;bullet.weapon=id;scene.add(bullet.mesh);bullets.push(bullet)
+    bullet.life=2.1;bullet.enemy=isEnemy;bullet.damage=bulletDamage;bullet.weapon=id;scene.add(bullet.mesh);bullets.push(bullet)
    }
    state[id]-=spec.cost;ammoChanged=true;cooldowns[id]+=60/spec.rpm;bursts++;
    playGunShot(gunSoundFor(type,id),from,isEnemy,60/spec.rpm)
@@ -732,15 +519,9 @@ function fireWeapons(from,isEnemy,dt,enabled){
  if(!isEnemy&&ammoChanged)updateAmmoUI()
 }
 function releaseBullet(index){const bullet=bullets[index];scene.remove(bullet.mesh);bullets.splice(index,1);if(bulletPool.length<512)bulletPool.push(bullet)}
-function fireBomberTurrets(from,isEnemy,dt){
- if(gameMode==='airspace'){fireAirspaceBomberTurrets(airspaceUnitFor(from),dt);return}
-const type=isEnemy?enemyPlaneType:playerPlane;if(type!=='b29')return;const target=isEnemy?player:enemy,state=isEnemy?enemyAmmo:playerAmmo,data=from.userData,stopPlayerGun=()=>{};if(!target||!state||state.b29mg<=0){data.bomberGunsActive=false;data.bomberGunClock=0;data.bomberEligibleTurrets=[];data.bomberEligibleGuns=0;stopPlayerGun();return}data.bomberArcCheckRemaining=(data.bomberArcCheckRemaining??0)-dt;if(data.bomberArcTarget!==target||data.bomberArcCheckRemaining<=0){data.bomberArcTarget=target;data.bomberArcCheckRemaining=.075;const targetLocal=target.position.clone().sub(from.position).applyQuaternion(from.quaternion.clone().invert());data.bomberEligibleTurrets=B29_TURRETS.filter(turret=>{const relative=targetLocal.clone().sub(new THREE.Vector3(...turret.offset));return relative.length()*METERS_PER_UNIT<=250&&bomberTurretCanTrack(turret,relative)});data.bomberEligibleGuns=data.bomberEligibleTurrets.reduce((sum,turret)=>sum+turret.guns,0)}const eligibleTurrets=data.bomberEligibleTurrets||[],eligibleGuns=data.bomberEligibleGuns||0;if(!eligibleTurrets.length){data.bomberGunsActive=false;data.bomberGunClock=0;stopPlayerGun();return}if(!data.bomberGunsActive){toast(isEnemy?'遭到B-29炮塔攻击':'B-29炮塔自动开火');data.bomberGunsActive=true}const interval=60/450;data.bomberGunClock+=dt;let ammoSpent=0;while(data.bomberGunClock>=interval&&state.b29mg>0){data.bomberGunClock-=interval;const rounds=Math.min(eligibleGuns,state.b29mg);state.b29mg-=rounds;ammoSpent+=rounds;playGunShot('b29Gun',from,isEnemy,interval,true);let hits=0;for(let i=0;i<rounds;i++)if(Math.random()<.5)hits++;if(hits)damage(isEnemy?'player':'enemy',hits*20)}if(!isEnemy&&ammoSpent>0)updateAmmoUI()}
-function dropBomb(){
- if(gameMode==='airspace'&&!airspacePlayerAlive())return;
-if(!playing||playerPlane!=='b29'||!playerAmmo||playerAmmo.bombs<=0)return;const loadout=BOMBER_LOADOUTS[selectedBombPayload],mesh=new THREE.Mesh(new THREE.CylinderGeometry(.045,.075,.36,8),new THREE.MeshStandardMaterial({color:0x46505a,roughness:.75,metalness:.35})),release=new THREE.Vector3(0,-.16,0).multiplyScalar(player.scale.x).applyQuaternion(player.quaternion);mesh.position.copy(player.position).add(release);scene.add(mesh);bombsInFlight.push({mesh,velocity:player.userData.velocity.clone(),damage:Math.round(700*loadout.eachLb/1000),radius:.12,life:30});playerAmmo.bombs--;playSfx('bombDrop',.5);updateAmmoUI();toast('炸弹投放 · '+loadout.eachLb+'磅')}
-function updateDroppedBombs(dt){
- if(gameMode==='airspace'){updateAirspaceBombs(dt);return}
-for(let i=bombsInFlight.length-1;i>=0;i--){const bomb=bombsInFlight[i];bomb.velocity.y-=9.81/METERS_PER_UNIT*dt;bomb.mesh.position.addScaledVector(bomb.velocity,dt);bomb.life-=dt;let hit=false;if(gameMode==='campaign'){for(const target of campaignTargets()){if(insideAircraftHitbox(bomb.mesh.position,target.root,bomb.radius)){damage('enemy',bomb.damage,target);hit=true;break}}}else if(enemy&&insideAircraftHitbox(bomb.mesh.position,enemy,bomb.radius)){damage('enemy',bomb.damage);hit=true}if(hit||bomb.mesh.position.y<=-90||bomb.life<=0){scene.remove(bomb.mesh);bombsInFlight.splice(i,1)}}}
+function fireBomberTurrets(from,isEnemy,dt){const type=isEnemy?enemyPlaneType:playerPlane;if(type!=='b29')return;const target=isEnemy?player:enemy,state=isEnemy?enemyAmmo:playerAmmo,data=from.userData,stopPlayerGun=()=>{};if(!target||!state||state.b29mg<=0){data.bomberGunsActive=false;data.bomberGunClock=0;data.bomberEligibleTurrets=[];data.bomberEligibleGuns=0;stopPlayerGun();return}data.bomberArcCheckRemaining=(data.bomberArcCheckRemaining??0)-dt;if(data.bomberArcTarget!==target||data.bomberArcCheckRemaining<=0){data.bomberArcTarget=target;data.bomberArcCheckRemaining=.075;const targetLocal=target.position.clone().sub(from.position).applyQuaternion(from.quaternion.clone().invert());data.bomberEligibleTurrets=B29_TURRETS.filter(turret=>{const relative=targetLocal.clone().sub(new THREE.Vector3(...turret.offset));return relative.length()*METERS_PER_UNIT<=250&&bomberTurretCanTrack(turret,relative)});data.bomberEligibleGuns=data.bomberEligibleTurrets.reduce((sum,turret)=>sum+turret.guns,0)}const eligibleTurrets=data.bomberEligibleTurrets||[],eligibleGuns=data.bomberEligibleGuns||0;if(!eligibleTurrets.length){data.bomberGunsActive=false;data.bomberGunClock=0;stopPlayerGun();return}if(!data.bomberGunsActive){toast(isEnemy?'遭到B-29炮塔攻击':'B-29炮塔自动开火');data.bomberGunsActive=true}const interval=60/450;data.bomberGunClock+=dt;let ammoSpent=0;while(data.bomberGunClock>=interval&&state.b29mg>0){data.bomberGunClock-=interval;const rounds=Math.min(eligibleGuns,state.b29mg);state.b29mg-=rounds;ammoSpent+=rounds;playGunShot('b29Gun',from,isEnemy,interval,true);let hits=0;for(let i=0;i<rounds;i++)if(Math.random()<.5)hits++;if(hits)damage(isEnemy?'player':'enemy',hits*20)}if(!isEnemy&&ammoSpent>0)updateAmmoUI()}
+function dropBomb(){if(!playing||playerPlane!=='b29'||!playerAmmo||playerAmmo.bombs<=0)return;const loadout=BOMBER_LOADOUTS[selectedBombPayload],mesh=new THREE.Mesh(new THREE.CylinderGeometry(.045,.075,.36,8),new THREE.MeshStandardMaterial({color:0x46505a,roughness:.75,metalness:.35})),release=new THREE.Vector3(0,-.16,0).multiplyScalar(player.scale.x).applyQuaternion(player.quaternion);mesh.position.copy(player.position).add(release);scene.add(mesh);bombsInFlight.push({mesh,velocity:player.userData.velocity.clone(),damage:Math.round(700*loadout.eachLb/1000),radius:.12,life:30});playerAmmo.bombs--;playSfx('bombDrop',.5);updateAmmoUI();toast('炸弹投放 · '+loadout.eachLb+'磅')}
+function updateDroppedBombs(dt){for(let i=bombsInFlight.length-1;i>=0;i--){const bomb=bombsInFlight[i];bomb.velocity.y-=9.81/METERS_PER_UNIT*dt;bomb.mesh.position.addScaledVector(bomb.velocity,dt);bomb.life-=dt;let hit=false;if(gameMode==='campaign'){for(const target of campaignTargets()){if(insideAircraftHitbox(bomb.mesh.position,target.root,bomb.radius)){damage('enemy',bomb.damage,target);hit=true;break}}}else if(enemy&&insideAircraftHitbox(bomb.mesh.position,enemy,bomb.radius)){damage('enemy',bomb.damage);hit=true}if(hit||bomb.mesh.position.y<=-90||bomb.life<=0){scene.remove(bomb.mesh);bombsInFlight.splice(i,1)}}}
 function resizePreview(){if(!previewRenderer)return;const canvas=$('#previewCanvas'),w=Math.max(1,canvas.clientWidth),h=Math.max(1,canvas.clientHeight);previewRenderer.setPixelRatio(Math.min(devicePixelRatio,1.5));previewRenderer.setSize(w,h,false);previewCamera.aspect=w/h;previewCamera.updateProjectionMatrix()}
 function ensureCatalogPreview(){if(previewRenderer)return;const canvas=$('#previewCanvas');previewRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});previewScene=new THREE.Scene();previewScene.background=new THREE.Color(0x142536);previewCamera=new THREE.PerspectiveCamera(45,1,.1,150);previewScene.add(new THREE.HemisphereLight(0xd8f1ff,0x36424a,2.2));const light=new THREE.DirectionalLight(0xffedcf,2.4);light.position.set(5,9,7);previewScene.add(light)}
 function setCatalogSpecs(type){const info=planeInfo[type];if(!info)return;previewType=type;document.querySelectorAll('[data-preview-plane]').forEach(button=>button.classList.toggle('active',button.dataset.previewPlane===type));$('#catalogName').textContent=info.name;$('#catalogIntro').textContent=info.intro;$('#catalogSpecs').innerHTML=info.specs.map(([label,value])=>'<div class="spec-item"><b>'+label+'</b><span>'+value+'</span></div>').join('');ensureCatalogPreview();if(previewPlane)previewScene.remove(previewPlane);previewPlane=aircraft(false,type,{preview:true});previewScene.add(previewPlane);const bounds=AIRCRAFT_SPECS[type].collisionMeters,span=Math.max(bounds.x,bounds.y,bounds.z)/METERS_PER_UNIT,distance=Math.max(2.0,span*.95);previewCamera.position.set(distance*.88,distance*.48,-distance*.9);previewCamera.lookAt(0,0,0)}
@@ -819,20 +600,14 @@ function init(){
 }
 function resize(){if(!renderer)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);resizePreview()}addEventListener('resize',resize);
 function clearCampaignEntities(){for(const target of campaignTargets())scene.remove(target.root);for(const node of campaignMarkerNodes.values())node.remove();campaignMarkerNodes.clear();campaignBombers.length=0;campaignEscorts.length=0;campaignRespawns.length=0}
-function reset(){throttleValue=1;resetDuelBoundary();battlePaused=false;clearFlightInputs();$('#again').textContent='再次升空　→';stopGunSounds();playerPlane=gameMode==='campaign'?'mig15':selectedAircraft;resetCameraTracking();if(!scene)init();if(player)scene.remove(player);if(enemy){scene.remove(enemy);enemy=null}clearCampaignEntities();clearAirspaceEntities();for(const wreck of wreckedAircraft)scene.remove(wreck.root);wreckedAircraft.length=0;setBattleMap(gameMode==='campaign'||gameMode==='airspace'?'korea1951':(Math.random()<.5?'openSea':'korea1951'));groundPlane.scale.setScalar(gameMode==='airspace'?600/2200:1);bombsInFlight.forEach(bomb=>scene.remove(bomb.mesh));bombsInFlight.length=0;keys.bomb=false;bombKeyWasDown=false;player=aircraft(true,playerPlane);scene.add(player);for(let i=bullets.length-1;i>=0;i--)releaseBullet(i);player.position.copy(blueSpawn);player.quaternion.identity();resetCursorControl();const initialSpeed=Math.max(player.userData.minFlightSpeedMps*1.12,player.userData.maxSpeedMps*.68);player.userData.airspeed=initialSpeed;player.userData.velocity.set(0,0,-1).multiplyScalar(initialSpeed/METERS_PER_UNIT);player.userData.throttle=throttleValue;player.userData.engineRunning=true;weaponMode=playerPlane==='mig15'?'both':playerPlane==='meteor'?'hispano':'mg';playerAmmo=freshAmmo(playerPlane);playerWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0};hp=planeInfo[playerPlane].health;kills=0;ended=false;playing=true;startEngineSound(playerPlane);campaignTimeRemaining=CAMPAIGN_DURATION;campaignResupplyRemaining=CAMPAIGN_RESUPPLY_INTERVAL;$('#kills').textContent='00';if(gameMode==='airspace')startAirspaceBattle();else if(gameMode==='campaign')startCampaign();else{campaignElapsed=0;spawnEnemy(redSpawn.clone(),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI))}updateAmmoUI();updateThrottleUI();updateHealthUI();updateEngineUI();['menu','settings','modeSelect','campaignBriefing','hangar','research','encyclopedia','end'].forEach(id=>$('#'+id).classList.add('hidden'));$('#hud').classList.remove('hidden');updateCampaignHud();toast(gameMode==='airspace'?'空域争夺 · 8 V 8 · 抢占 A 点':gameMode==='campaign'?'米格之舞：1951·朝鲜':'进入战区 · '+MAP_LIBRARY[activeMapId].name);clock.getDelta()}
+function reset(){throttleValue=1;resetDuelBoundary();battlePaused=false;clearFlightInputs();$('#again').textContent='再次升空　→';stopGunSounds();playerPlane=gameMode==='campaign'?'mig15':selectedAircraft;resetCameraTracking();if(!scene)init();if(player)scene.remove(player);if(enemy){scene.remove(enemy);enemy=null}clearCampaignEntities();for(const wreck of wreckedAircraft)scene.remove(wreck.root);wreckedAircraft.length=0;setBattleMap(gameMode==='campaign'?'korea1951':(Math.random()<.5?'openSea':'korea1951'));bombsInFlight.forEach(bomb=>scene.remove(bomb.mesh));bombsInFlight.length=0;keys.bomb=false;bombKeyWasDown=false;player=aircraft(true,playerPlane);scene.add(player);for(let i=bullets.length-1;i>=0;i--)releaseBullet(i);player.position.copy(blueSpawn);player.quaternion.identity();resetCursorControl();const initialSpeed=Math.max(player.userData.minFlightSpeedMps*1.12,player.userData.maxSpeedMps*.68);player.userData.airspeed=initialSpeed;player.userData.velocity.set(0,0,-1).multiplyScalar(initialSpeed/METERS_PER_UNIT);player.userData.throttle=throttleValue;player.userData.engineRunning=true;weaponMode=playerPlane==='mig15'?'both':playerPlane==='meteor'?'hispano':'mg';playerAmmo=freshAmmo(playerPlane);playerWeaponCooldowns={mg:0,m2:0,mg762:0,n37:0,ns23:0,hispano:0};hp=planeInfo[playerPlane].health;kills=0;ended=false;playing=true;startEngineSound(playerPlane);campaignTimeRemaining=CAMPAIGN_DURATION;campaignResupplyRemaining=CAMPAIGN_RESUPPLY_INTERVAL;$('#kills').textContent='00';if(gameMode==='campaign')startCampaign();else{campaignElapsed=0;spawnEnemy(redSpawn.clone(),new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI))}updateAmmoUI();updateThrottleUI();updateHealthUI();updateEngineUI();['menu','settings','modeSelect','campaignBriefing','hangar','research','encyclopedia','end'].forEach(id=>$('#'+id).classList.add('hidden'));$('#hud').classList.remove('hidden');updateCampaignHud();toast(gameMode==='campaign'?'米格之舞：1951·朝鲜':'进入战区 · '+MAP_LIBRARY[activeMapId].name);clock.getDelta()}
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._timer);el._timer=setTimeout(()=>el.classList.remove('show'),1300)}
 function triggerDamageFlash(){const now=performance.now();if(damageFlashTimer!==null||now<damageFlashNextAt)return;damageFlashNextAt=now+200;const hud=$('#hud');hud.classList.add('damage');damageFlashTimer=setTimeout(()=>{hud.classList.remove('damage');damageFlashTimer=null},180)}
-function damage(target,n,campaignTarget=null){
- if(gameMode==='airspace'){damageAirspaceUnit(target==='player'?airspaceUnitFor(player):campaignTarget||airspaceUnitFor(enemy),n);return}
-if(target==='enemy'&&gameMode==='campaign'&&campaignTarget){damageCampaignTarget(campaignTarget,n);return}if(target==='enemy'){eHp=Math.max(0,eHp-n);$('#enemyHealth').style.width=(eHp/planeInfo[enemyPlaneType].health*100)+'%';if(eHp===0){playSfx('kill',.35);kills++;$('#kills').textContent=String(kills).padStart(2,'0');toast('敌机击落');const spawn=redSpawn.clone().add(new THREE.Vector3((Math.random()-.5)*24,0,(Math.random()-.5)*24)),rot=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI);retireAircraft(enemy);spawnEnemy(spawn,rot);if(kills>=3)finish(true)}}else{hp=Math.max(0,hp-n);$('#playerHealth').style.width=(hp/planeInfo[playerPlane].health*100)+'%';$('#hpText').textContent=Math.round(hp/planeInfo[playerPlane].health*100)+'%';triggerDamageFlash();if(hp===0)finish(false)}}
-function finish(win){
- if(gameMode==='airspace'){finishAirspaceBattle(win===null?null:win?'blue':'red');return}
-resetDuelBoundary();battlePaused=false;clearFlightInputs();playing=false;ended=true;if(player){player.userData.engineRunning=false;if(hp<=0)player.userData.destroyed=true}if(enemy)enemy.userData.engineRunning=false;for(const target of campaignTargets())target.root.userData.engineRunning=false;stopGunSounds();stopEngineSound();updateCampaignHud();if(gameMode==='campaign'){$('#resultTitle').textContent=win?'战役胜利':'任务失败';$('#resultCopy').textContent=win?'米格之舞完成：3架 B-29 均已击落。':hp<=0?'MIG-15 已被击落，南市空战失败。':'300秒时限已到，仍有 B-29 未被击落。'}else{$('#resultTitle').textContent=win?'王牌飞行员':'任务失败';$('#resultCopy').textContent=win?`空战战果：${kills} 架。你已夺取局部制空权。`:`你击落了 ${kills} 架敌机。整备机体，再次出击。`}$('#end').classList.remove('hidden')}
+function damage(target,n,campaignTarget=null){if(target==='enemy'&&gameMode==='campaign'&&campaignTarget){damageCampaignTarget(campaignTarget,n);return}if(target==='enemy'){eHp=Math.max(0,eHp-n);$('#enemyHealth').style.width=(eHp/planeInfo[enemyPlaneType].health*100)+'%';if(eHp===0){playSfx('kill',.35);kills++;$('#kills').textContent=String(kills).padStart(2,'0');toast('敌机击落');const spawn=redSpawn.clone().add(new THREE.Vector3((Math.random()-.5)*24,0,(Math.random()-.5)*24)),rot=new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI);retireAircraft(enemy);spawnEnemy(spawn,rot);if(kills>=3)finish(true)}}else{hp=Math.max(0,hp-n);$('#playerHealth').style.width=(hp/planeInfo[playerPlane].health*100)+'%';$('#hpText').textContent=Math.round(hp/planeInfo[playerPlane].health*100)+'%';triggerDamageFlash();if(hp===0)finish(false)}}
+function finish(win){resetDuelBoundary();battlePaused=false;clearFlightInputs();playing=false;ended=true;if(player){player.userData.engineRunning=false;if(hp<=0)player.userData.destroyed=true}if(enemy)enemy.userData.engineRunning=false;for(const target of campaignTargets())target.root.userData.engineRunning=false;stopGunSounds();stopEngineSound();updateCampaignHud();if(gameMode==='campaign'){$('#resultTitle').textContent=win?'战役胜利':'任务失败';$('#resultCopy').textContent=win?'米格之舞完成：3架 B-29 均已击落。':hp<=0?'MIG-15 已被击落，南市空战失败。':'300秒时限已到，仍有 B-29 未被击落。'}else{$('#resultTitle').textContent=win?'王牌飞行员':'任务失败';$('#resultCopy').textContent=win?`空战战果：${kills} 架。你已夺取局部制空权。`:`你击落了 ${kills} 架敌机。整备机体，再次出击。`}$('#end').classList.remove('hidden')}
 function projectEnemyMarkerPoint(position){const clip=position.clone().project(camera);let nx=clip.x,ny=-clip.y;const behind=clip.z>1;if(behind){nx=-nx;ny=-ny}const visible=!behind&&clip.z>=-1&&Math.abs(nx)<.9&&Math.abs(ny)<.9;if(!visible){if(Math.abs(nx)+Math.abs(ny)<.001)ny=1;const maxX=Math.max(.15,1-36/innerWidth),maxY=Math.max(.15,1-48/innerHeight),scale=Math.min(maxX/Math.max(Math.abs(nx),.001),maxY/Math.max(Math.abs(ny),.001));nx*=scale;ny*=scale}return{x:(nx+1)*innerWidth*.5,y:(ny+1)*innerHeight*.5,visible}}
 function updateCampaignEnemyMarkers(){const layer=$('#campaignEnemyMarkers'),single=$('#enemyMarker'),targets=campaignTargets(),active=new Set(targets);layer.classList.remove('hidden');single.classList.add('hidden');for(const[target,node]of campaignMarkerNodes){if(!active.has(target)){node.remove();campaignMarkerNodes.delete(target)}}const occupied=[],offsets=[[0,0],[0,-34],[44,0],[-44,0],[0,34],[34,-30],[-34,-30],[34,30],[-34,30]];for(let radius=68;radius<=420;radius+=46)for(let i=0;i<8;i++){const angle=i*Math.PI/4;offsets.push([Math.cos(angle)*radius,Math.sin(angle)*radius])}const isClear=(x,y)=>occupied.every(p=>Math.abs(x-p.x)>48||Math.abs(y-p.y)>34),clamp=(v,min,max)=>Math.max(min,Math.min(max,v));for(const target of targets){let node=campaignMarkerNodes.get(target);if(!node){node=document.createElement('div');node.className='enemy-marker campaign-target-marker';node.innerHTML='<i class="marker-leader"></i><span class="marker-label"></span>';layer.appendChild(node);campaignMarkerNodes.set(target,node)}const label=node.querySelector('.marker-label'),name=(target.isBomber?'B-29 #':'F-86 #')+target.id;if(label.textContent!==name)label.textContent=name;const anchor=projectEnemyMarkerPoint(target.root.position);node.classList.toggle('offscreen',!anchor.visible);let x=anchor.x,y=anchor.y;const minX=24,maxX=innerWidth-24,minY=24,maxY=innerHeight-32;for(const[dx,dy]of offsets){const candidateX=clamp(anchor.x+dx,minX,maxX),candidateY=clamp(anchor.y+dy,minY,maxY);if(isClear(candidateX,candidateY)){x=candidateX;y=candidateY;break}}occupied.push({x,y});node.style.left=(x/innerWidth*100)+'%';node.style.top=(y/innerHeight*100)+'%';const dx=anchor.x-x,dy=anchor.y-y,distance=Math.hypot(dx,dy);node.style.setProperty('--leader-length',distance>20?distance+'px':'0px');node.style.setProperty('--leader-angle',Math.atan2(dy,dx)+'rad')}}
-function updateTacticalDisplay(){
- if(gameMode==='airspace'){updateAirspaceTacticalDisplay();return}
-if(!player||!camera)return;const tracked=gameMode==='campaign'?nearestCampaignTarget()?.root:enemy;if(!tracked)return;camera.updateMatrixWorld(true);if(gameMode==='campaign')updateCampaignEnemyMarkers();else{const layer=$('#campaignEnemyMarkers'),marker=$('#enemyMarker');layer.classList.add('hidden');marker.classList.remove('hidden');const point=projectEnemyMarkerPoint(tracked.position);marker.classList.toggle('offscreen',!point.visible);marker.style.left=(point.x/innerWidth*100)+'%';marker.style.top=(point.y/innerHeight*100)+'%'}const canvas=$('#radar'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,r=w*.39;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(5,20,31,.72)';ctx.beginPath();ctx.arc(cx,cy,r+7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(105,219,231,.43)';ctx.lineWidth=1;for(const f of [.36,.68,1]){ctx.beginPath();ctx.arc(cx,cy,r*f,0,Math.PI*2);ctx.stroke()}ctx.beginPath();ctx.moveTo(cx-r,cy);ctx.lineTo(cx+r,cy);ctx.moveTo(cx,cy-r);ctx.lineTo(cx,cy+r);ctx.stroke();const right=new THREE.Vector3(1,0,0).applyQuaternion(player.quaternion),forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion),range=260;const plotBase=(point,color,label)=>{const rel=point.clone().sub(player.position);let bx=rel.dot(right)/range*r,by=-rel.dot(forward)/range*r,bd=Math.hypot(bx,by);if(bd>r-5){bx*=((r-5)/bd);by*=((r-5)/bd)}ctx.fillStyle=color;ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx+bx,cy+by,5,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx+bx,cy+by)};plotBase(blueSpawn,'#39aaff','A');if(gameMode==='campaign'){for(const target of campaignBombers)plotBase(target.root.position,'#ff6268','B');for(const target of campaignEscorts)plotBase(target.root.position,'#ffb14d','F')}else plotBase(redSpawn,'#ff5258','B');const delta=tracked.position.clone().sub(player.position);let ex=delta.dot(right)/range*r,ey=-delta.dot(forward)/range*r,d=Math.hypot(ex,ey);if(d>r-4){ex*=((r-4)/d);ey*=((r-4)/d)}ctx.fillStyle='#ff6e68';ctx.shadowColor='#ff544b';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(cx+ex,cy+ey,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;$('#radarDistance').textContent=Math.round(delta.length()*METERS_PER_UNIT)+' m'}
+function updateTacticalDisplay(){if(!player||!camera)return;const tracked=gameMode==='campaign'?nearestCampaignTarget()?.root:enemy;if(!tracked)return;camera.updateMatrixWorld(true);if(gameMode==='campaign')updateCampaignEnemyMarkers();else{const layer=$('#campaignEnemyMarkers'),marker=$('#enemyMarker');layer.classList.add('hidden');marker.classList.remove('hidden');const point=projectEnemyMarkerPoint(tracked.position);marker.classList.toggle('offscreen',!point.visible);marker.style.left=(point.x/innerWidth*100)+'%';marker.style.top=(point.y/innerHeight*100)+'%'}const canvas=$('#radar'),ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,r=w*.39;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(5,20,31,.72)';ctx.beginPath();ctx.arc(cx,cy,r+7,0,Math.PI*2);ctx.fill();ctx.strokeStyle='rgba(105,219,231,.43)';ctx.lineWidth=1;for(const f of [.36,.68,1]){ctx.beginPath();ctx.arc(cx,cy,r*f,0,Math.PI*2);ctx.stroke()}ctx.beginPath();ctx.moveTo(cx-r,cy);ctx.lineTo(cx+r,cy);ctx.moveTo(cx,cy-r);ctx.lineTo(cx,cy+r);ctx.stroke();const right=new THREE.Vector3(1,0,0).applyQuaternion(player.quaternion),forward=new THREE.Vector3(0,0,-1).applyQuaternion(player.quaternion),range=260;const plotBase=(point,color,label)=>{const rel=point.clone().sub(player.position);let bx=rel.dot(right)/range*r,by=-rel.dot(forward)/range*r,bd=Math.hypot(bx,by);if(bd>r-5){bx*=((r-5)/bd);by*=((r-5)/bd)}ctx.fillStyle=color;ctx.strokeStyle='rgba(255,255,255,.9)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(cx+bx,cy+by,5,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#fff';ctx.font='bold 7px monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(label,cx+bx,cy+by)};plotBase(blueSpawn,'#39aaff','A');if(gameMode==='campaign'){for(const target of campaignBombers)plotBase(target.root.position,'#ff6268','B');for(const target of campaignEscorts)plotBase(target.root.position,'#ffb14d','F')}else plotBase(redSpawn,'#ff5258','B');const delta=tracked.position.clone().sub(player.position);let ex=delta.dot(right)/range*r,ey=-delta.dot(forward)/range*r,d=Math.hypot(ex,ey);if(d>r-4){ex*=((r-4)/d);ey*=((r-4)/d)}ctx.fillStyle='#ff6e68';ctx.shadowColor='#ff544b';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(cx+ex,cy+ey,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;$('#radarDistance').textContent=Math.round(delta.length()*METERS_PER_UNIT)+' m'}
 function rotateAircraftLocal(object,axis,angle){if(!angle)return;object.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(axis,angle)).normalize()}
 function rotateAircraftWorld(object,axis,angle){if(!angle)return;object.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(axis,angle)).normalize()}
 function softLimitRate(value,limit){if(limit<=0)return 0;return limit*Math.tanh(value/limit)}
@@ -900,13 +675,13 @@ function bindFlightControls(){
  const joystick=$('#joystick'),knob=$('#joystickKnob');let joystickPointer=null;
  const moveJoystick=e=>{const r=joystick.getBoundingClientRect(),radius=Math.max(1,r.width*.36),rawX=e.clientX-(r.left+r.width/2),rawY=e.clientY-(r.top+r.height/2),length=Math.hypot(rawX,rawY),scale=length>radius?radius/length:1,x=rawX*scale,y=rawY*scale;joystickInput.x=x/radius;joystickInput.y=y/radius;knob.style.transform=`translate(-50%,-50%) translate(${x}px,${y}px)`};
  const releaseJoystick=(e={})=>{if(joystickPointer!==null&&e.pointerId!==undefined&&e.pointerId!==joystickPointer)return;joystickPointer=null;joystickInput.x=0;joystickInput.y=0;knob.style.transform='translate(-50%,-50%)'};
- joystick.addEventListener('pointerdown',e=>{if(!playing||gameMode==='airspace'&&airspaceSpectating||controlSettings.mode!=='joystick'||(joystickPointer!==null&&joystickPointer!==e.pointerId))return;e.preventDefault();joystickPointer=e.pointerId;try{joystick.setPointerCapture(e.pointerId)}catch{}moveJoystick(e)});
+ joystick.addEventListener('pointerdown',e=>{if(!playing||controlSettings.mode!=='joystick'||(joystickPointer!==null&&joystickPointer!==e.pointerId))return;e.preventDefault();joystickPointer=e.pointerId;try{joystick.setPointerCapture(e.pointerId)}catch{}moveJoystick(e)});
  joystick.addEventListener('pointermove',e=>{if(e.pointerId===joystickPointer)moveJoystick(e)});
  ['pointerup','pointercancel','lostpointercapture'].forEach(type=>joystick.addEventListener(type,releaseJoystick));
  const canvas=renderer.domElement;
  canvas.addEventListener('pointerdown',e=>{
   if(!playing||e.button!==0)return;e.preventDefault();
-  if(controlSettings.mode==='cursor'&&!keys.look&&!(gameMode==='airspace'&&airspaceSpectating)){
+  if(controlSettings.mode==='cursor'&&!keys.look){
    if(cursorDragPointer)return;
    cursorDragPointer={id:e.pointerId,x:e.clientX,y:e.clientY}
   }else{
@@ -932,7 +707,7 @@ function bindFlightControls(){
  ['pointerup','pointercancel','lostpointercapture'].forEach(type=>canvas.addEventListener(type,releaseCanvas));
  const track=$('#throttleTrack');let throttlePointer=null;
  const setThrottle=e=>{const r=track.getBoundingClientRect();throttleValue=THREE.MathUtils.clamp(1-(e.clientY-r.top)/Math.max(r.height,1),0,1);if(player)player.userData.throttle=throttleValue;updateThrottleUI()};
- track.addEventListener('pointerdown',e=>{if(!playing||gameMode==='airspace'&&airspaceSpectating||(throttlePointer!==null&&throttlePointer!==e.pointerId))return;e.preventDefault();throttlePointer=e.pointerId;try{track.setPointerCapture(e.pointerId)}catch{}setThrottle(e)});
+ track.addEventListener('pointerdown',e=>{if(!playing||(throttlePointer!==null&&throttlePointer!==e.pointerId))return;e.preventDefault();throttlePointer=e.pointerId;try{track.setPointerCapture(e.pointerId)}catch{}setThrottle(e)});
  track.addEventListener('pointermove',e=>{if(e.pointerId===throttlePointer)setThrottle(e)});
  const releaseThrottle=(e={})=>{if(throttlePointer!==null&&e.pointerId!==undefined&&e.pointerId!==throttlePointer)return;throttlePointer=null};
  ['pointerup','pointercancel','lostpointercapture'].forEach(type=>track.addEventListener(type,releaseThrottle));
@@ -1124,7 +899,7 @@ function terrainLineClear(start,end){
 }
 function safeAIGoal(root,goal){
  const safe=goal.clone(),half=activeMapId==='korea1951'?265:290;
- if(gameMode==='duel'||gameMode==='airspace'){const b=terrainBattleBounds();safe.x=THREE.MathUtils.clamp(safe.x,b.minX,b.maxX);safe.z=THREE.MathUtils.clamp(safe.z,b.minZ,b.maxZ)}
+ if(gameMode==='duel'){const b=terrainBattleBounds();safe.x=THREE.MathUtils.clamp(safe.x,b.minX,b.maxX);safe.z=THREE.MathUtils.clamp(safe.z,b.minZ,b.maxZ)}
  else if(activeMapId==='korea1951'){safe.x=THREE.MathUtils.clamp(safe.x,-half,half);safe.z=THREE.MathUtils.clamp(safe.z,-half,half)}
  else{const radius=Math.hypot(safe.x,safe.z);if(radius>half){safe.x*=half/radius;safe.z*=half/radius}}
  safe.y=Math.max(safe.y,terrainHeightAt(safe.x,safe.z)+AI_TACTICS.groundClearanceMeters/METERS_PER_UNIT);
@@ -1148,7 +923,7 @@ function aiFormationGoal(root,formationRoot,seconds){
  return formationRoot.position.clone().addScaledVector(formationRoot.userData.velocity,seconds).add(offset)
 }
 function decideFighterAI(root,target,center){
- const ai=root.userData.ai,type=root.userData.type,config=AI_FIGHTER[type],toTarget=target.position.clone().sub(root.position),distance=toTarget.length()*METERS_PER_UNIT,fromCenter=root.position.distanceTo(center)*METERS_PER_UNIT,targetFromCenter=target.position.distanceTo(center)*METERS_PER_UNIT,ammo=ai.role==='escort'||ai.role==='airspace'?root.userData.ammo:enemyAmmo,mode=ai.role==='escort'||ai.role==='airspace'?root.userData.weaponMode:enemyWeaponMode;
+ const ai=root.userData.ai,type=root.userData.type,config=AI_FIGHTER[type],toTarget=target.position.clone().sub(root.position),distance=toTarget.length()*METERS_PER_UNIT,fromCenter=root.position.distanceTo(center)*METERS_PER_UNIT,targetFromCenter=target.position.distanceTo(center)*METERS_PER_UNIT,ammo=ai.role==='escort'?root.userData.ammo:enemyAmmo,mode=ai.role==='escort'?root.userData.weaponMode:enemyWeaponMode;
  const forward=new THREE.Vector3(0,0,-1).applyQuaternion(root.quaternion),alignment=distance>1?forward.dot(toTarget.clone().normalize()):0,local=toTarget.clone().applyQuaternion(root.quaternion.clone().invert());
  // Separate enter and exit ranges prevent a target at the 3 km boundary from
  // repeatedly flipping between GUARD and INTERCEPT.
@@ -1189,7 +964,7 @@ function decideFighterAI(root,target,center){
  ai.telemetry={state:ai.state,distanceMeters:distance,escortDistanceMeters:fromCenter,targetFromCenterMeters:targetFromCenter,goal:ai.goal.clone(),headingVelocityDot:ai.headingVelocityDot,lateralVelocityMps:ai.lateralVelocityMps,recoveries:ai.recoveries,armed:selectedWeaponIds(type,mode).some(id=>weaponInfo[type]?.[id]&&ammo?.[id]>=weaponInfo[type][id].cost)}
 }
 function aiFireIntent(root,target){
- const data=root.userData,ai=data.ai,type=data.type,config=AI_FIGHTER[type],mode=ai.role==='escort'||ai.role==='airspace'?data.weaponMode:enemyWeaponMode,ammo=ai.role==='escort'||ai.role==='airspace'?data.ammo:enemyAmmo,forward=new THREE.Vector3(0,0,-1).applyQuaternion(root.quaternion).normalize(),local=target.position.clone().sub(root.position).applyQuaternion(root.quaternion.clone().invert()),intent={};
+ const data=root.userData,ai=data.ai,type=data.type,config=AI_FIGHTER[type],mode=ai.role==='escort'?data.weaponMode:enemyWeaponMode,ammo=ai.role==='escort'?data.ammo:enemyAmmo,forward=new THREE.Vector3(0,0,-1).applyQuaternion(root.quaternion).normalize(),local=target.position.clone().sub(root.position).applyQuaternion(root.quaternion.clone().invert()),intent={};
  if(data.boundaryReturning||data.instructorRecovering||ai.state!=='FIRE_PASS'||local.z>=0)return intent;
  for(const id of selectedWeaponIds(type,mode)){
   const spec=weaponInfo[type]?.[id],gun=config.gun[id];if(!spec||!gun||ammo?.[id]<spec.cost)continue;
@@ -1205,7 +980,7 @@ function recoverAircraftAttitude(root,dt){
  const travel=root.userData.velocity.clone();if(travel.lengthSq()<.001)return;
  steerAircraftToward(root,travel.normalize(),dt)
 }
-function updateFighterAI(root,target,center,dt,orderGoal=null){
+function updateFighterAI(root,target,center,dt){
  const data=root.userData,ai=data.ai;if(!ai||!target)return;
  ai.stateAge+=dt;ai.decisionRemaining-=dt;
  const forward=new THREE.Vector3(0,0,-1).applyQuaternion(root.quaternion),travel=data.velocity.clone(),speed=travel.length()*METERS_PER_UNIT;
@@ -1218,7 +993,7 @@ function updateFighterAI(root,target,center,dt,orderGoal=null){
   changeAIState(ai,'RECOVER',true);ai.recoveries++;ai.stableSeconds=0
  }
  if(ai.decisionRemaining<=0){decideFighterAI(root,target,center);do{ai.decisionRemaining+=AI_TACTICS.decisionSeconds}while(ai.decisionRemaining<=0)}
- const toGoal=safeAIGoal(root,orderGoal||ai.goal).sub(root.position),goalAlignment=toGoal.lengthSq()>.001?forward.dot(toGoal.clone().normalize()):1;
+ const toGoal=safeAIGoal(root,ai.goal).sub(root.position),goalAlignment=toGoal.lengthSq()>.001?forward.dot(toGoal.clone().normalize()):1;
  if(ai.role==='escort'){
   const slotDistance=ai.formationRoot?root.position.distanceTo(aiFormationGoal(root,ai.formationRoot,2))*METERS_PER_UNIT:0;
   let desiredKmh;
@@ -1226,8 +1001,8 @@ function updateFighterAI(root,target,center,dt,orderGoal=null){
   else if(ai.state==='GUARD')desiredKmh=THREE.MathUtils.clamp(320+slotDistance*.20,320,450);
   else desiredKmh=data.campaignCruiseKmh+60;
   data.throttle=ai.state==='RECOVER'?.95:THREE.MathUtils.clamp(desiredKmh/planeInfo.f86.maxSpeedKmh,.27,.9)
- }else if(ai.role==='airspace'&&orderGoal)data.throttle=ai.state==='RECOVER'?.95:data.airspaceNavigationThrottle;else data.throttle=ai.state==='RECOVER'?.95:THREE.MathUtils.clamp(.78+(ai.state==='INTERCEPT'||ai.state==='FIRE_PASS'?.11:0),.35,.95);
- const boundaryGoal=duelBoundaryReturnGoal(root),direction=ai.role==='airspace'&&orderGoal?airspaceFlightDirection(root,boundaryGoal||safeAIGoal(root,orderGoal)):boundaryGoal?boundaryGoal.sub(root.position):toGoal;
+ }else data.throttle=ai.state==='RECOVER'?.95:THREE.MathUtils.clamp(.78+(ai.state==='INTERCEPT'||ai.state==='FIRE_PASS'?.11:0),.35,.95);
+ const boundaryGoal=duelBoundaryReturnGoal(root),direction=boundaryGoal?boundaryGoal.sub(root.position):toGoal;
  const count=Math.max(1,Math.ceil(dt/FLIGHT_PHYSICS.stepSeconds)),step=dt/count;
  for(let i=0;i<count;i++){
   if(ai.state==='RECOVER'&&!boundaryGoal)recoverAircraftAttitude(root,step);
@@ -1239,7 +1014,7 @@ function updateFighterAI(root,target,center,dt,orderGoal=null){
  ai.headingVelocityDot=actualSpeed>.001?actualForward.dot(data.velocity.clone().divideScalar(actualSpeed)):1;
  ai.lateralVelocityMps=data.velocity.dot(new THREE.Vector3(1,0,0).applyQuaternion(root.quaternion))*METERS_PER_UNIT;
  if(ai.telemetry){ai.telemetry.headingVelocityDot=ai.headingVelocityDot;ai.telemetry.lateralVelocityMps=ai.lateralVelocityMps;ai.telemetry.speedKmh=data.airspeed*3.6;ai.telemetry.throttle=data.throttle;ai.telemetry.unsafeSeconds=ai.unsafeSeconds}
- fireWeapons(root,true,dt,orderGoal?false:aiFireIntent(root,target))
+ fireWeapons(root,true,dt,aiFireIntent(root,target))
 }
 function updateDuelEnemy(dt){
  if(!enemy)return;
@@ -1254,8 +1029,8 @@ function updateDuelEnemy(dt){
  if(enemy&&enemy.position.y<terrainHeightAt(enemy.position.x,enemy.position.z))damage('enemy',eHp)
 }
 function animate(){
- requestAnimationFrame(animate);if(!scene)return;const elapsed=Math.max(0,clock.getDelta()),dt=Math.min(elapsed,.1);if(gameMode!=='airspace')worldTime+=elapsed;
- if(gameMode==='airspace'&&airspaceState)updateAirspaceFrame(elapsed,dt);else if(playing){
+ requestAnimationFrame(animate);if(!scene)return;const elapsed=Math.max(0,clock.getDelta()),dt=Math.min(elapsed,.1);worldTime+=elapsed;
+ if(playing){
   rememberAircraftFrameStart();updatePlayerFlightControls(dt);
   if(player.position.y<terrainHeightAt(player.position.x,player.position.z)){hp=0;updateHealthUI();finish(false)}
   if(playing){if(gameMode==='campaign')updateCampaign(dt);else updateDuelEnemy(dt)}
@@ -1312,14 +1087,12 @@ function renderResearch(){
   button.innerHTML=id==='all'?'全部国家':nationFlag(id)+allNations.find(n=>n.id===id).name.split(' · ')[0]
  })
 }
-function showMenuScreen(id){
- airspacePrepareToken++;$('#chooseAIBattle').disabled=false;$('#airspaceLoadStatus').textContent='';
-stopEngineSound();clearFlightInputs();if(id==='menu')battlePaused=false;playing=false;stopGunSounds();['menu','settings','modeSelect','campaignBriefing','hangar','research','encyclopedia','end'].forEach(n=>$('#'+n).classList.toggle('hidden',n!==id));$('#hud').classList.add('hidden');$('#campaignHud').classList.add('hidden');if(id==='hangar')renderHangar();if(id==='research')renderResearch();if(id==='settings')renderControlSettings()}
-for(const b of document.querySelectorAll('[data-key]')){const k=b.dataset.key;const down=e=>{if(!playing||gameMode==='airspace'&&airspaceSpectating&&k!=='look'||e.button!==undefined&&e.button!==0)return;e.preventDefault();keys[k]=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId)}catch{}},up=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on')};b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('lostpointercapture',up)}
+function showMenuScreen(id){stopEngineSound();clearFlightInputs();if(id==='menu')battlePaused=false;playing=false;stopGunSounds();['menu','settings','modeSelect','campaignBriefing','hangar','research','encyclopedia','end'].forEach(n=>$('#'+n).classList.toggle('hidden',n!==id));$('#hud').classList.add('hidden');$('#campaignHud').classList.add('hidden');if(id==='hangar')renderHangar();if(id==='research')renderResearch();if(id==='settings')renderControlSettings()}
+for(const b of document.querySelectorAll('[data-key]')){const k=b.dataset.key;const down=e=>{if(e.button!==undefined&&e.button!==0)return;e.preventDefault();keys[k]=true;b.classList.add('on');try{b.setPointerCapture(e.pointerId)}catch{}},up=e=>{e.preventDefault();keys[k]=false;b.classList.remove('on')};b.addEventListener('pointerdown',down);b.addEventListener('pointerup',up);b.addEventListener('pointercancel',up);b.addEventListener('lostpointercapture',up)}
 const keyMap={ArrowUp:'up',w:'up',ArrowDown:'down',s:'down',ArrowLeft:'left',a:'left',ArrowRight:'right',d:'right',' ':'fire',b:'bomb',c:'look'};
-const setKey=(e,pressed)=>{if(pressed&&!playing)return;if(gameMode==='airspace'&&airspaceSpectating&&e.key.toLowerCase()!=='c')return;const k=keyMap[e.key]||keyMap[e.key.toLowerCase()];if(!k)return;e.preventDefault();keys[k]=pressed;document.querySelector(`[data-key="${k}"]`)?.classList.toggle('on',pressed)};
-window.addEventListener('keydown',e=>{if(playing&&gameMode==='airspace'&&airspaceSpectating&&['q','e'].includes(e.key.toLowerCase())){cycleAirspaceSpectator(e.key.toLowerCase()==='q'?-1:1);e.preventDefault();return}if(playing&&e.key.toLowerCase()==='x'){cycleWeaponMode();e.preventDefault();return}setKey(e,true)});window.addEventListener('keyup',e=>setKey(e,false));
-document.querySelectorAll('[data-preview-plane]').forEach(b=>b.addEventListener('click',()=>setCatalogSpecs(b.dataset.previewPlane)));$('#weaponSelect').addEventListener('click',cycleWeaponMode);$('#engineToggle').addEventListener('click',togglePlayerEngine);$('#openHangar').addEventListener('click',()=>showMenuScreen('hangar'));$('#openResearch').addEventListener('click',()=>showMenuScreen('research'));$('#hangarHome').addEventListener('click',()=>showMenuScreen('menu'));$('#researchHome').addEventListener('click',()=>showMenuScreen('menu'));$('#hangarSortie').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#openEncyclopedia').addEventListener('click',openCatalog);$('#closeEncyclopedia').addEventListener('click',closeCatalog);$('#useCatalogPlane').addEventListener('click',()=>{setSelectedAircraft(previewType);showMenuScreen('menu')});document.querySelectorAll('[data-nation-filter]').forEach(b=>b.addEventListener('click',()=>{researchNation=b.dataset.nationFilter;renderResearch()}));$('#start').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#modeHome').addEventListener('click',()=>showMenuScreen('menu'));$('#chooseAIBattle').addEventListener('click',prepareAirspaceBattle);$('#spectatePrevious').addEventListener('click',()=>cycleAirspaceSpectator(-1));$('#spectateNext').addEventListener('click',()=>cycleAirspaceSpectator(1));$('#chooseCampaign').addEventListener('click',()=>showMenuScreen('campaignBriefing'));$('#campaignBack').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#beginCampaign').addEventListener('click',()=>{gameMode='campaign';reset()});$('#again').addEventListener('click',()=>battlePaused&&!ended?resumeBattle():reset());$('#returnHome').addEventListener('click',()=>showMenuScreen('menu'));window.showPause=()=>{
+const setKey=(e,pressed)=>{if(pressed&&!playing)return;const k=keyMap[e.key]||keyMap[e.key.toLowerCase()];if(!k)return;e.preventDefault();keys[k]=pressed;document.querySelector(`[data-key="${k}"]`)?.classList.toggle('on',pressed)};
+window.addEventListener('keydown',e=>{if(playing&&e.key.toLowerCase()==='x'){cycleWeaponMode();e.preventDefault();return}setKey(e,true)});window.addEventListener('keyup',e=>setKey(e,false));
+document.querySelectorAll('[data-preview-plane]').forEach(b=>b.addEventListener('click',()=>setCatalogSpecs(b.dataset.previewPlane)));$('#weaponSelect').addEventListener('click',cycleWeaponMode);$('#engineToggle').addEventListener('click',togglePlayerEngine);$('#openHangar').addEventListener('click',()=>showMenuScreen('hangar'));$('#openResearch').addEventListener('click',()=>showMenuScreen('research'));$('#hangarHome').addEventListener('click',()=>showMenuScreen('menu'));$('#researchHome').addEventListener('click',()=>showMenuScreen('menu'));$('#hangarSortie').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#openEncyclopedia').addEventListener('click',openCatalog);$('#closeEncyclopedia').addEventListener('click',closeCatalog);$('#useCatalogPlane').addEventListener('click',()=>{setSelectedAircraft(previewType);showMenuScreen('menu')});document.querySelectorAll('[data-nation-filter]').forEach(b=>b.addEventListener('click',()=>{researchNation=b.dataset.nationFilter;renderResearch()}));$('#start').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#modeHome').addEventListener('click',()=>showMenuScreen('menu'));$('#chooseAIBattle').addEventListener('click',()=>{gameMode='duel';reset()});$('#chooseCampaign').addEventListener('click',()=>showMenuScreen('campaignBriefing'));$('#campaignBack').addEventListener('click',()=>showMenuScreen('modeSelect'));$('#beginCampaign').addEventListener('click',()=>{gameMode='campaign';reset()});$('#again').addEventListener('click',()=>battlePaused&&!ended?resumeBattle():reset());$('#returnHome').addEventListener('click',()=>showMenuScreen('menu'));window.showPause=()=>{
  if(!$('#settings').classList.contains('hidden')){showMenuScreen('menu');return}
  if(playing){battlePaused=true;pausedEngineRunning=player.userData.engineRunning!==false;playing=false;clearFlightInputs();player.userData.engineRunning=false;stopGunSounds();stopEngineSound();$('#again').textContent='继续战斗　→';$('#end').classList.remove('hidden');$('#resultTitle').textContent='任务暂停';$('#resultCopy').textContent='点击继续战斗返回当前空战。'}
  else if(ended)reset()
@@ -1405,8 +1178,6 @@ function cursorChaseQuaternion(){
 }
 
 function terrainBattleBounds(){
- if(gameMode==='airspace'){const half=6000/(2*METERS_PER_UNIT);return{minX:-half,maxX:half,minZ:-half,maxZ:half}}
-
  if(activeMapId==='korea1951'&&koreaTerrainBounds)return koreaTerrainBounds;
  const half=MAP_LIBRARY[activeMapId].sizeMeters/(2*METERS_PER_UNIT);return{minX:-half,maxX:half,minZ:-half,maxZ:half}
 }
@@ -1417,7 +1188,7 @@ function outsideTerrainMeters(position){
 }
 
 function duelBoundaryReturnGoal(root){
- if(gameMode!=='duel'&&gameMode!=='airspace')return null;
+ if(gameMode!=='duel')return null;
  const data=root.userData,b=terrainBattleBounds(),speed=Math.max(data.airspeed,1),turn=turnRateForPlane(data.type,speed),radius=speed/Math.max(turn,.025),buffer=Math.min(radius*1.35+speed*.7+120,Math.min(b.maxX-b.minX,b.maxZ-b.minZ)*METERS_PER_UNIT*.43)/METERS_PER_UNIT;
  const v=data.velocity,sideTimes=[],marginUnits=DUEL_BOUNDARY_RULES.aiMarginMeters/METERS_PER_UNIT;
  if(v.x>0)sideTimes.push((b.maxX+marginUnits-root.position.x)/v.x);else if(v.x<0)sideTimes.push((b.minX-marginUnits-root.position.x)/v.x);
@@ -1430,7 +1201,7 @@ function duelBoundaryReturnGoal(root){
 }
 
 function enforceDuelAIBoundary(root){
- if((gameMode!=='duel'&&gameMode!=='airspace')||!root)return;
+ if(gameMode!=='duel'||!root)return;
  const b=terrainBattleBounds(),nearest=new THREE.Vector3(THREE.MathUtils.clamp(root.position.x,b.minX,b.maxX),root.position.y,THREE.MathUtils.clamp(root.position.z,b.minZ,b.maxZ)),delta=root.position.clone().sub(nearest),length=delta.length(),limit=DUEL_BOUNDARY_RULES.aiMarginMeters/METERS_PER_UNIT;
  if(length<=limit)return;
  const normal=delta.divideScalar(length);root.position.copy(nearest.addScaledVector(normal,limit));
@@ -1443,10 +1214,8 @@ function resetDuelBoundary(){
 }
 
 function updateDuelBoundary(elapsed){
- if(gameMode==='airspace'){if(!playing||!airspacePlayerAlive()){resetDuelBoundary();return}}
-
- if((gameMode!=='duel'&&gameMode!=='airspace')||!playing||!player){if(gameMode!=='duel'&&gameMode!=='airspace')resetDuelBoundary();return}
- if(gameMode==='duel')enforceDuelAIBoundary(enemy);
+ if(gameMode!=='duel'||!playing||!player){if(gameMode!=='duel')resetDuelBoundary();return}
+ enforceDuelAIBoundary(enemy);
  if(outsideTerrainMeters(player.position)<=DUEL_BOUNDARY_RULES.playerMarginMeters){
   const returning=duelDesertionRemaining!==null;resetDuelBoundary();if(returning)toast('已返回战区，自毁倒计时取消');return
  }
@@ -1454,7 +1223,7 @@ function updateDuelBoundary(elapsed){
  duelDesertionRemaining=Math.max(0,duelDesertionRemaining-Math.max(0,elapsed));
  const warning=$('#boundaryWarning');warning.classList.remove('hidden');warning.textContent='临阵脱逃，自毁倒计时：'+Math.ceil(duelDesertionRemaining)+'秒';
  if(duelDesertionRemaining<=.000001){
-  if(gameMode==='airspace'){player.userData.desertionDestroyed=true;damageAirspaceUnit(airspaceUnitFor(player),airspaceUnitFor(player).health);toast('越界超过15秒 · 战机自毁，进入观战');return}
   hp=0;player.userData.desertionDestroyed=true;updateHealthUI();finish(false);$('#resultTitle').textContent='临阵脱逃';$('#resultCopy').textContent='越界超过15秒，战机已执行强制自毁。'
  }
 }
+</script></body></html>
