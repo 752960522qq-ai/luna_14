@@ -1,6 +1,15 @@
 # 天空决斗 / Sky Duel
 
-离线 Android 3D 空战游戏，适配手机横屏。v15 包含 MiG-3、MiG-15、F-86F-2、Meteor、B-29、I-15bis、Bf-109 B-1、P-36A 和 F3F-2，以及空域争夺与“米格之舞”战役。
+离线 Android 3D 空战游戏，适配手机横屏。v16 包含苏联 I-15、MiG-3、MiG-15、F-86F-2、Meteor F Mk 4 G.41G、B-29、I-15bis、Bf-109 B-1、P-36A 和 F3F-2，以及空域争夺与“米格之舞”战役。
+
+## v16
+
+- 新增苏联 I-15：I 级、BR 1.0、耐久 340，航速 365/105 km/h、爬升 12.7 m/s，水平/垂直转弯 13.8/8.6 秒。四挺 PV-1 单管 750 发/分、合计 3200 发，弹速 775 m/s、伤害 13。
+- 上传模型按 6.10 m 统一缩放，保留贴图、海鸥翼及固定放下的起落架；螺旋桨随发动机和油门启动、停转及模糊。旧存档自动加入新机型。
+- 速度、高度、攻角及击落数移至右上角顶边；雷达与两种模式的顶边任务栏避开读数。MiG-15、F-86、Meteor 为机尾后 0.5 m、上方 2 m，B-29 为机尾后 1 m、上方 2 m，I-15 为后方及上方各 2 m。
+- AI 升限统一为海拔 3000 m，玩家不受限制。流星更名为 Meteor F Mk 4 G.41G。
+- 修复掉帧时相机向机体回弹：相机先同步飞机位移，再平滑相对视角。战役使用固定 120 Hz 更新和显示插值，保留长帧的完整时间；模型、纹理与渲染在开战前预热。
+- 保留 F3F-2、MiG-3 收轮、5V5、权重匹配、占点、补给、无复活及观战。验证与限制见 [v16 更新说明](docs/v16-update.md)。
 
 ## v15
 
@@ -46,11 +55,11 @@ v10–v12 的瞄准环/摇杆切换、真实枪口准星与预瞄点、统一玩
 
 ```bash
 python3 normalize-mig3.py
-python3 update-v15.py
+python3 update-v16.py
 npm run check
 ```
 
-`update-v15.py` 使用锁定的 `baseline/v14-index.html` 生成 v15 页面；`normalize-mig3.py` 从保留的原始上传文件生成模型。检查覆盖九机型匹配、三维球、15/30 秒占领、补给、无复活、观战、暂停、胜负、原战役，以及飞行、双武器和音效。`validation/` 保存可重复执行的脚本与结果。
+`update-v16.py` 使用锁定的 `baseline/v15-index.html` 和 `v16-flight-stability.mjs` 生成 v16 页面；`normalize-mig3.py` 从保留的原始上传文件生成模型。I-15 GLB 与用户上传文件字节一致。检查覆盖十机型匹配、三维球、15/30 秒占领、补给、无复活、观战、暂停、胜负、原战役，以及飞行、武器、音效、相机和长帧补偿。`validation/` 保存可重复执行的脚本与结果。
 
 浏览器模型检查需要 Playwright 与 Chromium：
 
@@ -64,7 +73,7 @@ SKY_DUEL_CHROME=/absolute/path/to/chromium npm run check:browser
 
 ## 构建 APK
 
-GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `main` 的 PR 和手动运行时执行源码生成检查、逻辑检查及 Android 构建。构建环境为 JDK 17、Gradle 8.9、Android SDK 35。产物 `sky-duel-v15-debug-apk` 内含 `app-debug.apk`。
+GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `main` 的 PR 和手动运行时执行源码生成检查、逻辑检查及 Android 构建。构建环境为 JDK 17、Gradle 8.9、Android SDK 35。产物 `sky-duel-v16-debug-apk` 内含 `app-debug.apk`。
 
 本地安装相同工具后可运行：
 
@@ -72,19 +81,19 @@ GitHub Actions 的 **Build Android APK** 工作流在 `main` 推送、面向 `ma
 gradle --no-daemon assembleDebug
 ```
 
-已交付的 `sky-duel-mig3-v15.apk` 使用原游戏签名，versionCode 为 15，可覆盖原签名的旧版；Actions 生成的默认 debug APK 使用构建环境的调试签名，证书可能不同。仓库不包含签名私钥或密码。
+已交付的 `sky-duel-i15-stability-v16.apk` 使用原游戏签名，versionCode 为 16，可覆盖原签名的旧版；Actions 生成的默认 debug APK 使用构建环境的调试签名，证书可能不同。仓库不包含签名私钥或密码。
 
-保留原生壳、使用已交付 v14 APK 更新资源的复现方式：
+保留原生壳、使用已交付 v15 APK 更新资源的复现方式：
 
 ```bash
-python3 package-v15.py /absolute/path/sky-duel-airspace-v14.apk
-zipalign -f -p 4 unsigned-v15.apk aligned-v15.apk
-apksigner sign --ks /absolute/path/authorized-game-key.p12 --ks-pass file:/absolute/path/password-file --out sky-duel-mig3-v15.apk aligned-v15.apk
-apksigner verify --verbose --print-certs sky-duel-mig3-v15.apk
-zipalign -c -p 4 sky-duel-mig3-v15.apk
+python3 package-v16.py /absolute/path/sky-duel-mig3-v15.apk
+zipalign -f -p 4 unsigned-v16.apk aligned-v16.apk
+apksigner sign --ks /absolute/path/authorized-game-key.p12 --ks-pass file:/absolute/path/password-file --out sky-duel-i15-stability-v16.apk aligned-v16.apk
+apksigner verify --verbose --print-certs sky-duel-i15-stability-v16.apk
+zipalign -c -p 4 sky-duel-i15-stability-v16.apk
 ```
 
-v14 基线 SHA-256：`414ab8a3050367d1bc1a000ea593fbecb9d95a1b3a27f954bb524914e597b96e`。打包增加 MiG-3 模型，修改页面与 manifest；65 个原模型、音效、解码器和原生壳文件内容不变。
+v15 基线 SHA-256：`fc7e6abe92e53eb8e1f905dcc305ad8689d07e45d4dd4f2086cd29b01f66a82f`。打包增加苏联 I-15 模型，修改页面与 manifest 的 versionCode；66 个原模型、音效、解码器和原生壳文件内容不变。
 
 B-29 模型由 Sketchfab 用户 manilov.ap 提供，采用 CC BY 4.0 许可：[模型来源](https://sketchfab.com/3d-models/b29-48aa117b88a34c5194370e868114484c)。其他新飞机模型由用户提供。音效来源见 [SOUNDS_CREDITS.md](SOUNDS_CREDITS.md)。
 

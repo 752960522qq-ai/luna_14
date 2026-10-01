@@ -1,9 +1,9 @@
 {
-  "name": "sky-duel-mig3-v15-patch",
-  "private": true,
-  "type": "module",
-  "scripts": {
-    "check": "node --check game.mjs && node validation/check-source-v15.mjs && node validation/check-aircraft-v15.mjs && node validation/check-audio-v15.mjs && node validation/check-flight-v15.mjs && node validation/check-airspace-v15.mjs",
-    "check:browser": "node validation/check-browser-v15.cjs"
-  }
+ "name":"sky-duel-i15-stability-v16",
+ "private":true,
+ "type":"module",
+ "scripts":{
+  "check":"node --check game.mjs && node validation/check-source-v16.mjs && node validation/check-aircraft-v16.mjs && node validation/check-audio-v16.mjs && node validation/check-flight-v16.mjs && node validation/check-airspace-v16.mjs && node validation/check-stability-v16.mjs",
+  "check:browser":"node validation/check-browser-v16.cjs"
+ }
 }

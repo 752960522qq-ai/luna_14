@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "baseSha256": "fc7e6abe92e53eb8e1f905dcc305ad8689d07e45d4dd4f2086cd29b01f66a82f",
+  "unsignedBytes": 49085179,
+  "changed": [
+    "assets/index.html",
+    "AndroidManifest.xml"
+  ],
+  "added": [
+    "assets/i15-soviet.glb"
+  ],
+  "unchangedPayloadCount": 66,
+  "unchangedOriginalModelsAudioAndNativeShell": true
+}
