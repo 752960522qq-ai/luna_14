@@ -2,9 +2,9 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main, codex/luna14-v18-silverwing]
-  pull_request:
     branches: [main]
+  pull_request:
+    branches: [main, codex/luna14-v18-silverwing]
   workflow_dispatch:
 
 permissions:
@@ -47,19 +47,19 @@ jobs:
       - name: Collect APK and signing tools
         run: |
           mkdir -p deliverables
-          cp app/build/outputs/apk/debug/app-debug.apk deliverables/silverwing-v18.apk
+          cp app/build/outputs/apk/debug/app-debug.apk deliverables/silverwing-1.0.apk
           cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" deliverables/apksigner.jar
       - uses: actions/upload-artifact@v4
         with:
-          name: silverwing-v18-apk
+          name: silverwing-1.0-apk
           path: deliverables/*
           if-no-files-found: error
           retention-days: 30
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: silverwing-v18-validation
+          name: silverwing-1.0-validation
           path: |
-            validation/*-v18.json
-            validation/*-v18.png
+            validation/*-v19.json
+            validation/*-v19.png
           retention-days: 30

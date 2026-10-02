@@ -28,7 +28,7 @@ const report={result:'passed',checks:[]};
  h.run("showMenuScreen('menu')");assert.equal(h.run('economy.gp'),gp+944);report.checks.push('Research, purchase and selection roll back on storage errors; results retry once without duplicate rewards.');
 }
 {
- const h=load({profile:{unlocked:['b29'],selected:'b29'}});
+ const h=load({profile:{format:'silverwing-profile',version:1,gameVersion:'1.0',mode:'all-aircraft',unlocked:['b29'],selected:'b29'}});
  h.run("gameMode='airspace';reset();dropBomb();window.disposes=0;bombsInFlight[0].mesh.geometry.addEventListener('dispose',()=>window.disposes++);bombsInFlight[0].mesh.material.addEventListener('dispose',()=>window.disposes++);reset()");
  assert.equal(h.window.disposes,2);
  h.run("window.owned=new THREE.PlaneGeometry();window.released=0;window.owned.addEventListener('dispose',()=>window.released++);ownAircraftResource(player,window.owned);disposeAircraft(player);disposeAircraft(player)");
@@ -59,4 +59,4 @@ const report={result:'passed',checks:[]};
  assert(allocations<46685*.4,'Vector allocation regression');
  report.vectorAllocations={before:46685,after:allocations,simulationSeconds:1,units:10,modelsLoaded:false,webglMeasured:false};
 }
-fs.writeFileSync(new URL('repairs-v18.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('repairs-v19.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

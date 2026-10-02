@@ -1,6 +1,6 @@
 function aircraftCatalogueSpecs(r) {
   const p = r.performance;
-  const rows = [['系别', r.tree.nationName], ['等级', r.tree.rank], ['战机权重', r.tree.rating.toFixed(1)], ['机体耐久', String(p.health)], ['最大航速', p.maxSpeedKmh + ' km/h'], ['最小航速', p.minLevelFlightKmh + ' km/h'], ['最佳爬升率', p.bestClimbMps + ' m/s'], ['水平转弯性能', p.turnTimeS + '秒'], ['垂直转弯性能', p.verticalTurnTimeS + '秒']];
+  const rows = [['系别', r.tree.nationName], ['等级', r.tree.rank], ['战机权重', r.tree.rating.toFixed(1)], ['机体耐久', String(p.health)], ['最大航速', p.maxSpeedKmh + ' km/h'], ['最小航速', p.minLevelFlightKmh + ' km/h'], ['最佳爬升率', p.bestClimbMps + ' m/s'], ['水平转弯性能', (Number.isInteger(p.turnTimeS) ? p.turnTimeS.toFixed(1) : p.turnTimeS) + '秒'], ['垂直转弯性能', (p.verticalTurnTimeS ?? Number((360 / p.verticalTurnRateDps).toFixed(2))) + '秒']];
   for (const [id, w] of Object.entries(r.weapons)) rows.push([w.label, w.count + '挺 · 合计备弹' + r.ammo[id] + '发 · 单管' + w.rpm + '发/分钟 · 伤害' + w.damage + ' · 弹速' + w.speed + ' m/s']);
   if (r.ammo.b29mg) rows.push(['炮塔武器', '5座炮塔 · 12挺机枪 · 备弹' + r.ammo.b29mg + '发'], ['炸弹挂载', '可在机库选择挂载']);
   return rows;
@@ -173,16 +173,22 @@ function updateEconomyDisplay() {
   if (choose) {
     choose.disabled = !campaignOwned;
     const label = choose.querySelector('span');
-    if (label) label.textContent = campaignOwned ? '米格之舞 · 1951·朝鲜 · 6×6公里' : '需先研发并购买 MiG-15';
+    if (label) label.textContent = campaignOwned ? '米格之舞 · 1951·朝鲜 · 6×6公里' : '本版本暂未开放 · 需要 MiG-15';
   }
   if (begin && $('#battleLoading')?.classList.contains('hidden')) begin.disabled = !campaignOwned;
   if (use) {
     use.disabled = !profileState.unlockedPlanes.includes(viewState.previewType);
-    use.textContent = use.disabled ? '请先在研发中解锁' : '设为出战机';
+    use.textContent = use.disabled ? isAircraftResearchOpen(viewState.previewType) ? '请先在研发中解锁' : '本版本暂未开放' : '设为出战机';
   }
+  const mode = $('#currentSaveMode');
+  if (mode) mode.textContent = profileState.profileMode === 'all-aircraft' ? '全解锁测试存档 · 全部飞机已入库' : '普通存档 · 中、德、美、苏四系 Rank I—II';
 }
 function handleResearchAircraft(type) {
   const state = aircraftResearchState(type);
+  if (state.status === 'unavailable' || state.status === 'invalid') {
+    toast('本版本暂未开放此飞机的研发');
+    return;
+  }
   if (state.status === 'owned') {
     setSelectedAircraft(type);
     renderResearch();
@@ -277,22 +283,17 @@ function renderResearch() {
     id: 'us',
     code: 'USA',
     name: '美系 · 美国',
-    types: ['f3f2', 'p36a', 'b29', 'f86']
+    types: ['f3f2', 'p36a']
   }, {
     id: 'ussr',
     code: 'USSR',
     name: '苏系 · 苏联',
-    types: ['i15', 'i16', 'mig3', 'mig15']
-  }, {
-    id: 'uk',
-    code: 'RAF',
-    name: '英系 · 英国',
-    types: ['meteor']
+    types: ['i15', 'i16', 'mig3']
   }, {
     id: 'de',
     code: 'GER',
     name: '德系 · 德国',
-    types: ['bf109b1']
+    types: ['bf109b1', 'bf109c1']
   }];
   const nations = allNations.filter(n => profileState.researchNation === 'all' || n.id === profileState.researchNation);
   host.innerHTML = nations.map(n => {
@@ -322,6 +323,7 @@ function renderResearch() {
   });
 }
 function showMenuScreen(id) {
+  clearProjectileSmoke();
   session.airspacePrepareToken++;
   setBattleLoading(false);
   $('#beginCampaign').disabled = false;

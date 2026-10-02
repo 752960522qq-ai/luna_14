@@ -24,4 +24,4 @@ for(let at=1;at<65;at++){
 }
 assert.equal(floorFallbacks,0);assert(maxUnderevaluationMeters<1,'Terrain height underestimated by more than one metre');assert(maxAbsoluteErrorMeters<1,'Terrain raster error exceeded one metre');
 const report={result:'passed',method:'Actual packaged GLB vertex/index/node transforms compared with downward Three.js ray intersections; CPU geometry, no textures or GPU.',resolution:grid.resolution,gridBytes:grid.heights.byteLength,buildMilliseconds,samples,floorFallbacks,maxUnderevaluationMeters,maxAbsoluteErrorMeters,oldSampledMaxUnderevaluationMeters:12.48};
-fs.writeFileSync(new URL('terrain-v18.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('terrain-v19.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

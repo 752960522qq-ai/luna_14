@@ -5,10 +5,11 @@ import * as Three from '../app/src/main/assets/three.module.js';
 import {bridgeState} from './state-bridge.mjs';
 
 
-export function loadGame({random=()=>.1,profile,adapters={}}={}){
+export function loadGame({random=()=>.1,profile,legacyProfile,adapters={}}={}){
 const html=fs.readFileSync(new URL('../app/src/main/assets/index.html',import.meta.url),'utf8'),source=html.split('<script type="module">')[1].split('</script>')[0];
 const nodes=new Map(),events=new Map(),storage=new Map();
-if(profile!==undefined)storage.set('sky-duel-profile-v1',JSON.stringify(profile));
+if(profile!==undefined)storage.set('silverwing.profile.1.0',JSON.stringify(profile));
+if(legacyProfile!==undefined)storage.set('sky-duel-profile-v1',JSON.stringify(legacyProfile));
 class Node {
  constructor(tag='div'){this.tagName=tag.toUpperCase();this.style={setProperty(k,v){this[k]=v}};this.dataset={};this.children=[];this.events={};this.textContent='';this.innerHTML='';this.value='';this.checked=false;this.classes=new Set();this.classList={add:(...s)=>s.forEach(x=>this.classes.add(x)),remove:(...s)=>s.forEach(x=>this.classes.delete(x)),toggle:(s,b)=>{b??=!this.classes.has(s);b?this.classes.add(s):this.classes.delete(s)},contains:s=>this.classes.has(s)};this.captures=new Set()}
  addEventListener(name,fn){(this.events[name]??=[]).push(fn)}

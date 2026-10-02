@@ -450,6 +450,7 @@ function fireAirspaceBomberTurrets(unit, dt) {
     } of active) {
       const rounds = Math.min(turret.guns, ammo.b29mg);
       ammo.b29mg -= rounds;
+      emitTurretSmoke(root, target.root, turret, rounds);
       let hits = 0;
       for (let n = 0; n < rounds; n++) if (Math.random() < .5) hits++;
       if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id);
@@ -490,12 +491,14 @@ function airspaceHitFraction(start, end, root, radius) {
   return enter;
 }
 function updateAirspaceBullets(dt) {
+  updateProjectileSmoke(dt);
   const live = airspaceLiveUnits();
   for (let i = session.bullets.length - 1; i >= 0; i--) {
     const bullet = session.bullets[i];
     (bullet.previousPosition ??= new THREE.Vector3()).copy(bullet.mesh.position);
     bullet.mesh.position.addScaledVector(bullet.dir, bullet.speed * Math.min(dt, Math.max(0, bullet.life)));
     bullet.life -= dt;
+    traceBulletSmoke(bullet, dt);
     let target = null,
       fraction = Infinity;
     for (const unit of live) {

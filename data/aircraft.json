@@ -1245,5 +1245,124 @@
     "sounds": {
       "default": "b29Gun"
     }
+  },
+  "bf109c1": {
+    "model": {
+      "chaseOffsetMeters": 2.6,
+      "chaseHeightMeters": 1.4,
+      "modelFile": "./bf109-c1.glb",
+      "lengthMeters": 8.55,
+      "rollRateDps": 135,
+      "control": {
+        "stickAttackSeconds": 0.055,
+        "stickReleaseSeconds": 0.075,
+        "rollResponse": 10,
+        "rollRelease": 12,
+        "pitchResponse": 7
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 9.65249324,
+        "y": 3.0071844,
+        "z": 8.55
+      },
+      "chaseFixed": true,
+      "levelDragCompensation": 0.018
+    },
+    "propeller": {
+      "idleRpm": 600,
+      "maxRpm": 2300,
+      "direction": -1,
+      "spoolUpSeconds": 3.2,
+      "spoolDownSeconds": 4.2,
+      "blurStartRpm": 850,
+      "blurFullRpm": 1350,
+      "radius": 1.504
+    },
+    "tree": {
+      "nation": "de",
+      "nationName": "德系",
+      "rating": 2.0,
+      "rank": "II",
+      "branch": "单发战斗机"
+    },
+    "performance": {
+      "name": "Bf-109 C-1",
+      "health": 390,
+      "maxSpeedKmh": 465,
+      "minLevelFlightKmh": 124,
+      "bestClimbMps": 13.2,
+      "turnTimeS": 19.0,
+      "horizontalTurnRateDps": 18.94736842105263,
+      "verticalTurnRateDps": 31.858407079646014,
+      "turnRadiusM": 300,
+      "intro": "早期梅塞施密特单翼战斗机，搭载燃油喷射Jumo210G发动机，四挺MG17机枪火力充足；能量机动优秀，擅长俯冲‑掠袭战术；水平回转弱于双翼对手。",
+      "verticalTurnTimeS": 11.3
+    },
+    "weapons": {
+      "mg": {
+        "rpm": 1200,
+        "damage": 14,
+        "speed": 855,
+        "cost": 4,
+        "count": 4,
+        "radius": 0.075,
+        "color": 16770222,
+        "offsets": [
+          [
+            -0.022,
+            0.036,
+            -0.288
+          ],
+          [
+            0.022,
+            0.036,
+            -0.288
+          ],
+          [
+            -0.211,
+            0.006,
+            -0.12
+          ],
+          [
+            0.211,
+            0.006,
+            -0.12
+          ]
+        ],
+        "label": "7.92mm MG17机枪"
+      }
+    },
+    "ai": {
+      "detectMeters": 2450,
+      "loseMeters": 2900,
+      "alignMeters": 700,
+      "breakMeters": 120,
+      "passSeconds": 2.6,
+      "gun": {
+        "mg": {
+          "rangeMeters": 550,
+          "coneDeg": 6
+        }
+      }
+    },
+    "researchCost": {
+      "rp": 1600,
+      "gp": 4500
+    },
+    "ammo": {
+      "mg": 1840,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "sounds": {
+      "mg": "pv1Gun",
+      "default": "pv1Gun"
+    }
   }
 }

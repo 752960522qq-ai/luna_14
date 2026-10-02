@@ -25,4 +25,4 @@ const parts=JSON.parse(read('src/parts.json'));
 for(const part of parts)assert(source.includes('// Source: src/'+part));
 for(const field of ['AIRCRAFT_SPECS','PROPELLER_SPECS','AIRCRAFT_TREE','planeInfo','weaponInfo','AI_FIGHTER','RESEARCH_COSTS'])assert(!parts.some(p=>read('src/'+p).includes('const '+field+' = {')),field+' still has a duplicated table');
 const report={result:'passed',embeddedModuleMatches:true,aircraftTablesPreserveV17CombatParameters:true,sourceParts:parts.length,parserHandlesBracesInStringsCommentsAndTemplates:true,brand:'银翼凌云'};
-fs.writeFileSync(new URL('source-v18.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('source-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

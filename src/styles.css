@@ -2519,3 +2519,8 @@ canvas {
 .plane-option:disabled {
   opacity: .6;
 }
+
+.save-controls { border-top: 1px solid #395360; margin-top: 18px; padding-top: 12px; }
+.save-controls h2 { font-size: 16px; margin: 0 0 8px; }
+.save-controls p { font-size: 12px; line-height: 1.5; margin: 7px 0; }
+#profileImportStatus { color: #f4d989; min-height: 18px; }

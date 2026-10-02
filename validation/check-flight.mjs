@@ -36,6 +36,6 @@ assert(Math.max(...report.fps.map(x=>x.final.speedKmh))-Math.min(...report.fps.m
 for(const pitch of [29,30,31])report.climbContinuity.push(run({id:`bf109b1-climb-${pitch}`,type:'bf109b1',throttle:1,speedKmh:450,duration:12},()=>dir(0,pitch)));
 assert(Math.max(...report.climbContinuity.map(x=>x.final.speedKmh))-Math.min(...report.climbContinuity.map(x=>x.final.speedKmh))<25,'30-degree climb discontinuity remains');
 const h=makeContext(1),p=plane(h,'bf109b1');h.ctx.player=p;p.userData.airspeed=p.userData.minFlightSpeedMps;h.ctx.wanted=dir(0,75);h.run('instructorDirection(player,wanted,.02)');assert(p.userData.instructorEnergyGuard,'Low speed climb guard absent');
-fs.writeFileSync(new URL('flight-regression-v18.json',import.meta.url),JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('flight-regression-v19.json',import.meta.url),JSON.stringify(report,null,2));
 const columns=Object.keys(series[0]);fs.writeFileSync(new URL('flight-series-v18.csv',import.meta.url),columns.join(',')+'\n'+series.map(r=>columns.map(c=>r[c]??'').join(',')).join('\n')+'\n');
 console.log(JSON.stringify({input:report.input.length,flight:report.flight.length,manual:report.manual.length,fps:report.fps.length,speed:report.speed,climb:report.climbContinuity.map(x=>({id:x.id,speed:x.final.speedKmh})),result:'passed'},null,2));

@@ -105,6 +105,7 @@ function fireWeapons(from, isEnemy, dt, enabled) {
         bullet.shooterId = unit?.id || null;
         bullet.damage = bulletDamage;
         bullet.weapon = id;
+        startBulletSmoke(bullet);
         viewState.scene.add(bullet.mesh);
         session.bullets.push(bullet);
       }
@@ -120,6 +121,8 @@ function fireWeapons(from, isEnemy, dt, enabled) {
 }
 function releaseBullet(index) {
   const bullet = session.bullets[index];
+  traceBulletSmoke(bullet, 0, true);
+  bullet.smokeActive = false;
   viewState.scene.remove(bullet.mesh);
   session.bullets.splice(index, 1);
   if (resourceState.bulletPool.length < 512) resourceState.bulletPool.push(bullet);
@@ -174,6 +177,13 @@ function fireBomberTurrets(from, isEnemy, dt) {
     const rounds = Math.min(eligibleGuns, state.b29mg);
     state.b29mg -= rounds;
     ammoSpent += rounds;
+    let visualRounds = rounds;
+    for (const turret of eligibleTurrets) {
+      const count = Math.min(turret.guns, visualRounds);
+      emitTurretSmoke(from, target, turret, count);
+      visualRounds -= count;
+      if (!visualRounds) break;
+    }
     playGunShot('b29Gun', from, isEnemy, interval, true);
     let hits = 0;
     for (let i = 0; i < rounds; i++) if (Math.random() < .5) hits++;

@@ -263,6 +263,7 @@ function chaseFrameOffsets(type, aspect = viewState.camera.aspect) {
     baseBack = spec.lengthMeters * .5 + spec.chaseOffsetMeters,
     baseHeight = spec.chaseHeightMeters,
     narrow = CHASE_NARROW_PRESETS[type];
+  if (spec.chaseFixed) return { backMeters: baseBack, heightMeters: baseHeight };
   const t = (CHASE_REFERENCE_ASPECT / Math.max(aspect, 1) - 1) / (CHASE_REFERENCE_ASPECT / (16 / 9) - 1);
   return {
     backMeters: baseBack + (narrow[0] - baseBack) * t,
