@@ -1,0 +1,1455 @@
+{
+  "result": "passed",
+  "method": "Actual generated v17 page, native GLTF/Draco/PBR/WebGL/audio/DOM, controlled RAF and software rendering. Not an Android device.",
+  "checks": [
+    "All eleven combat models decode; I-16 uses textured 6m model and correct propeller axis, RPM and blur",
+    "Thirty-three actual vertex projections match reference width and screen height across three landscape aspects",
+    "Fresh and migrated saves enforce ownership and retain old aircraft",
+    "Native research buttons save partial progress, charge exact RP/GP once, and open next stage with one BR1.3 aircraft",
+    "Research cards and wallet stay within panel at three landscape widths",
+    "Actual I-16 5v5 sortie has correct HP/ammunition and two correct projectiles",
+    "Migrated MiG-15 campaign keeps three B-29 and five escorts with new camera"
+  ],
+  "fresh": {
+    "types": [
+      "i16",
+      "i15",
+      "mig3",
+      "f3f2",
+      "i15bis",
+      "p36a",
+      "bf109b1",
+      "mig15",
+      "f86",
+      "meteor",
+      "b29"
+    ],
+    "unlocked": [
+      "i15",
+      "i15bis"
+    ],
+    "selected": "i15",
+    "economy": {
+      "rp": 0,
+      "gp": 2000,
+      "research": {},
+      "completedSorties": 0
+    },
+    "states": {
+      "i16": "research",
+      "i15": "owned",
+      "mig3": "blocked",
+      "f3f2": "research",
+      "i15bis": "owned",
+      "bf109b1": "research",
+      "p36a": "research",
+      "mig15": "blocked",
+      "f86": "blocked",
+      "meteor": "blocked",
+      "b29": "blocked"
+    }
+  },
+  "models": {
+    "i16": {
+      "type": "i16",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.006449503259098,
+        2.9636113226546734,
+        6
+      ],
+      "textured": 23,
+      "meshes": 23,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "i15": {
+      "type": "i15",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.582930270875867,
+        3.290771481699945,
+        6.099999999999999
+      ],
+      "textured": 20,
+      "meshes": 31,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "mig3": {
+      "type": "mig3",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.230410315498201,
+        3.07269434496562,
+        8.25
+      ],
+      "textured": 62,
+      "meshes": 85,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "f3f2": {
+      "type": "f3f2",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.807017014379365,
+        3.2346967340824295,
+        7.06
+      ],
+      "textured": 38,
+      "meshes": 61,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "i15bis": {
+      "type": "i15bis",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.06358905741616,
+        3.3927412125782084,
+        6.28
+      ],
+      "textured": 13,
+      "meshes": 16,
+      "propeller": true,
+      "propAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    "bf109b1": {
+      "type": "bf109b1",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.640105242254842,
+        3.01208534749601,
+        8.55
+      ],
+      "textured": 10,
+      "meshes": 11,
+      "propeller": true,
+      "propAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    "p36a": {
+      "type": "p36a",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.581712589649099,
+        3.4357962745265755,
+        8.7
+      ],
+      "textured": 22,
+      "meshes": 118,
+      "propeller": true,
+      "propAxis": [
+        0,
+        1,
+        0
+      ]
+    },
+    "mig15": {
+      "type": "mig15",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.128015279211162,
+        3.19907725976766,
+        10.100000000000001
+      ],
+      "textured": 2,
+      "meshes": 5,
+      "propeller": false
+    },
+    "f86": {
+      "type": "f86",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        11.311573814383372,
+        3.990324659655431,
+        11.400000000000002
+      ],
+      "textured": 5,
+      "meshes": 6,
+      "propeller": false
+    },
+    "meteor": {
+      "type": "meteor",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        13.20193254003348,
+        2.9650307960272415,
+        12.600000000000001
+      ],
+      "textured": 4,
+      "meshes": 5,
+      "propeller": false
+    },
+    "b29": {
+      "type": "b29",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        42.73967746223873,
+        8.640966505138291,
+        30.18
+      ],
+      "textured": 22,
+      "meshes": 64,
+      "propeller": false
+    }
+  },
+  "preview": {
+    "type": "i16",
+    "attached": true,
+    "error": false,
+    "sizeMeters": [
+      9.006449503259098,
+      2.9636113226546734,
+      6
+    ],
+    "textured": 23,
+    "meshes": 23,
+    "propeller": true,
+    "propAxis": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "prop": {
+    "running": {
+      "rpm": 1900,
+      "blur": true
+    },
+    "stoppedRpm": 0
+  },
+  "cameras": [
+    {
+      "type": "i16",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.5,
+            11.7
+          ],
+          "width": 0.25760876733325344,
+          "centerY": 0.7381843940874523,
+          "bounds": [
+            0.3711956163333733,
+            0.6219317149541876,
+            0.6288043836666267,
+            0.8544370732207169
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            3.6168744892956366,
+            12.058914855368524
+          ],
+          "width": 0.2576395126429229,
+          "centerY": 0.7380447578399139,
+          "bounds": [
+            0.3711802436785386,
+            0.6252420682756362,
+            0.6288197563214615,
+            0.8508474474041916
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            4.529,
+            14.86
+          ],
+          "width": 0.25781680754211544,
+          "centerY": 0.7380736282571835,
+          "bounds": [
+            0.3710915962289423,
+            0.6463060986135234,
+            0.6289084037710577,
+            0.8298411579008436
+          ]
+        }
+      ]
+    },
+    {
+      "type": "i15",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.9000000000000004,
+            12.350000000000001
+          ],
+          "width": 0.2576985362729227,
+          "centerY": 0.7397869119325896,
+          "bounds": [
+            0.37115073186353864,
+            0.6347200803732892,
+            0.6288492681364614,
+            0.84485374349189
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.021644876613825,
+            12.73640137277333
+          ],
+          "width": 0.25769079945995643,
+          "centerY": 0.7394345089135493,
+          "bounds": [
+            0.3711546002700218,
+            0.6375808585009437,
+            0.6288453997299782,
+            0.841288159326155
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            4.971,
+            15.752000000000002
+          ],
+          "width": 0.2578075934656636,
+          "centerY": 0.7380269566442124,
+          "bounds": [
+            0.3710962032671682,
+            0.6556563534132492,
+            0.6289037967328318,
+            0.8203975598751755
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mig3",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            4.3,
+            13.625
+          ],
+          "width": 0.25796315617944154,
+          "centerY": 0.7388670241780768,
+          "bounds": [
+            0.37101842191027923,
+            0.6310097474147882,
+            0.6289815780897208,
+            0.8467243009413655
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.435728877267527,
+            14.039569374080731
+          ],
+          "width": 0.2579437283947785,
+          "centerY": 0.7385833964582426,
+          "bounds": [
+            0.37102813580261074,
+            0.6340049989233051,
+            0.6289718641973893,
+            0.84316179399318
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            5.495,
+            17.275
+          ],
+          "width": 0.257805865841364,
+          "centerY": 0.73801761731387,
+          "bounds": [
+            0.371097067079318,
+            0.6531414198680983,
+            0.628902932920682,
+            0.8228938147596415
+          ]
+        }
+      ]
+    },
+    {
+      "type": "f3f2",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.5,
+            12.229999999999999
+          ],
+          "width": 0.25836771370279554,
+          "centerY": 0.7416784986009675,
+          "bounds": [
+            0.37081614314860223,
+            0.6321117572233598,
+            0.6291838568513978,
+            0.851245239978575
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            3.6243708122242193,
+            12.6279865991175
+          ],
+          "width": 0.258292477082666,
+          "centerY": 0.7410031768415711,
+          "bounds": [
+            0.370853761458667,
+            0.6350221249473857,
+            0.629146238541333,
+            0.8469842287357565
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            4.595,
+            15.733999999999998
+          ],
+          "width": 0.25780955870027067,
+          "centerY": 0.7380578342609725,
+          "bounds": [
+            0.37109522064986467,
+            0.653380017699263,
+            0.6289047793501353,
+            0.8227356508226819
+          ]
+        }
+      ]
+    },
+    {
+      "type": "i15bis",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.9000000000000004,
+            12.940000000000001
+          ],
+          "width": 0.2582346996298093,
+          "centerY": 0.7354779822776114,
+          "bounds": [
+            0.37088265018509536,
+            0.6267242004384653,
+            0.6291173498149046,
+            0.8442317641167575
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.037205425723157,
+            13.349003922209512
+          ],
+          "width": 0.25815550350820415,
+          "centerY": 0.7357332668553964,
+          "bounds": [
+            0.3709222482458979,
+            0.6302389223162441,
+            0.6290777517541021,
+            0.8412276113945486
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            5.107999999999999,
+            16.541
+          ],
+          "width": 0.25781887901452905,
+          "centerY": 0.7380483283152637,
+          "bounds": [
+            0.3710905604927355,
+            0.6524022847730764,
+            0.6289094395072645,
+            0.8236943718574511
+          ]
+        }
+      ]
+    },
+    {
+      "type": "bf109b1",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.8,
+            12.275
+          ],
+          "width": 0.25856333619425514,
+          "centerY": 0.7386673957745058,
+          "bounds": [
+            0.37071833190287246,
+            0.6111367899186168,
+            0.6292816680971276,
+            0.866198001630395
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            3.931072070599771,
+            12.66628534074195
+          ],
+          "width": 0.258456738672018,
+          "centerY": 0.7383868072140296,
+          "bounds": [
+            0.370771630663991,
+            0.6147366152830385,
+            0.629228369336009,
+            0.8620369991450207
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            4.954,
+            15.72
+          ],
+          "width": 0.25781782912101625,
+          "centerY": 0.7380725533792619,
+          "bounds": [
+            0.3710910854394919,
+            0.6377968854623974,
+            0.6289089145605081,
+            0.8383482212961264
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p36a",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            4.2,
+            13.25
+          ],
+          "width": 0.2576128859840471,
+          "centerY": 0.7403979664372031,
+          "bounds": [
+            0.37119347099872513,
+            0.6245591312075596,
+            0.6288063569827722,
+            0.8562368016668468
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.338909135479653,
+            13.676154600424905
+          ],
+          "width": 0.25761949062116657,
+          "centerY": 0.7398556988926287,
+          "bounds": [
+            0.37119036619657003,
+            0.6277948623128708,
+            0.6288098568177366,
+            0.8519165354723865
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            5.423,
+            17.002
+          ],
+          "width": 0.2578136575580312,
+          "centerY": 0.7380539621690148,
+          "bounds": [
+            0.37109312120393845,
+            0.6483379236112045,
+            0.6289067787619697,
+            0.8277700007268249
+          ]
+        }
+      ]
+    },
+    {
+      "type": "mig15",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            3.7,
+            15.350000000000001
+          ],
+          "width": 0.25849853766127756,
+          "centerY": 0.7387468171511041,
+          "bounds": [
+            0.37085260477491816,
+            0.6515082197907389,
+            0.6293511424361957,
+            0.8259854145114693
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            3.828118973688511,
+            15.759458244811244
+          ],
+          "width": 0.25840584163947355,
+          "centerY": 0.739081711263162,
+          "bounds": [
+            0.3708947155705492,
+            0.6546745331906721,
+            0.6293005572100228,
+            0.8234888893356519
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            4.828,
+            18.955
+          ],
+          "width": 0.2578142922814192,
+          "centerY": 0.7380588385052017,
+          "bounds": [
+            0.371164205921845,
+            0.6678935537322452,
+            0.6289784982032642,
+            0.8082241232781582
+          ]
+        }
+      ]
+    },
+    {
+      "type": "f86",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            4.3,
+            17.7
+          ],
+          "width": 0.2581421430611849,
+          "centerY": 0.7390549594604456,
+          "bounds": [
+            0.3709290509308153,
+            0.6420331573020853,
+            0.6290711939920002,
+            0.8360767616188058
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.444020264749142,
+            18.14807566595849
+          ],
+          "width": 0.2580385620990856,
+          "centerY": 0.7388423387304892,
+          "bounds": [
+            0.37098084125065733,
+            0.644335920309637,
+            0.6290194033497429,
+            0.8333487571513414
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            5.568,
+            21.645
+          ],
+          "width": 0.2578184037255413,
+          "centerY": 0.7380677846369638,
+          "bounds": [
+            0.3710909182526413,
+            0.6593294329499844,
+            0.6289093219781826,
+            0.8168061363239432
+          ]
+        }
+      ]
+    },
+    {
+      "type": "meteor",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            4.4,
+            17.7
+          ],
+          "width": 0.2577577485975304,
+          "centerY": 0.7404558316269108,
+          "bounds": [
+            0.3711211257012348,
+            0.6506647757704701,
+            0.6288788742987652,
+            0.8302468874833513
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            4.5683265239418205,
+            18.232806831181563
+          ],
+          "width": 0.2577674017306722,
+          "centerY": 0.7400050902935529,
+          "bounds": [
+            0.3711162991346639,
+            0.6529889753537461,
+            0.6288837008653361,
+            0.8270212052333595
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            5.882,
+            22.391
+          ],
+          "width": 0.25780772548654185,
+          "centerY": 0.7380281187086121,
+          "bounds": [
+            0.3710961372567291,
+            0.6677228754038244,
+            0.6289038627432709,
+            0.8083333620133998
+          ]
+        }
+      ]
+    },
+    {
+      "type": "b29",
+      "screens": [
+        {
+          "aspect": 2.226086956521739,
+          "offset": [
+            0,
+            15.5,
+            57.989999999999995
+          ],
+          "width": 0.2576277376720305,
+          "centerY": 0.7380374150960398,
+          "bounds": [
+            0.37118612394666073,
+            0.6719822691765148,
+            0.6288138616186912,
+            0.8040925610155647
+          ]
+        },
+        {
+          "aspect": 2.164102564102564,
+          "offset": [
+            0,
+            16.087552704690307,
+            59.69666285340742
+          ],
+          "width": 0.25766186039946287,
+          "centerY": 0.738068707017189,
+          "bounds": [
+            0.37116906278210454,
+            0.6739329080242135,
+            0.6288309231815674,
+            0.8022045060101645
+          ]
+        },
+        {
+          "aspect": 1.7777777777777777,
+          "offset": [
+            0,
+            20.673,
+            73.016
+          ],
+          "width": 0.25781139402642295,
+          "centerY": 0.7380444199585,
+          "bounds": [
+            0.3710942972151844,
+            0.6857079970930655,
+            0.6289056912416073,
+            0.7903808428239345
+          ]
+        }
+      ]
+    }
+  ],
+  "rewards": [
+    {
+      "first": {
+        "rp": 334,
+        "gp": 2944,
+        "research": {},
+        "completedSorties": 1
+      },
+      "repeat": {
+        "rp": 334,
+        "gp": 2944,
+        "research": {},
+        "completedSorties": 1
+      },
+      "text": "本局获得 334 研发点 · 944 GP"
+    },
+    {
+      "first": {
+        "rp": 334,
+        "gp": 3888,
+        "research": {
+          "i16": 334
+        },
+        "completedSorties": 2
+      },
+      "repeat": {
+        "rp": 334,
+        "gp": 3888,
+        "research": {
+          "i16": 334
+        },
+        "completedSorties": 2
+      },
+      "text": "本局获得 334 研发点 · 944 GP"
+    }
+  ],
+  "purchased": {
+    "types": [
+      "i16",
+      "i15",
+      "mig3",
+      "f3f2",
+      "i15bis",
+      "p36a",
+      "bf109b1",
+      "mig15",
+      "f86",
+      "meteor",
+      "b29"
+    ],
+    "unlocked": [
+      "i15",
+      "i15bis",
+      "i16"
+    ],
+    "selected": "i16",
+    "economy": {
+      "rp": 168,
+      "gp": 2488,
+      "research": {
+        "i16": 500
+      },
+      "completedSorties": 2
+    },
+    "states": {
+      "i16": "owned",
+      "i15": "owned",
+      "mig3": "research",
+      "f3f2": "research",
+      "i15bis": "owned",
+      "bf109b1": "research",
+      "p36a": "research",
+      "mig15": "blocked",
+      "f86": "blocked",
+      "meteor": "blocked",
+      "b29": "blocked"
+    }
+  },
+  "reloaded": {
+    "types": [
+      "i16",
+      "i15",
+      "mig3",
+      "f3f2",
+      "i15bis",
+      "p36a",
+      "bf109b1",
+      "mig15",
+      "f86",
+      "meteor",
+      "b29"
+    ],
+    "unlocked": [
+      "i15",
+      "i15bis",
+      "i16"
+    ],
+    "selected": "i16",
+    "economy": {
+      "rp": 168,
+      "gp": 2488,
+      "research": {
+        "i16": 500
+      },
+      "completedSorties": 2
+    },
+    "states": {
+      "i16": "owned",
+      "i15": "owned",
+      "mig3": "research",
+      "f3f2": "research",
+      "i15bis": "owned",
+      "bf109b1": "research",
+      "p36a": "research",
+      "mig15": "blocked",
+      "f86": "blocked",
+      "meteor": "blocked",
+      "b29": "blocked"
+    }
+  },
+  "layouts": [
+    {
+      "width": 844,
+      "height": 390,
+      "panelClient": 808,
+      "panelScroll": 808,
+      "cards": [
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.0 · 6.28 m\nI-15bis\n已入库\n选择出战\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 201
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.3 · 7.06 m\nF3F-2\n0 / 400 研发点 · 1,200 GP\n投入研发点\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.3 · 8.70 m\nP-36A\n0 / 550 研发点 · 1,600 GP\n投入研发点\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 6.7 · 30.18 m\nB-29 超级堡垒\n需先入库任一 BR 2.3 飞机\n前置未解锁\nIV 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 8.0 · 11.40 m\nF-86 佩刀\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.0 · 6.10 m\nI-15\n已入库\n选择出战\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 201
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.3 · 6.00 m\nI-16 type 5\n当前出战\n选择出战\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 201
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 2.3 · 8.25 m\nMiG-3\n0 / 1600 研发点 · 4,500 GP\n投入研发点\nII 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 8.0 · 10.10 m\nMIG-15\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 8.0 · 12.60 m\nMeteor F Mk 4 G.41G\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        },
+        {
+          "w": 300,
+          "scroll": 300,
+          "text": "BR 1.3 · 8.55 m\nBf-109 B-1\n0 / 500 研发点 · 1,400 GP\n投入研发点\nI 阶",
+          "copyWidth": 201,
+          "trackWidth": 201,
+          "fillWidth": 0
+        }
+      ]
+    },
+    {
+      "width": 640,
+      "height": 360,
+      "panelClient": 612,
+      "panelScroll": 612,
+      "cards": [
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.0 · 6.28 m\nI-15bis\n已入库\n选择出战\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 259
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.3 · 7.06 m\nF3F-2\n0 / 400 研发点 · 1,200 GP\n投入研发点\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.3 · 8.70 m\nP-36A\n0 / 550 研发点 · 1,600 GP\n投入研发点\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 6.7 · 30.18 m\nB-29 超级堡垒\n需先入库任一 BR 2.3 飞机\n前置未解锁\nIV 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 8.0 · 11.40 m\nF-86 佩刀\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.0 · 6.10 m\nI-15\n已入库\n选择出战\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 259
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.3 · 6.00 m\nI-16 type 5\n当前出战\n选择出战\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 259
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 2.3 · 8.25 m\nMiG-3\n0 / 1600 研发点 · 4,500 GP\n投入研发点\nII 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 8.0 · 10.10 m\nMIG-15\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 8.0 · 12.60 m\nMeteor F Mk 4 G.41G\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        },
+        {
+          "w": 328,
+          "scroll": 328,
+          "text": "BR 1.3 · 8.55 m\nBf-109 B-1\n0 / 500 研发点 · 1,400 GP\n投入研发点\nI 阶",
+          "copyWidth": 259,
+          "trackWidth": 259,
+          "fillWidth": 0
+        }
+      ]
+    },
+    {
+      "width": 480,
+      "height": 320,
+      "panelClient": 459,
+      "panelScroll": 459,
+      "cards": [
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.0 · 6.28 m\nI-15bis\n已入库\n选择出战\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 232
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.3 · 7.06 m\nF3F-2\n0 / 400 研发点 · 1,200 GP\n投入研发点\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.3 · 8.70 m\nP-36A\n0 / 550 研发点 · 1,600 GP\n投入研发点\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 6.7 · 30.18 m\nB-29 超级堡垒\n需先入库任一 BR 2.3 飞机\n前置未解锁\nIV 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 8.0 · 11.40 m\nF-86 佩刀\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.0 · 6.10 m\nI-15\n已入库\n选择出战\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 232
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.3 · 6.00 m\nI-16 type 5\n当前出战\n选择出战\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 232
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 2.3 · 8.25 m\nMiG-3\n0 / 1600 研发点 · 4,500 GP\n投入研发点\nII 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 8.0 · 10.10 m\nMIG-15\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 8.0 · 12.60 m\nMeteor F Mk 4 G.41G\n需先入库任一 BR 6.7 飞机\n前置未解锁\nV 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        },
+        {
+          "w": 301,
+          "scroll": 301,
+          "text": "BR 1.3 · 8.55 m\nBf-109 B-1\n0 / 500 研发点 · 1,400 GP\n投入研发点\nI 阶",
+          "copyWidth": 232,
+          "trackWidth": 232,
+          "fillWidth": 0
+        }
+      ]
+    }
+  ],
+  "fight": {
+    "playing": true,
+    "mode": "airspace",
+    "type": "i16",
+    "hp": 350,
+    "ammo": {
+      "mg": 850,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "root": {
+      "type": "i16",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.006449503259098,
+        2.9636113226546734,
+        6
+      ],
+      "textured": 23,
+      "meshes": 23,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "cameraLocal": [
+      0,
+      3.616874489295583,
+      12.058914855368212
+    ],
+    "offset": {
+      "backMeters": 12.058914855368522,
+      "heightMeters": 3.6168744892956366
+    },
+    "units": [
+      {
+        "team": "blue",
+        "type": "i16",
+        "attached": true
+      },
+      {
+        "team": "blue",
+        "type": "bf109b1",
+        "attached": true
+      },
+      {
+        "team": "blue",
+        "type": "p36a",
+        "attached": true
+      },
+      {
+        "team": "blue",
+        "type": "i16",
+        "attached": true
+      },
+      {
+        "team": "blue",
+        "type": "p36a",
+        "attached": true
+      },
+      {
+        "team": "red",
+        "type": "i15bis",
+        "attached": true
+      },
+      {
+        "team": "red",
+        "type": "bf109b1",
+        "attached": true
+      },
+      {
+        "team": "red",
+        "type": "f3f2",
+        "attached": true
+      },
+      {
+        "team": "red",
+        "type": "i15bis",
+        "attached": true
+      },
+      {
+        "team": "red",
+        "type": "bf109b1",
+        "attached": true
+      }
+    ],
+    "bomberCount": 0,
+    "escortCount": 0
+  },
+  "fired": {
+    "ammo": {
+      "mg": 848,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "bullets": [
+      {
+        "speed": 825,
+        "damage": 16
+      },
+      {
+        "speed": 825,
+        "damage": 16
+      }
+    ]
+  },
+  "legacy": {
+    "types": [
+      "i16",
+      "i15",
+      "mig3",
+      "f3f2",
+      "i15bis",
+      "p36a",
+      "bf109b1",
+      "mig15",
+      "f86",
+      "meteor",
+      "b29"
+    ],
+    "unlocked": [
+      "i15",
+      "i15bis",
+      "f86",
+      "mig15",
+      "meteor",
+      "b29",
+      "bf109b1",
+      "p36a",
+      "f3f2",
+      "mig3"
+    ],
+    "selected": "f86",
+    "economy": {
+      "rp": 0,
+      "gp": 2000,
+      "research": {},
+      "completedSorties": 0
+    },
+    "states": {
+      "i16": "research",
+      "i15": "owned",
+      "mig3": "owned",
+      "f3f2": "owned",
+      "i15bis": "owned",
+      "bf109b1": "owned",
+      "p36a": "owned",
+      "mig15": "owned",
+      "f86": "owned",
+      "meteor": "owned",
+      "b29": "owned"
+    }
+  },
+  "campaign": {
+    "playing": true,
+    "mode": "campaign",
+    "type": "mig15",
+    "hp": 600,
+    "ammo": {
+      "mg": 0,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 40,
+      "ns23": 160,
+      "hispano": 0
+    },
+    "root": {
+      "type": "mig15",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.128015279211162,
+        3.19907725976766,
+        10.100000000000001
+      ],
+      "textured": 2,
+      "meshes": 5,
+      "propeller": false
+    },
+    "cameraLocal": [
+      0,
+      3.8281189736885324,
+      15.759458244811242
+    ],
+    "offset": {
+      "backMeters": 15.759458244811244,
+      "heightMeters": 3.828118973688511
+    },
+    "units": [],
+    "bomberCount": 3,
+    "escortCount": 5
+  },
+  "errors": [],
+  "httpErrors": []
+}

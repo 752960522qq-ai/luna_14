@@ -1,0 +1,74 @@
+{
+  "result": "passed",
+  "checks": [
+    "New save starts with two BR1.0 aircraft, 0 RP / 2000 GP; locked aircraft cannot be selected or used in campaign",
+    "RP spending caps at remaining research; ownership needs sufficient GP and purchase is charged once",
+    "Any one of four BR1.3 planes opens BR2.3; equal-weight alternatives are optional",
+    "BR stages cannot be skipped, including with full stored research; one BR8 jet is independent of the other jets",
+    "Wallet, partial progress and purchased aircraft survive reloading",
+    "Legacy v16 ownership, selected aircraft and bomber loadout are preserved; I16 remains researchable",
+    "Invalid saves cannot create negative balances, oversized research or locked selections",
+    "Campaign and airspace settle exact RP/GP rewards, including defeat and capped active time; repeated finish cannot duplicate rewards",
+    "Rewards count fixed simulation activity; pause and loading time do not add RP/GP"
+  ],
+  "costs": {
+    "i15": {
+      "rp": 0,
+      "gp": 0
+    },
+    "i15bis": {
+      "rp": 0,
+      "gp": 0
+    },
+    "f3f2": {
+      "rp": 400,
+      "gp": 1200
+    },
+    "bf109b1": {
+      "rp": 500,
+      "gp": 1400
+    },
+    "i16": {
+      "rp": 500,
+      "gp": 1400
+    },
+    "p36a": {
+      "rp": 550,
+      "gp": 1600
+    },
+    "mig3": {
+      "rp": 1600,
+      "gp": 4500
+    },
+    "b29": {
+      "rp": 4800,
+      "gp": 14000
+    },
+    "meteor": {
+      "rp": 7000,
+      "gp": 22000
+    },
+    "mig15": {
+      "rp": 7500,
+      "gp": 24000
+    },
+    "f86": {
+      "rp": 7800,
+      "gp": 26000
+    }
+  },
+  "rewardRules": {
+    "startGP": 2000,
+    "maxBalance": 999999999,
+    "killRP": 80,
+    "killGP": 200,
+    "winRP": 120,
+    "winGP": 400,
+    "lossRP": 30,
+    "lossGP": 100,
+    "timeRP": 0.3,
+    "timeGP": 0.8,
+    "maxRewardSeconds": 300,
+    "minResultSeconds": 20
+  }
+}

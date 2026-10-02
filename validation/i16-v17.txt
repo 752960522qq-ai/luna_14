@@ -1,0 +1,36 @@
+{
+  "result": "passed",
+  "checks": [
+    "Two nose ShKAS barrels: 1800 RPM each, 825m/s, damage16, 850 total ammunition",
+    "Cadence, final ammunition pair and empty-magazine silence at 30/60/120 FPS",
+    "Full-power level flight settles at 445 km/h; both control modes remain finite and normalized",
+    "Piston engine configuration and existing machine-gun sound"
+  ],
+  "cadence": [
+    {
+      "fps": 30,
+      "spentInTwoSeconds": 122
+    },
+    {
+      "fps": 60,
+      "spentInTwoSeconds": 122
+    },
+    {
+      "fps": 120,
+      "spentInTwoSeconds": 120
+    }
+  ],
+  "flight": [
+    {
+      "mode": "cursor",
+      "speedKmh": 305.1778042299629,
+      "aoaDegrees": -2.6267106597689345e-9
+    },
+    {
+      "mode": "joystick",
+      "speedKmh": 409.4381856164966,
+      "aoaDegrees": -1.4919219259505079
+    }
+  ],
+  "levelSpeedKmh": 444.9992701477063
+}

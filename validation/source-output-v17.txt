@@ -1,0 +1,8 @@
+{
+  "result": "passed",
+  "embeddedModuleMatches": true,
+  "existingTenAircraftDataPreservedExceptCalibratedCameras": true,
+  "flightIntegratorControlsGearAndV16StabilityPreserved": true,
+  "I16SuppliedStatsAndTwoGuns": true,
+  "existingAudioFilesUnchanged": true
+}

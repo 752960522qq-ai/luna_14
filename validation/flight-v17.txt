@@ -1,0 +1,89 @@
+{
+  "input": 10,
+  "flight": 55,
+  "manual": 11,
+  "fps": 3,
+  "speed": [
+    {
+      "type": "i16",
+      "throttle": 1,
+      "levelKmh": 444.9992701477063,
+      "configuredMaxKmh": 445
+    },
+    {
+      "type": "i15",
+      "throttle": 1,
+      "levelKmh": 364.9994013571086,
+      "configuredMaxKmh": 365
+    },
+    {
+      "type": "mig3",
+      "throttle": 1,
+      "levelKmh": 639.9989503247904,
+      "configuredMaxKmh": 640
+    },
+    {
+      "type": "f3f2",
+      "throttle": 1,
+      "levelKmh": 424.9993029500568,
+      "configuredMaxKmh": 425
+    },
+    {
+      "type": "i15bis",
+      "throttle": 1,
+      "levelKmh": 372.11923688238096,
+      "configuredMaxKmh": 380
+    },
+    {
+      "type": "p36a",
+      "throttle": 1,
+      "levelKmh": 493.54761944399854,
+      "configuredMaxKmh": 504
+    },
+    {
+      "type": "bf109b1",
+      "throttle": 1,
+      "levelKmh": 455.35643460607264,
+      "configuredMaxKmh": 465
+    },
+    {
+      "type": "mig15",
+      "throttle": 1,
+      "levelKmh": 1053.6849970669577,
+      "configuredMaxKmh": 1076
+    },
+    {
+      "type": "f86",
+      "throttle": 1,
+      "levelKmh": 1083.062831557667,
+      "configuredMaxKmh": 1106
+    },
+    {
+      "type": "meteor",
+      "throttle": 1,
+      "levelKmh": 893.0861685177125,
+      "configuredMaxKmh": 912
+    },
+    {
+      "type": "b29",
+      "throttle": 1,
+      "levelKmh": 563.0751610720253,
+      "configuredMaxKmh": 575
+    }
+  ],
+  "climb": [
+    {
+      "id": "bf109b1-climb-29",
+      "speed": 312.2264401282215
+    },
+    {
+      "id": "bf109b1-climb-30",
+      "speed": 306.9058769651471
+    },
+    {
+      "id": "bf109b1-climb-31",
+      "speed": 301.66003455232726
+    }
+  ],
+  "result": "passed"
+}
