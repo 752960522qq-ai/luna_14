@@ -1,0 +1,20 @@
+{
+  "result": "passed",
+  "unchangedAircraftPhysicsWeaponsAudioAndGear": [
+    "integrateAircraftFlight",
+    "steerAircraftToward",
+    "updatePlayerFlightControls",
+    "turnRateForPlane",
+    "verticalTurnRateForPlane",
+    "updatePropeller",
+    "configureCombatLandingGear",
+    "attachPropeller",
+    "sweptAircraftHit",
+    "solveBulletIntercept",
+    "startCampaign",
+    "updateCampaign",
+    "updateCampaignEscortAI"
+  ],
+  "unchangedFlightParameters": true,
+  "embeddedModuleMatches": true
+}

@@ -1,0 +1,20 @@
+{
+  "result": "passed",
+  "unchangedExistingFlightPhysicsAndGear": [
+    "integrateAircraftFlight",
+    "steerAircraftToward",
+    "updatePlayerFlightControls",
+    "turnRateForPlane",
+    "verticalTurnRateForPlane",
+    "updatePropeller",
+    "configureCombatLandingGear",
+    "sweptAircraftHit",
+    "solveBulletIntercept",
+    "startCampaign",
+    "updateCampaign",
+    "updateCampaignEscortAI"
+  ],
+  "existingAircraftDataPreservedExceptRequestedCameraOffsets": true,
+  "embeddedModuleMatches": true,
+  "HUDBrandingRemoved": true
+}

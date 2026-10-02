@@ -1,0 +1,79 @@
+{
+  "result": "passed",
+  "checks": [
+    "Soviet I-15 textures, uniform 6.10m scale, forward axis and permanently extended gear",
+    "I-15 propeller spools to 1900 RPM with blur and stops with engine off",
+    "Saved v15 profile gains I-15; catalogs and Meteor name update",
+    "Five requested aft/height offsets match exactly",
+    "Actual 5v5 sortie has BR-matched AI under 3000m and four correct PV-1 projectiles",
+    "Telemetry sits at upper-right edge; objective/radar/text remain separate at five widths",
+    "Campaign awaits all models and rendering warm-up before it starts, retains three B-29 and five escorts"
+  ],
+  "preview": {
+    "type": "i15",
+    "attached": true,
+    "error": false,
+    "sizeMeters": [
+      9.582930270875867,
+      3.290771481699945,
+      6.099999999999999
+    ],
+    "textured": 20,
+    "meshes": 31,
+    "gear": null,
+    "propeller": true,
+    "propAxis": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "cameras": [
+    {
+      "type": "mig15",
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.549999999999999
+      ],
+      "length": 10.1
+    },
+    {
+      "type": "f86",
+      "offset": [
+        0,
+        2.0000000000000284,
+        6.2
+      ],
+      "length": 11.4
+    },
+    {
+      "type": "meteor",
+      "offset": [
+        0,
+        2.0000000000000284,
+        6.799999999999999
+      ],
+      "length": 12.6
+    },
+    {
+      "type": "b29",
+      "offset": [
+        0,
+        2.0000000000000284,
+        16.09
+      ],
+      "length": 30.18
+    },
+    {
+      "type": "i15",
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.05
+      ],
+      "length": 6.1
+    }
+  ],
+  "errors": []
+}

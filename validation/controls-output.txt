@@ -1,0 +1,72 @@
+{
+  "method": "Actual shipped Three.js and game functions in Node VM; DOM/camera/physics checks, not Android runtime",
+  "flight": [
+    {
+      "plane": "i15bis",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.9961885452201003,
+      "maxSpeedStepMps": 0.03026513993533797
+    },
+    {
+      "plane": "bf109b1",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.9958552016182528,
+      "maxSpeedStepMps": 0.02299144955102861
+    },
+    {
+      "plane": "p36a",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.9939946930378873,
+      "maxSpeedStepMps": 0.025945117962521635
+    },
+    {
+      "plane": "mig15",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.9961345983783421,
+      "maxSpeedStepMps": 0.03763604558534439
+    },
+    {
+      "plane": "f86",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 8.537736462515939e-7,
+      "maxTurnRatio": 0.9965950629317888,
+      "maxSpeedStepMps": 0.03990118058871417
+    },
+    {
+      "plane": "meteor",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0,
+      "maxTurnRatio": 0.9954013104146578,
+      "maxSpeedStepMps": 0.035808707670639706
+    },
+    {
+      "plane": "b29",
+      "initialErrorDeg": 18.656765500035153,
+      "finalErrorDeg": 0.0004115844309170258,
+      "maxTurnRatio": 0.9863424003028343,
+      "maxSpeedStepMps": 0.019226695637343028
+    }
+  ],
+  "otherChecks": [
+    "persistent modes and malformed settings",
+    "free joystick roll preserved",
+    "touch-down without snap",
+    "pointer ownership and cancellation",
+    "free look independence",
+    "throttle independence",
+    "locked target survives fire release",
+    "lead matches actual straight non-inherited projectiles",
+    "joystick lead visible without steering assistance",
+    "lead switches with actual selected weapon",
+    "no forward lead for B-29",
+    "out-of-range lead hidden",
+    "destroyed target invalidated",
+    "commanded direction and real gunsight remain separate until the aircraft turns",
+    "pause resume retains health, kills and position",
+    "unique HTML IDs"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "result": "passed",
+  "fileName": "sky-duel-i15-stability-v16.apk",
+  "bytes": 49101148,
+  "sha256": "235cbfbaa766a7a564fe0b0f2db4f84c3114e24035019a780171353c30257ffa",
+  "package": "com.luna.skyduel",
+  "versionCode": 16,
+  "versionName": "1.0",
+  "minSdk": 23,
+  "targetSdk": 35,
+  "sameSigningCertificateSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "signatureSchemes": [
+    "v1",
+    "v2",
+    "v3"
+  ],
+  "zipalign4Bytes": true,
+  "unchangedPayloadCount": 66,
+  "originalModelAudioDecoderAndNativePayloadsUnchanged": true,
+  "manifestChanges": "Only versionCode integer 15 -> 16",
+  "i15MatchesOriginalUpload": true,
+  "packagedPageMatchesTestedSource": true,
+  "checksPassed": [
+    "source",
+    "stability",
+    "aircraft",
+    "airspace",
+    "audio-behavior",
+    "browser",
+    "package",
+    "flight-regression"
+  ],
+  "androidDeviceTested": false
+}

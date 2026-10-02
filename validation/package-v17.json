@@ -1,0 +1,14 @@
+{
+  "result": "passed",
+  "baseSha256": "235cbfbaa766a7a564fe0b0f2db4f84c3114e24035019a780171353c30257ffa",
+  "unsignedBytes": 51779424,
+  "changed": [
+    "assets/index.html",
+    "AndroidManifest.xml"
+  ],
+  "added": [
+    "assets/i16-type5.glb"
+  ],
+  "unchangedPayloadCount": 67,
+  "unchangedOriginalModelsAudioAndNativeShell": true
+}

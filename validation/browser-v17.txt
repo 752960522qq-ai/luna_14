@@ -1,0 +1,15 @@
+Native I-16 textures/scale/propeller and 33 chase-camera projections passed
+Native research UI, exact RP/GP charges, one-of-stage prerequisite and save reload passed
+{
+  "result": "passed",
+  "checks": [
+    "All eleven combat models decode; I-16 uses textured 6m model and correct propeller axis, RPM and blur",
+    "Thirty-three actual vertex projections match reference width and screen height across three landscape aspects",
+    "Fresh and migrated saves enforce ownership and retain old aircraft",
+    "Native research buttons save partial progress, charge exact RP/GP once, and open next stage with one BR1.3 aircraft",
+    "Research cards and wallet stay within panel at three landscape widths",
+    "Actual I-16 5v5 sortie has correct HP/ammunition and two correct projectiles",
+    "Migrated MiG-15 campaign keeps three B-29 and five escorts with new camera"
+  ],
+  "errors": []
+}

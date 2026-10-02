@@ -1,0 +1,24 @@
+{
+  "result": "passed",
+  "apk": "sky-duel-audio-v12.apk",
+  "bytes": 39614610,
+  "sha256": "d3ce5696d2dd523fff08ad0561205879a4887761a80c2cac95ebf85b5245f187",
+  "package": "com.luna.skyduel",
+  "versionCode": 12,
+  "versionName": "1.0",
+  "certificateSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "sameCertificateAsV11": true,
+  "baselineApkSha256": "975b00134a0b84d864fee8812c014fe36a15afcc318cc072ee8ce92f855f6689",
+  "signatureSchemes": [
+    1,
+    2,
+    3
+  ],
+  "zipAlignmentVerified": true,
+  "audioSlices": 9,
+  "originalGunEngineRecordingsRemoved": 9,
+  "unchangedExtraSounds": [
+    "bomb_drop.mp3",
+    "kill_confirm.mp3"
+  ]
+}

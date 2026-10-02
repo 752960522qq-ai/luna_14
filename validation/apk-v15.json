@@ -1,0 +1,16 @@
+{
+  "file": "sky-duel-mig3-v15.apk",
+  "bytes": 45099289,
+  "sha256": "fc7e6abe92e53eb8e1f905dcc305ad8689d07e45d4dd4f2086cd29b01f66a82f",
+  "package": "com.luna.skyduel",
+  "versionCode": 15,
+  "versionName": "1.0",
+  "minSdk": 23,
+  "signerSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "v1": true,
+  "v2": true,
+  "v3": true,
+  "aligned": true,
+  "embeddedPageAndModelMatch": true,
+  "includesMiG3CombatGear": true
+}

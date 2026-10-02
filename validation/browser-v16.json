@@ -1,0 +1,729 @@
+{
+  "result": "passed",
+  "method": "Actual v16 page with native GLTF/Draco/PBR/WebGL/audio/DOM, controlled RAF, software rendering. Not an Android device.",
+  "checks": [
+    "Soviet I-15 textures, uniform 6.10m scale, forward axis and permanently extended gear",
+    "I-15 propeller spools to 1900 RPM with blur and stops with engine off",
+    "Saved v15 profile gains I-15; catalogs and Meteor name update",
+    "Five requested aft/height offsets match exactly",
+    "Actual 5v5 sortie has BR-matched AI under 3000m and four correct PV-1 projectiles",
+    "Telemetry sits at upper-right edge; objective/radar/text remain separate at five widths",
+    "Campaign awaits all models and rendering warm-up before it starts, retains three B-29 and five escorts"
+  ],
+  "info": {
+    "types": [
+      "i15",
+      "mig3",
+      "f3f2",
+      "i15bis",
+      "p36a",
+      "bf109b1",
+      "mig15",
+      "f86",
+      "meteor",
+      "b29"
+    ],
+    "unlocked": [
+      "f86",
+      "mig15",
+      "meteor",
+      "b29",
+      "i15bis",
+      "bf109b1",
+      "p36a",
+      "f3f2",
+      "mig3",
+      "i15"
+    ],
+    "meteor": "Meteor F Mk 4 G.41G",
+    "i15": {
+      "name": "I-15",
+      "health": 340,
+      "maxSpeedKmh": 365,
+      "minLevelFlightKmh": 105,
+      "bestClimbMps": 12.7,
+      "turnTimeS": 13.8,
+      "horizontalTurnRateDps": 26.08695652173913,
+      "verticalTurnTimeS": 8.6,
+      "verticalTurnRateDps": 41.86046511627907,
+      "turnRadiusM": 130,
+      "intro": "经典海鸥翼双翼战斗机，拥有极强的水平缠斗能力，回转极为灵活；采用固定起落架，极速不高，高空性能弱，适合低空低速狗斗，不适合高速俯冲交战，西班牙内战大量使用。",
+      "specs": [
+        [
+          "系别",
+          "苏联"
+        ],
+        [
+          "等级",
+          "I"
+        ],
+        [
+          "战机权重",
+          "1.0"
+        ],
+        [
+          "机体耐久",
+          "340"
+        ],
+        [
+          "最大航速",
+          "365 km/h"
+        ],
+        [
+          "最小航速",
+          "105 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "12.7 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "13.8秒"
+        ],
+        [
+          "垂直转弯性能",
+          "8.6秒"
+        ],
+        [
+          "7.62mm PV-1航空机枪",
+          "4挺 · 总备弹3200发 · 单管750发/分钟 · 伤害13 · 弹速775 m/s"
+        ]
+      ]
+    }
+  },
+  "preview": {
+    "type": "i15",
+    "attached": true,
+    "error": false,
+    "sizeMeters": [
+      9.582930270875867,
+      3.290771481699945,
+      6.099999999999999
+    ],
+    "textured": 20,
+    "meshes": 31,
+    "gear": null,
+    "propeller": true,
+    "propAxis": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "combat": {
+    "type": "i15",
+    "attached": true,
+    "error": false,
+    "sizeMeters": [
+      9.582930270875867,
+      3.290771481699945,
+      6.099999999999999
+    ],
+    "textured": 20,
+    "meshes": 31,
+    "gear": null,
+    "propeller": true,
+    "propAxis": [
+      0,
+      0,
+      -1
+    ]
+  },
+  "orientation": {
+    "prop": [
+      -0.000056807812334504215,
+      0.020518781649817158,
+      -2.8580022134327616
+    ],
+    "tail": [
+      0,
+      0.6219112601843245,
+      1.7046658570263733
+    ],
+    "wheelLeft": [
+      -0.7464405119543402,
+      -1.3026284621053643,
+      -1.7601017965922288
+    ],
+    "wheelRight": [
+      0.7464993214207285,
+      -1.302617757607598,
+      -1.760219372010787
+    ]
+  },
+  "prop": {
+    "running": {
+      "rpm": 1900,
+      "blur": true
+    },
+    "stoppedRpm": 0
+  },
+  "cameras": [
+    {
+      "type": "mig15",
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.549999999999999
+      ],
+      "length": 10.1
+    },
+    {
+      "type": "f86",
+      "offset": [
+        0,
+        2.0000000000000284,
+        6.2
+      ],
+      "length": 11.4
+    },
+    {
+      "type": "meteor",
+      "offset": [
+        0,
+        2.0000000000000284,
+        6.799999999999999
+      ],
+      "length": 12.6
+    },
+    {
+      "type": "b29",
+      "offset": [
+        0,
+        2.0000000000000284,
+        16.09
+      ],
+      "length": 30.18
+    },
+    {
+      "type": "i15",
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.05
+      ],
+      "length": 6.1
+    }
+  ],
+  "fight": {
+    "playing": true,
+    "mode": "airspace",
+    "type": "i15",
+    "hp": 340,
+    "ammo": {
+      "mg": 3200,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "root": {
+      "type": "i15",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        9.582930270875867,
+        3.290771481699945,
+        6.1
+      ],
+      "textured": 20,
+      "meshes": 31,
+      "gear": null,
+      "propeller": true,
+      "propAxis": [
+        0,
+        0,
+        -1
+      ]
+    },
+    "cameraLocal": [
+      5.551115123125783e-16,
+      2.0000000000000284,
+      5.04999999999963
+    ],
+    "units": [
+      {
+        "team": "blue",
+        "type": "i15",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "blue",
+        "type": "i15",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "blue",
+        "type": "i15",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "blue",
+        "type": "i15",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "blue",
+        "type": "f3f2",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "red",
+        "type": "i15bis",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "red",
+        "type": "bf109b1",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "red",
+        "type": "f3f2",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "red",
+        "type": "p36a",
+        "attached": true,
+        "altitude": 1993.275260925293
+      },
+      {
+        "team": "red",
+        "type": "p36a",
+        "attached": true,
+        "altitude": 1993.275260925293
+      }
+    ],
+    "bomberCount": 0,
+    "escortCount": 0
+  },
+  "fired": {
+    "ammo": {
+      "mg": 3196,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "bullets": [
+      {
+        "speed": 775,
+        "damage": 13
+      },
+      {
+        "speed": 775,
+        "damage": 13
+      },
+      {
+        "speed": 775,
+        "damage": 13
+      },
+      {
+        "speed": 775,
+        "damage": 13
+      }
+    ]
+  },
+  "layouts": [
+    {
+      "width": 1100,
+      "height": 760,
+      "readout": {
+        "x": 788,
+        "y": 0,
+        "w": 308,
+        "h": 42.078125,
+        "right": 1096,
+        "bottom": 42.078125
+      },
+      "objective": {
+        "x": 140,
+        "y": 0,
+        "w": 634,
+        "h": 64,
+        "right": 774,
+        "bottom": 64
+      },
+      "radar": {
+        "x": 35.1875,
+        "y": 8,
+        "w": 88,
+        "h": 124,
+        "right": 123.1875,
+        "bottom": 132
+      },
+      "capture": {
+        "x": 218.03125,
+        "y": 31,
+        "w": 477.921875,
+        "h": 13.5,
+        "right": 695.953125,
+        "bottom": 44.5
+      },
+      "fields": [
+        {
+          "left": 795,
+          "right": 859.515625,
+          "textLeft": 795,
+          "textRight": 859.515625,
+          "scrollWidth": 65,
+          "clientWidth": 65
+        },
+        {
+          "left": 865.515625,
+          "right": 958.703125,
+          "textLeft": 865.515625,
+          "textRight": 958.703125,
+          "scrollWidth": 93,
+          "clientWidth": 93
+        },
+        {
+          "left": 964.703125,
+          "right": 1036.390625,
+          "textLeft": 964.703125,
+          "textRight": 1036.390625,
+          "scrollWidth": 72,
+          "clientWidth": 72
+        },
+        {
+          "left": 1042.390625,
+          "right": 1089,
+          "textLeft": 1042.390625,
+          "textRight": 1089,
+          "scrollWidth": 47,
+          "clientWidth": 47
+        }
+      ]
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "readout": {
+        "x": 603.6875,
+        "y": 0,
+        "w": 236.3125,
+        "h": 36.234375,
+        "right": 840,
+        "bottom": 36.234375
+      },
+      "objective": {
+        "x": 140,
+        "y": 0,
+        "w": 449.6875,
+        "h": 61,
+        "right": 589.6875,
+        "bottom": 61
+      },
+      "radar": {
+        "x": 27,
+        "y": 8,
+        "w": 67.515625,
+        "h": 103.515625,
+        "right": 94.515625,
+        "bottom": 111.515625
+      },
+      "capture": {
+        "x": 218.03125,
+        "y": 31,
+        "w": 293.609375,
+        "h": 12,
+        "right": 511.640625,
+        "bottom": 43
+      },
+      "fields": [
+        {
+          "left": 610.6875,
+          "right": 658.4375,
+          "textLeft": 610.6875,
+          "textRight": 658.4375,
+          "scrollWidth": 48,
+          "clientWidth": 48
+        },
+        {
+          "left": 664.4375,
+          "right": 733.4375,
+          "textLeft": 664.4375,
+          "textRight": 733.4375,
+          "scrollWidth": 69,
+          "clientWidth": 69
+        },
+        {
+          "left": 739.4375,
+          "right": 792.5,
+          "textLeft": 739.4375,
+          "textRight": 792.5,
+          "scrollWidth": 53,
+          "clientWidth": 53
+        },
+        {
+          "left": 798.5,
+          "right": 833,
+          "textLeft": 798.5,
+          "textRight": 833,
+          "scrollWidth": 35,
+          "clientWidth": 35
+        }
+      ]
+    },
+    {
+      "width": 640,
+      "height": 360,
+      "readout": {
+        "x": 428,
+        "y": 0,
+        "w": 210,
+        "h": 29.59375,
+        "right": 638,
+        "bottom": 29.59375
+      },
+      "objective": {
+        "x": 105,
+        "y": 0,
+        "w": 315,
+        "h": 59,
+        "right": 420,
+        "bottom": 59
+      },
+      "radar": {
+        "x": 20.46875,
+        "y": 8,
+        "w": 64,
+        "h": 100,
+        "right": 84.46875,
+        "bottom": 108
+      },
+      "capture": {
+        "x": 175.8125,
+        "y": 29,
+        "w": 173.390625,
+        "h": 12,
+        "right": 349.203125,
+        "bottom": 41
+      },
+      "fields": [
+        {
+          "left": 433,
+          "right": 476.9375,
+          "textLeft": 433,
+          "textRight": 476.9375,
+          "scrollWidth": 44,
+          "clientWidth": 44
+        },
+        {
+          "left": 480.9375,
+          "right": 544.421875,
+          "textLeft": 480.9375,
+          "textRight": 544.421875,
+          "scrollWidth": 63,
+          "clientWidth": 63
+        },
+        {
+          "left": 548.421875,
+          "right": 597.25,
+          "textLeft": 548.421875,
+          "textRight": 597.25,
+          "scrollWidth": 49,
+          "clientWidth": 49
+        },
+        {
+          "left": 601.25,
+          "right": 632.984375,
+          "textLeft": 601.25,
+          "textRight": 632.984375,
+          "scrollWidth": 32,
+          "clientWidth": 32
+        }
+      ]
+    },
+    {
+      "width": 568,
+      "height": 320,
+      "readout": {
+        "x": 356,
+        "y": 0,
+        "w": 210,
+        "h": 29.59375,
+        "right": 566,
+        "bottom": 29.59375
+      },
+      "objective": {
+        "x": 105,
+        "y": 0,
+        "w": 243,
+        "h": 59,
+        "right": 348,
+        "bottom": 59
+      },
+      "radar": {
+        "x": 18.171875,
+        "y": 8,
+        "w": 64,
+        "h": 100,
+        "right": 82.171875,
+        "bottom": 108
+      },
+      "capture": {
+        "x": 175.8125,
+        "y": 29,
+        "w": 101.390625,
+        "h": 12,
+        "right": 277.203125,
+        "bottom": 41
+      },
+      "fields": [
+        {
+          "left": 361,
+          "right": 404.9375,
+          "textLeft": 361,
+          "textRight": 404.9375,
+          "scrollWidth": 44,
+          "clientWidth": 44
+        },
+        {
+          "left": 408.9375,
+          "right": 472.421875,
+          "textLeft": 408.9375,
+          "textRight": 472.421875,
+          "scrollWidth": 63,
+          "clientWidth": 63
+        },
+        {
+          "left": 476.421875,
+          "right": 525.25,
+          "textLeft": 476.421875,
+          "textRight": 525.25,
+          "scrollWidth": 49,
+          "clientWidth": 49
+        },
+        {
+          "left": 529.25,
+          "right": 560.984375,
+          "textLeft": 529.25,
+          "textRight": 560.984375,
+          "scrollWidth": 32,
+          "clientWidth": 32
+        }
+      ]
+    },
+    {
+      "width": 480,
+      "height": 320,
+      "readout": {
+        "x": 268,
+        "y": 0,
+        "w": 210,
+        "h": 29.59375,
+        "right": 478,
+        "bottom": 29.59375
+      },
+      "objective": {
+        "x": 105,
+        "y": 0,
+        "w": 155,
+        "h": 101,
+        "right": 260,
+        "bottom": 101
+      },
+      "radar": {
+        "x": 15.359375,
+        "y": 8,
+        "w": 64,
+        "h": 100,
+        "right": 79.359375,
+        "bottom": 108
+      },
+      "capture": {
+        "x": 112,
+        "y": 50,
+        "w": 141,
+        "h": 12,
+        "right": 253,
+        "bottom": 62
+      },
+      "fields": [
+        {
+          "left": 273,
+          "right": 316.9375,
+          "textLeft": 273,
+          "textRight": 316.9375,
+          "scrollWidth": 44,
+          "clientWidth": 44
+        },
+        {
+          "left": 320.9375,
+          "right": 384.421875,
+          "textLeft": 320.9375,
+          "textRight": 384.421875,
+          "scrollWidth": 63,
+          "clientWidth": 63
+        },
+        {
+          "left": 388.421875,
+          "right": 437.25,
+          "textLeft": 388.421875,
+          "textRight": 437.25,
+          "scrollWidth": 49,
+          "clientWidth": 49
+        },
+        {
+          "left": 441.25,
+          "right": 472.984375,
+          "textLeft": 441.25,
+          "textRight": 472.984375,
+          "scrollWidth": 32,
+          "clientWidth": 32
+        }
+      ]
+    }
+  ],
+  "campaign": {
+    "playing": true,
+    "mode": "campaign",
+    "type": "mig15",
+    "hp": 600,
+    "ammo": {
+      "mg": 0,
+      "m2": 0,
+      "mg762": 0,
+      "n37": 40,
+      "ns23": 160,
+      "hispano": 0
+    },
+    "root": {
+      "type": "mig15",
+      "attached": true,
+      "error": false,
+      "sizeMeters": [
+        10.128015279211162,
+        3.19907725976766,
+        10.100000000000001
+      ],
+      "textured": 2,
+      "meshes": 5,
+      "gear": null,
+      "propeller": false
+    },
+    "cameraLocal": [
+      0,
+      2.0000000000000284,
+      5.550000000000068
+    ],
+    "units": [],
+    "bomberCount": 3,
+    "escortCount": 5
+  },
+  "errors": [],
+  "httpErrors": []
+}

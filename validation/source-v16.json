@@ -1,0 +1,8 @@
+{
+  "result": "passed",
+  "embeddedModuleMatches": true,
+  "existingAircraftPreservedExceptRequestedCameraAndMeteorName": true,
+  "existingFlightIntegratorControlsAndGearPreserved": true,
+  "I15StatsAndFourGuns": true,
+  "existingAudioFilesUnchanged": true
+}

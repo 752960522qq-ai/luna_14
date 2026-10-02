@@ -1,0 +1,17 @@
+{
+  "result": "passed",
+  "fileName": "sky-duel-i16-research-v17.apk",
+  "bytes": 51796382,
+  "sha256": "433ddee827acedc571c1b20f5e3f587fd0137e70ecf9823536bca01a90b27d8d",
+  "versionCode": 17,
+  "package": "com.luna.skyduel",
+  "minSdk": 23,
+  "targetSdk": 35,
+  "unchangedPayloadCount": 67,
+  "manifestBytesChanged": 1,
+  "embeddedPageMatchesSource": true,
+  "I16UploadPreserved": true,
+  "originalSigningCertificateSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "signatureV1V2V3Verified": true,
+  "zipAlignmentPassed": true
+}

@@ -1,0 +1,12 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+import {func,declaration,source} from './runtime.mjs';
+const baseline=fs.readFileSync(new URL('../baseline/v13-index.html',import.meta.url),'utf8').split('<script type="module">')[1].split('</script>')[0];
+const oldFunction=name=>{const current=source.indexOf('function '+name+'('),baselineStart=baseline.indexOf('function '+name+'(');const body=func(name);if(body===baseline.slice(baselineStart,baselineStart+body.length))return body;let i=baseline.indexOf('(',baselineStart),depth=1;while(depth){i++;if(baseline[i]==='(')depth++;else if(baseline[i]===')')depth--}let end=baseline.indexOf('{',i),braces=1;while(braces){end++;if(baseline[end]==='{')braces++;else if(baseline[end]==='}')braces--}return baseline.slice(baselineStart,end+1)};
+const unchanged=['integrateAircraftFlight','steerAircraftToward','updatePlayerFlightControls','turnRateForPlane','verticalTurnRateForPlane','updatePropeller','configureCombatLandingGear','attachPropeller','sweptAircraftHit','solveBulletIntercept','startCampaign','updateCampaign','updateCampaignEscortAI'];
+for(const name of unchanged)assert.equal(func(name),oldFunction(name),name);
+for(const name of ['AIRCRAFT_SPECS','PROPELLER_SPECS','AIRCRAFT_TREE','weaponInfo','AI_FIGHTER','AUDIO_FILES']){const oldStart=baseline.indexOf('const '+name+'='),now=declaration(name);assert.equal(now,baseline.slice(oldStart,oldStart+now.length),name)}
+const now=vm.runInNewContext(declaration('planeInfo')+';planeInfo');
+const oldStart=baseline.indexOf('const planeInfo='),oldEnd=baseline.indexOf('const weaponInfo=',oldStart),old=vm.runInNewContext(baseline.slice(oldStart,oldEnd)+';planeInfo');
+for(const type of Object.keys(old))for(const key of Object.keys(old[type]).filter(key=>!['intro','specs'].includes(key)))assert.equal(now[type][key],old[type][key],type+':'+key);
+const html=fs.readFileSync(new URL('../app/src/main/assets/index.html',import.meta.url),'utf8');assert.equal(source,html.split('<script type="module">')[1].split('</script>')[0]);assert(!html.split('<script type="module">')[0].includes('AI对战'));
+const report={result:'passed',unchangedAircraftPhysicsWeaponsAudioAndGear:unchanged,unchangedFlightParameters:true,embeddedModuleMatches:true};fs.writeFileSync(new URL('source-v14.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

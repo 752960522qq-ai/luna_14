@@ -1,0 +1,325 @@
+{
+  "result": "passed",
+  "checks": [
+    "Same 0.5m aft / 2m high camera offset across regular and 50/100/200ms intervals in cursor and joystick modes",
+    "Actual campaign position, velocity, clock and camera agree for equal elapsed time at 100ms and 200ms",
+    "A .8s interval retains .4s debt after the 48-step budget and catches it up next frame without dropping time",
+    "Pause excludes inactive wall time; resume preserves the live sortie",
+    "Aircraft rendering interpolates between physics snapshots and restores exact transforms before the next collision step",
+    "All ten AI airframes stay at or below 3000m MSL, while the player remains unrestricted"
+  ],
+  "camera": [
+    {
+      "mode": "cursor",
+      "dt": 0.008333333333333333,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "cursor",
+      "dt": 0.016666666666666666,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "cursor",
+      "dt": 0.03333333333333333,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "cursor",
+      "dt": 0.05,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "cursor",
+      "dt": 0.1,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "cursor",
+      "dt": 0.2,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.008333333333333333,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.016666666666666666,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.03333333333333333,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.05,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.1,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    },
+    {
+      "mode": "joystick",
+      "dt": 0.2,
+      "offset": [
+        0,
+        2.0000000000000284,
+        5.550000000000068
+      ]
+    }
+  ],
+  "physics": [
+    {
+      "mode": "cursor",
+      "milliseconds": 100,
+      "normal": {
+        "position": [
+          0,
+          60,
+          56.788893417262265
+        ],
+        "camera": [
+          0,
+          60.2,
+          57.517434868076904
+        ],
+        "speed": 208.24974097756802,
+        "campaignElapsed": 2.099999999999995,
+        "worldTime": 2.099999999999995,
+        "pending": 0
+      },
+      "spike": {
+        "position": [
+          0,
+          60,
+          56.788893417262265
+        ],
+        "camera": [
+          0,
+          60.2,
+          57.517434868076904
+        ],
+        "speed": 208.24974097756802,
+        "campaignElapsed": 2.099999999999995,
+        "worldTime": 2.099999999999995,
+        "pending": 2.42861286636753e-17
+      }
+    },
+    {
+      "mode": "cursor",
+      "milliseconds": 200,
+      "normal": {
+        "position": [
+          0,
+          60,
+          54.70512097962243
+        ],
+        "camera": [
+          0,
+          60.2,
+          55.433858554715314
+        ],
+        "speed": 208.48509011145927,
+        "campaignElapsed": 2.199999999999995,
+        "worldTime": 2.199999999999995,
+        "pending": 0
+      },
+      "spike": {
+        "position": [
+          0,
+          60,
+          54.70512097962243
+        ],
+        "camera": [
+          0,
+          60.2,
+          55.433858554715314
+        ],
+        "speed": 208.48509011145927,
+        "campaignElapsed": 2.199999999999995,
+        "worldTime": 2.199999999999995,
+        "pending": 5.204170427930421e-17
+      }
+    },
+    {
+      "mode": "joystick",
+      "milliseconds": 100,
+      "normal": {
+        "position": [
+          0,
+          60,
+          56.788893417262265
+        ],
+        "camera": [
+          0,
+          60.2,
+          57.517434868076904
+        ],
+        "speed": 208.24974097756802,
+        "campaignElapsed": 2.099999999999995,
+        "worldTime": 2.099999999999995,
+        "pending": 0
+      },
+      "spike": {
+        "position": [
+          0,
+          60,
+          56.788893417262265
+        ],
+        "camera": [
+          0,
+          60.2,
+          57.517434868076904
+        ],
+        "speed": 208.24974097756802,
+        "campaignElapsed": 2.099999999999995,
+        "worldTime": 2.099999999999995,
+        "pending": 2.42861286636753e-17
+      }
+    },
+    {
+      "mode": "joystick",
+      "milliseconds": 200,
+      "normal": {
+        "position": [
+          0,
+          60,
+          54.70512097962243
+        ],
+        "camera": [
+          0,
+          60.2,
+          55.433858554715314
+        ],
+        "speed": 208.48509011145927,
+        "campaignElapsed": 2.199999999999995,
+        "worldTime": 2.199999999999995,
+        "pending": 0
+      },
+      "spike": {
+        "position": [
+          0,
+          60,
+          54.70512097962243
+        ],
+        "camera": [
+          0,
+          60.2,
+          55.433858554715314
+        ],
+        "speed": 208.48509011145927,
+        "campaignElapsed": 2.199999999999995,
+        "worldTime": 2.199999999999995,
+        "pending": 5.204170427930421e-17
+      }
+    }
+  ],
+  "interpolation": [
+    {
+      "halfStepPositionZ": 9,
+      "restoredPhysicsZ": 8
+    }
+  ],
+  "ceiling": [
+    {
+      "type": "i15",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2953.18363281905
+    },
+    {
+      "type": "i15bis",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2952.796984047909
+    },
+    {
+      "type": "mig3",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2644.090454531389
+    },
+    {
+      "type": "f3f2",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2914.9233191430803
+    },
+    {
+      "type": "p36a",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2844.2372780718697
+    },
+    {
+      "type": "bf109b1",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2906.50856332185
+    },
+    {
+      "type": "mig15",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2793.1823899932388
+    },
+    {
+      "type": "f86",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2949.081496233108
+    },
+    {
+      "type": "meteor",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2651.4237356807707
+    },
+    {
+      "type": "b29",
+      "maxAltitudeMeters": 3000,
+      "finalAltitudeMeters": 2888.9211095107357
+    }
+  ]
+}

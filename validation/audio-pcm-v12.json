@@ -1,0 +1,72 @@
+{
+  "result": "passed",
+  "method": "PCM amplitude, duration, loop energy/seam checks and byte-identical v11 gameplay function comparison; no subjective listening.",
+  "pcm": [
+    {
+      "file": "f86_gun_shot.wav",
+      "seconds": 0.075,
+      "boundaryFade": true
+    },
+    {
+      "file": "b29_gun_shot.wav",
+      "seconds": 0.112,
+      "boundaryFade": true
+    },
+    {
+      "file": "pv1_gun_shot.wav",
+      "seconds": 0.126,
+      "boundaryFade": true
+    },
+    {
+      "file": "mig23_gun_shot.wav",
+      "seconds": 0.141,
+      "boundaryFade": true
+    },
+    {
+      "file": "mig37_gun_shot.wav",
+      "seconds": 0.258,
+      "boundaryFade": true
+    },
+    {
+      "file": "meteor20_gun_shot.wav",
+      "seconds": 0.34,
+      "boundaryFade": true
+    },
+    {
+      "file": "jet_engine_loop.wav",
+      "seconds": 11.7,
+      "energyMaxMin": 1.0567359587248184,
+      "seamDelta": 0.06866664632099367,
+      "threeLoopJoinHasSilence": false
+    },
+    {
+      "file": "b29_engine_loop.wav",
+      "seconds": 11.7,
+      "energyMaxMin": 1.135924243076669,
+      "seamDelta": 0.005188146610919521,
+      "threeLoopJoinHasSilence": false
+    },
+    {
+      "file": "i15bis_engine_loop.wav",
+      "seconds": 11.7,
+      "energyMaxMin": 1.1466151681048522,
+      "seamDelta": 0.010559404278695034,
+      "threeLoopJoinHasSilence": false
+    }
+  ],
+  "unchangedV11Functions": [
+    "moveCursorDirection",
+    "steerAircraftToward",
+    "integrateAircraftFlight",
+    "advanceAircraft",
+    "updatePlayerFlightControls",
+    "updateCursorTarget",
+    "updateFlightAimingHUD",
+    "updateDuelBoundary",
+    "enforceDuelAIBoundary",
+    "updateFighterAI",
+    "solveBulletIntercept",
+    "updatePropeller",
+    "sweptAircraftHit"
+  ]
+}

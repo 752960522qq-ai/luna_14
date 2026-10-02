@@ -1,0 +1,21 @@
+{
+  "result": "passed",
+  "apk": "sky-duel-f3f2-v13.apk",
+  "bytes": 43976924,
+  "sha256": "94bb52cbe867026467b3932fe41030f59019372b557c945489b39adbddaa2d3f",
+  "package": "com.luna.skyduel",
+  "versionCode": 13,
+  "versionName": "1.0",
+  "certificateSha256": "eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f",
+  "sameCertificateAsV12": true,
+  "signatureSchemes": [
+    1,
+    2,
+    3
+  ],
+  "zipAlignmentVerified": true,
+  "addedModelSha256": "9bf83ee270d4aa92d18868a48724af2f20c184bbee7fb6ef2c1b9381cc5efdde",
+  "unchangedV12PayloadCount": 64,
+  "unchangedV12Audio": true,
+  "unchangedOriginalP36GLB": true
+}

@@ -1,0 +1,163 @@
+{
+  "referenceAspect": 2.226086956521739,
+  "targetWidthFraction": 0.2578125,
+  "targetCenterY": 0.7380434782608696,
+  "verticalFovDegrees": 63,
+  "referenceImageSha256": "f9db64cc556c8d147bd14add8599c30da6199549619530994a68552e05231b88",
+  "planes": {
+    "i15": {
+      "lengthMeters": 6.1,
+      "combatSizeMeters": [
+        9.582930270875867,
+        3.290771481699945,
+        6.099999999999999
+      ],
+      "tailBackMeters": 9.3,
+      "heightMeters": 3.9,
+      "narrowCenterBackMeters": 15.752,
+      "narrowHeightMeters": 4.971,
+      "fittedWidthFraction": 0.2576985362729227,
+      "fittedCenterY": 0.7397869119325895
+    },
+    "mig3": {
+      "lengthMeters": 8.25,
+      "combatSizeMeters": [
+        10.230410315498201,
+        3.07269434496562,
+        8.25
+      ],
+      "tailBackMeters": 9.5,
+      "heightMeters": 4.3,
+      "narrowCenterBackMeters": 17.275,
+      "narrowHeightMeters": 5.495,
+      "fittedWidthFraction": 0.2579631561794416,
+      "fittedCenterY": 0.738867024178077
+    },
+    "f3f2": {
+      "lengthMeters": 7.06,
+      "combatSizeMeters": [
+        9.807017014379365,
+        3.2346967340824295,
+        7.06
+      ],
+      "tailBackMeters": 8.7,
+      "heightMeters": 3.5,
+      "narrowCenterBackMeters": 15.734,
+      "narrowHeightMeters": 4.595,
+      "fittedWidthFraction": 0.25836771370279554,
+      "fittedCenterY": 0.7416784986009675
+    },
+    "i15bis": {
+      "lengthMeters": 6.28,
+      "combatSizeMeters": [
+        10.06358905741616,
+        3.3927412125782084,
+        6.28
+      ],
+      "tailBackMeters": 9.8,
+      "heightMeters": 3.9,
+      "narrowCenterBackMeters": 16.541,
+      "narrowHeightMeters": 5.108,
+      "fittedWidthFraction": 0.25823469962980944,
+      "fittedCenterY": 0.7354779822776114
+    },
+    "bf109b1": {
+      "lengthMeters": 8.55,
+      "combatSizeMeters": [
+        9.640105242254842,
+        3.01208534749601,
+        8.55
+      ],
+      "tailBackMeters": 8,
+      "heightMeters": 3.8,
+      "narrowCenterBackMeters": 15.72,
+      "narrowHeightMeters": 4.954,
+      "fittedWidthFraction": 0.25856333619425514,
+      "fittedCenterY": 0.738667395774506
+    },
+    "p36a": {
+      "lengthMeters": 8.7,
+      "combatSizeMeters": [
+        10.581712589649099,
+        3.4357962745265755,
+        8.7
+      ],
+      "tailBackMeters": 8.9,
+      "heightMeters": 4.2,
+      "narrowCenterBackMeters": 17.002,
+      "narrowHeightMeters": 5.423,
+      "fittedWidthFraction": 0.2576128859840471,
+      "fittedCenterY": 0.7403979664372031
+    },
+    "mig15": {
+      "lengthMeters": 10.1,
+      "combatSizeMeters": [
+        10.128015279211162,
+        3.19907725976766,
+        10.100000000000001
+      ],
+      "tailBackMeters": 10.3,
+      "heightMeters": 3.7,
+      "narrowCenterBackMeters": 18.955,
+      "narrowHeightMeters": 4.828,
+      "fittedWidthFraction": 0.2584985376612776,
+      "fittedCenterY": 0.738746817151104
+    },
+    "f86": {
+      "lengthMeters": 11.4,
+      "combatSizeMeters": [
+        11.311573814383372,
+        3.990324659655431,
+        11.400000000000002
+      ],
+      "tailBackMeters": 12,
+      "heightMeters": 4.3,
+      "narrowCenterBackMeters": 21.645,
+      "narrowHeightMeters": 5.568,
+      "fittedWidthFraction": 0.2581421430611849,
+      "fittedCenterY": 0.7390549594604456
+    },
+    "meteor": {
+      "lengthMeters": 12.6,
+      "combatSizeMeters": [
+        13.20193254003348,
+        2.9650307960272415,
+        12.600000000000001
+      ],
+      "tailBackMeters": 11.4,
+      "heightMeters": 4.4,
+      "narrowCenterBackMeters": 22.391,
+      "narrowHeightMeters": 5.882,
+      "fittedWidthFraction": 0.25775774859753037,
+      "fittedCenterY": 0.7404558316269106
+    },
+    "b29": {
+      "lengthMeters": 30.18,
+      "combatSizeMeters": [
+        42.73967746223873,
+        8.640966505138291,
+        30.18
+      ],
+      "tailBackMeters": 42.9,
+      "heightMeters": 15.5,
+      "narrowCenterBackMeters": 73.016,
+      "narrowHeightMeters": 20.673,
+      "fittedWidthFraction": 0.2576277376720305,
+      "fittedCenterY": 0.7380374150960398
+    },
+    "i16": {
+      "lengthMeters": 6,
+      "combatSizeMeters": [
+        9.006449503259098,
+        2.9636113226546734,
+        6
+      ],
+      "tailBackMeters": 8.7,
+      "heightMeters": 3.5,
+      "narrowCenterBackMeters": 14.86,
+      "narrowHeightMeters": 4.529,
+      "fittedWidthFraction": 0.25760876733325344,
+      "fittedCenterY": 0.7381843940874523
+    }
+  }
+}

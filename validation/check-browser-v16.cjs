@@ -1,0 +1,60 @@
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict');
+const {chromium}=require(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES?path.join(process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES,'playwright'):'playwright');
+const root=path.resolve(__dirname,'..'),assets=path.join(root,'app/src/main/assets');
+const bridge=`
+const qaRoots={};
+function qaSummary(root){
+ const box=aircraftLocalBounds(root,[root]);let textured=0,meshes=0;root.traverse(n=>{if(n.isMesh){meshes++;if((Array.isArray(n.material)?n.material:[n.material]).some(m=>m.map?.image))textured++}});
+ return{type:root.userData.type,attached:!!root.userData.modelAttached,error:!!root.userData.modelError,sizeMeters:box.getSize(new THREE.Vector3()).multiplyScalar(10).toArray(),textured,meshes,gear:root.userData.landingGear?.state||null,propeller:!!root.userData.propeller,propAxis:root.userData.propeller?.spinAxis.toArray()}
+}
+window.__qa={
+ ready:()=>Promise.all([...audioLoads.values()]),
+ info:()=>({types:Object.keys(planeInfo),unlocked:[...unlockedPlanes],meteor:planeInfo.meteor.name,i15:planeInfo.i15}),
+ make:async(type,preview=false)=>{await loadPlaneModel(type);const root=aircraft(false,type,{preview});await Promise.resolve();qaRoots[type+(preview?'Preview':'Combat')]=root;return qaSummary(root)},
+ fight:()=>({playing,mode:gameMode,type:playerPlane,hp,ammo:{...playerAmmo},root:qaSummary(player),cameraLocal:camera.position.clone().sub(player.position).applyQuaternion(player.quaternion.clone().invert()).multiplyScalar(10).toArray(),units:airspaceUnits.map(u=>({team:u.team,type:u.type,attached:u.root.userData.modelAttached,error:u.root.userData.modelError,altitude:(u.root.position.y+90)*10})),bomberCount:campaignBombers.length,escortCount:campaignEscorts.length}),
+ select:type=>{setSelectedAircraft(type);showMenuScreen('modeSelect')},
+ fire:()=>{fireWeapons(player,false,1/120,true);return{ammo:{...playerAmmo},bullets:bullets.map(b=>({speed:b.speed*10,damage:b.damage}))}},
+ camera:()=>{resetCameraTracking();updateChaseCamera(0)},
+ cameras:async()=>{const original=player,originalType=playerPlane,originalMode=gameMode,result=[];gameMode='duel';for(const type of ['mig15','f86','meteor','b29','i15']){await loadPlaneModel(type);player=aircraft(true,type);await Promise.resolve();playerPlane=type;player.position.set(0,60,0);player.quaternion.identity();resetCursorControl();resetCameraTracking();updateChaseCamera(0);result.push({type,offset:camera.position.clone().sub(player.position).multiplyScalar(10).toArray(),length:player.userData.lengthMeters})}player=original;playerPlane=originalType;gameMode=originalMode;resetCursorControl();resetCameraTracking();return result},
+ viewI15:()=>{const scene2=new THREE.Scene();scene2.background=new THREE.Color(0x263e50);scene2.add(new THREE.HemisphereLight(0xffffff,0x7c897a,2.4));const light=new THREE.DirectionalLight(0xffffff,2.8);light.position.set(2,3,-4);scene2.add(light);scene2.add(qaRoots.i15Preview);const c=new THREE.PerspectiveCamera(40,innerWidth/innerHeight,.01,30);c.position.set(1.05,.32,-1.2);c.lookAt(0,0,0);renderer.render(scene2,c);return renderer.domElement.toDataURL('image/png')},
+ prop:()=>{const root=qaRoots.i15Combat;root.userData.engineRunning=true;root.userData.throttle=1;updatePropeller(root,3);const running={rpm:root.userData.propRpm,blur:root.userData.propeller.disc.visible};root.userData.engineRunning=false;updatePropeller(root,4);return{running,stoppedRpm:root.userData.propRpm}},
+ modelOrientation:()=>{const root=qaRoots.i15Preview;const center=name=>new THREE.Box3().setFromObject(root.getObjectByName(name)).getCenter(new THREE.Vector3()).multiplyScalar(10).toArray();return{prop:center('prop01_1'),tail:center('tail'),wheelLeft:center('wheel_l'),wheelRight:center('wheel_r')}},
+ step:frames=>{for(let i=0;i<frames&&playing;i++)updateAirspaceStep(1/60);updateAirspaceFrame(0,1/60);renderer.render(scene,camera)},
+ render:()=>{if(gameMode==='airspace')updateAirspaceFrame(0,1/60);else{updateChaseCamera(0);updateCampaignHud()}renderer.render(scene,camera)},
+ textures:()=>renderer.info.memory.textures
+};`;
+async function main(){
+ const server=http.createServer((req,res)=>{const file=path.resolve(assets,'.'+new URL(req.url,'http://localhost').pathname);if(!file.startsWith(assets+'/')||!fs.existsSync(file)){res.writeHead(404);return res.end()}res.writeHead(200,{'Content-Type':({'.js':'text/javascript','.html':'text/html','.wasm':'application/wasm'}[path.extname(file)]||'application/octet-stream')});fs.createReadStream(file).pipe(res)});
+ await new Promise(r=>server.listen(0,'127.0.0.1',r));
+ const browser=await chromium.launch({executablePath:process.env.SKY_DUEL_CHROME,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--enable-unsafe-swiftshader','--use-angle=swiftshader']});
+ let page;
+ try{
+  page=await browser.newPage({viewport:{width:844,height:390}});page.setDefaultTimeout(60000);const errors=[],httpErrors=[];
+  page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.status()>=400)httpErrors.push({url:r.url(),status:r.status()})});
+  await page.addInitScript(()=>{window.requestAnimationFrame=cb=>{window.__nextFrame=cb;return 1};localStorage.setItem('sky-duel-profile-v1',JSON.stringify({unlocked:['f86','mig15','meteor','b29','i15bis','bf109b1','p36a','f3f2','mig3'],selected:'mig15'}))});
+  await page.route('**/index.html',route=>route.fulfill({status:200,contentType:'text/html',body:fs.readFileSync(path.join(assets,'index.html'),'utf8').replace('</script>',bridge+'\n</script>')}));
+  await page.goto('http://127.0.0.1:'+server.address().port+'/index.html',{waitUntil:'load'});await page.waitForFunction(()=>!!window.__qa);await page.evaluate(()=>window.__qa.ready());
+  const info=await page.evaluate(()=>window.__qa.info());assert.equal(info.types.length,10);assert(info.unlocked.includes('i15'));assert.equal(info.meteor,'Meteor F Mk 4 G.41G');
+  const preview=await page.evaluate(()=>window.__qa.make('i15',true)),combat=await page.evaluate(()=>window.__qa.make('i15',false));
+  assert(preview.attached&&!preview.error&&combat.attached&&!combat.error);assert(preview.textured>=20,JSON.stringify(preview));assert(Math.abs(preview.sizeMeters[2]-6.1)<1e-5);assert.equal(preview.gear,null);assert.equal(combat.gear,null);assert(combat.propeller);assert.deepEqual(combat.propAxis,[0,0,-1]);
+  const orientation=await page.evaluate(()=>window.__qa.modelOrientation());assert(orientation.prop[2]<-2);assert(orientation.tail[2]>1);assert(orientation.wheelLeft[1]<-.8);assert(orientation.wheelRight[1]<-.8);
+  const modelPNG=await page.evaluate(()=>window.__qa.viewI15());fs.writeFileSync(path.join(__dirname,'i15-model-v16.png'),Buffer.from(modelPNG.split(',')[1],'base64'));
+  const prop=await page.evaluate(()=>window.__qa.prop());assert.equal(prop.running.rpm,1900);assert(prop.running.blur);assert.equal(prop.stoppedRpm,0);
+  await page.locator('#openEncyclopedia').click({force:true});await page.locator('[data-preview-plane="i15"]').click({force:true});assert.equal(await page.locator('#catalogName').innerText(),'I-15');const specs=await page.locator('#catalogSpecs').innerText();assert(specs.includes('3200'));assert(specs.includes('13.8'));assert(!specs.includes('6.10 m'));await page.locator('#closeEncyclopedia').click({force:true});
+  const cameras=await page.evaluate(()=>window.__qa.cameras());for(const row of cameras){const aft=row.type==='i15'?2:row.type==='b29'?1:.5;assert(Math.abs(row.offset[1]-2)<1e-6);assert(Math.abs(row.offset[2]-(row.length/2+aft))<1e-6)}
+  await page.evaluate(()=>window.__qa.select('i15'));await page.locator('#chooseAIBattle').click({force:true});await page.waitForFunction(()=>window.__qa.fight().playing,null,{timeout:90000,polling:100});
+  const fight=await page.evaluate(()=>window.__qa.fight());assert.equal(fight.type,'i15');assert.equal(fight.hp,340);assert.equal(fight.ammo.mg,3200);assert.equal(fight.units.length,10);assert.equal(fight.units.filter(u=>u.team==='blue').length,5);assert(fight.units.every(u=>u.attached&&!u.error));assert(fight.units.filter((u,i)=>i!==0).every(u=>u.altitude<=3000+1e-6));
+  const fired=await page.evaluate(()=>window.__qa.fire());assert.equal(fired.ammo.mg,3196);assert.equal(fired.bullets.length,4);assert(fired.bullets.every(b=>b.speed===775&&b.damage===13));
+  const layouts=[];
+  for(const [width,height] of [[1100,760],[844,390],[640,360],[568,320],[480,320]]){
+   await page.setViewportSize({width,height});await page.waitForFunction(()=>{const c=document.querySelector('#scene canvas');return c.width===innerWidth&&c.height===innerHeight},null,{polling:100});await page.evaluate(()=>window.__qa.render());
+   const layout=await page.evaluate(()=>{const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return{x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom}};const fields=[...document.querySelectorAll('.readout>div')].map(n=>{const a=n.getBoundingClientRect(),r=n.querySelector('strong').getBoundingClientRect();return{left:a.left,right:a.right,textLeft:r.left,textRight:r.right,scrollWidth:n.scrollWidth,clientWidth:n.clientWidth}});return{readout:box('.hud .top'),objective:box('#airspaceHud'),radar:box('.radar-box'),capture:box('#aCaptureText'),fields}});
+   assert.equal(layout.readout.y,0);assert(layout.readout.right<=width&&layout.readout.right>=width-5);assert(layout.objective.right<layout.readout.x,JSON.stringify(layout));assert(layout.objective.x>=layout.radar.right,JSON.stringify(layout));assert(layout.capture.x>=layout.objective.x-1&&layout.capture.right<=layout.objective.right+1,JSON.stringify(layout));assert(layout.fields.every(f=>f.scrollWidth<=f.clientWidth+1),JSON.stringify(layout));layouts.push({width,height,...layout});
+   if(width===844||width===640)await page.screenshot({path:path.join(__dirname,`airspace-mobile-${width}-v16.png`)})
+  }
+  await page.setViewportSize({width:844,height:390});await page.evaluate(()=>{window.showPause();document.querySelector('#returnHome').click();document.querySelector('#start').click();document.querySelector('#chooseCampaign').click()});await page.locator('#beginCampaign').click({force:true});await page.waitForFunction(()=>window.__qa.fight().playing&&window.__qa.fight().mode==='campaign',null,{timeout:90000,polling:100});
+  const campaign=await page.evaluate(()=>window.__qa.fight());assert.equal(campaign.bomberCount,3);assert.equal(campaign.escortCount,5);assert.equal(campaign.type,'mig15');assert(Math.abs(campaign.cameraLocal[1]-2)<1e-6);assert(Math.abs(campaign.cameraLocal[2]-5.55)<1e-6);assert(!(await page.locator('#battleLoading').isVisible()));await page.screenshot({path:path.join(__dirname,'campaign-mobile-v16.png')});
+  assert.deepEqual(errors,[]);assert.deepEqual(httpErrors,[]);const report={result:'passed',method:'Actual v16 page with native GLTF/Draco/PBR/WebGL/audio/DOM, controlled RAF, software rendering. Not an Android device.',checks:['Soviet I-15 textures, uniform 6.10m scale, forward axis and permanently extended gear','I-15 propeller spools to 1900 RPM with blur and stops with engine off','Saved v15 profile gains I-15; catalogs and Meteor name update','Five requested aft/height offsets match exactly','Actual 5v5 sortie has BR-matched AI under 3000m and four correct PV-1 projectiles','Telemetry sits at upper-right edge; objective/radar/text remain separate at five widths','Campaign awaits all models and rendering warm-up before it starts, retains three B-29 and five escorts'],info,preview,combat,orientation,prop,cameras,fight,fired,layouts,campaign,errors,httpErrors};fs.writeFileSync(path.join(__dirname,'browser-v16.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({result:report.result,checks:report.checks,preview,cameras,errors},null,2));
+ }finally{if(page)await page.screenshot({path:path.join(__dirname,'last-browser-v16.png')}).catch(()=>{});await browser.close();await new Promise(r=>server.close(r))}
+}
+main().catch(e=>{console.error(e.stack);process.exitCode=1});

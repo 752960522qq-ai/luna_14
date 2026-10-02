@@ -1,0 +1,12 @@
+<div class="screen hidden" id="settings"><div class="panel section-panel settings-panel">
+  <div class="eyebrow">FLIGHT CONTROLS</div><h1>设置</h1><p>选择适合你的飞行操作方式，设置会自动保存。</p>
+  <fieldset class="control-mode-options"><legend>飞机操控</legend>
+    <label class="control-mode-choice"><input type="radio" name="flightControlMode" value="cursor"><span><strong>瞄准环操作</strong><small>拖动方向环，飞行教官控制飞机转向。准星显示真实射击方向。</small></span></label>
+    <label class="control-mode-choice"><input type="radio" name="flightControlMode" value="joystick"><span><strong>摇杆操作</strong><small>自由滚转与俯仰，保留原版飞机摇杆手感。</small></span></label>
+  </fieldset>
+  <label class="sensitivity-label" for="cursorSensitivity">瞄准环灵敏度 <output id="cursorSensitivityValue">1.0×</output></label>
+  <input id="cursorSensitivity" class="settings-range" type="range" min="0.5" max="1.8" step="0.1" value="1">
+  <p class="control-instructions" id="controlInstructions"></p>
+  <div class="control-marker-guide"><span><i class="guide-ring"></i>方向环：希望飞向哪里</span><span><i class="guide-cross"></i>准星：枪口实际方向</span><span><i class="guide-lead"></i>提前量圈：射击瞄准位置</span></div>
+  <button class="catalog-close" id="settingsHome" type="button">返回主界面</button>
+</div></div>

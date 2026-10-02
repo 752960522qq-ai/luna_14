@@ -1,0 +1,1 @@
+P-36A BR, engine RPM, independent gun cadence and ammunition passed: { m2: 13, mg762: 17 }

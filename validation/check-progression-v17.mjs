@@ -1,0 +1,27 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {loadGame} from './screen-runtime.mjs';
+const checks=[],data=h=>JSON.parse(h.run('JSON.stringify({owned:unlockedPlanes,selected:selectedAircraft,economy})'));
+const fresh=()=>loadGame();let h=fresh();
+assert.deepEqual(data(h).owned,['i15','i15bis']);assert.equal(data(h).selected,'i15');assert.equal(data(h).economy.rp,0);assert.equal(data(h).economy.gp,2000);
+assert.deepEqual(JSON.parse(h.run('JSON.stringify(researchStages())')),[1,1.3,2.3,6.7,8]);
+assert.equal(h.run("aircraftResearchState('i16').status"),'research');assert.equal(h.run("aircraftResearchState('mig3').status"),'blocked');assert.equal(h.run("aircraftResearchState('f86').status"),'blocked');
+h.run("setSelectedAircraft('f86')");assert.equal(data(h).selected,'i15');assert.equal(h.find('#chooseCampaign').disabled,true);checks.push('New save starts with two BR1.0 aircraft, 0 RP / 2000 GP; locked aircraft cannot be selected or used in campaign');
+// Completing research alone does not open the next stage: GP purchase must finish.
+h.run("economy.rp=550;investAircraftResearch('i16')");assert.equal(data(h).economy.rp,50);assert.equal(h.run("aircraftResearchState('i16').status"),'ready');assert.equal(h.run("aircraftResearchState('mig3').status"),'blocked');
+h.run("economy.gp=1399");assert.equal(h.run("purchaseResearchedAircraft('i16').ok"),false);assert.equal(data(h).economy.gp,1399);
+h.run("economy.gp=1400;purchaseResearchedAircraft('i16')");assert.equal(data(h).economy.gp,0);assert(data(h).owned.includes('i16'));assert.equal(h.run("aircraftResearchState('mig3').status"),'research');assert.equal(h.run("purchaseResearchedAircraft('i16').ok"),false);checks.push('RP spending caps at remaining research; ownership needs sufficient GP and purchase is charged once');
+for(const type of ['i16','f3f2','p36a','bf109b1']){
+ h=fresh();h.context.exampleType=type;h.run('economy.rp=1000;economy.gp=5000;investAircraftResearch(exampleType);purchaseResearchedAircraft(exampleType)');
+ assert.equal(h.run("aircraftResearchState('mig3').status"),'research');assert.equal(data(h).owned.length,3);
+}checks.push('Any one of four BR1.3 planes opens BR2.3; equal-weight alternatives are optional');
+h=fresh();h.run("economy.rp=999999;economy.gp=999999;economy.research.f86=7800");assert.equal(h.run("purchaseResearchedAircraft('f86').ok"),false);
+for(const type of ['f3f2','mig3','b29','meteor']){h.context.exampleType=type;assert.equal(h.run('investAircraftResearch(exampleType).ok'),true);assert.equal(h.run('purchaseResearchedAircraft(exampleType).ok'),true)}
+assert.equal(h.run("aircraftResearchState('f86').status"),'ready');assert.equal(h.run("aircraftResearchState('mig15').status"),'research');checks.push('BR stages cannot be skipped, including with full stored research; one BR8 jet is independent of the other jets');
+const saved=JSON.parse(h.storage.get('sky-duel-profile-v1'));const reloaded=loadGame({profile:saved});assert.deepEqual(data(reloaded),data(h));checks.push('Wallet, partial progress and purchased aircraft survive reloading');
+const legacy=loadGame({profile:{unlocked:['f86','mig15','meteor','b29','i15bis','bf109b1','p36a','f3f2','mig3','i15'],selected:'f86',bomberLoadout:'8x2000'}});
+assert.equal(data(legacy).owned.length,10);assert.equal(data(legacy).selected,'f86');assert.equal(legacy.run("aircraftResearchState('i16').status"),'research');assert.equal(legacy.find('#chooseCampaign').disabled,false);checks.push('Legacy v16 ownership, selected aircraft and bomber loadout are preserved; I16 remains researchable');
+const malformed=loadGame({profile:{unlocked:['invalid'],selected:'f86',economy:{rp:-99,gp:NaN,research:{i16:999999},completedSorties:-8}}});assert.equal(data(malformed).economy.rp,0);assert.equal(data(malformed).economy.gp,0);assert.equal(data(malformed).economy.research.i16,500);assert.equal(data(malformed).selected,'i15');checks.push('Invalid saves cannot create negative balances, oversized research or locked selections');
+h=fresh();h.run("gameMode='duel';reset();battleRewardSeconds=180;kills=2;finish(true)");assert.equal(data(h).economy.rp,334);assert.equal(data(h).economy.gp,2944);h.run('finish(true)');assert.equal(data(h).economy.rp,334);assert.equal(data(h).economy.gp,2944);
+h.run("gameMode='airspace';reset();battleRewardSeconds=60;kills=1;finishAirspaceBattle('red')");assert.equal(data(h).economy.rp,462);assert.equal(data(h).economy.gp,3292);h.run("finishAirspaceBattle('red')");assert.equal(data(h).economy.rp,462);
+h.run("gameMode='campaign';reset();battleRewardSeconds=300;kills=3;finish(true)");assert.equal(data(h).economy.rp,912);assert.equal(data(h).economy.gp,4532);checks.push('Campaign and airspace settle exact RP/GP rewards, including defeat and capped active time; repeated finish cannot duplicate rewards');
+h=fresh();h.run("gameMode='airspace';reset()");for(let i=0;i<60;i++)h.advance(1/60);const t=h.run('battleRewardSeconds');assert(Math.abs(t-1)<1e-7);h.window.showPause();h.advance(120);assert.equal(h.run('battleRewardSeconds'),t);checks.push('Rewards count fixed simulation activity; pause and loading time do not add RP/GP');
+const report={result:'passed',checks,costs:JSON.parse(h.run('JSON.stringify(RESEARCH_COSTS)')),rewardRules:JSON.parse(h.run('JSON.stringify(ECONOMY_RULES)'))};fs.writeFileSync(new URL('progression-v17.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

@@ -1,0 +1,13 @@
+{
+  "result": "passed",
+  "aiCases": 126,
+  "simulatedSeconds": 8280,
+  "maxOutsideMeters": 100.00000000000153,
+  "centerCasesWithHardContacts": [],
+  "countdownCases": 6,
+  "other": [
+    "Campaign excluded",
+    "Rounded corner uses distance; altitude and tangential speed preserved",
+    "Terrain loader derives actual scaled XZ extent, including non-square coverage"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "method": "Actual generated v17 audio and weapon functions, Web Audio/HTML audio adapters; PCM checks are separate.",
+  "checks": [
+    "Nine PCM slices decode and preload; no long engine recording loaded",
+    "i15: tap produces one sample per selected weapon, release emits no new sample",
+    "mig3: tap produces one sample per selected weapon, release emits no new sample",
+    "f86: tap produces one sample per selected weapon, release emits no new sample",
+    "bf109b1: tap produces one sample per selected weapon, release emits no new sample",
+    "i15bis: tap produces one sample per selected weapon, release emits no new sample",
+    "p36a: tap produces one sample per selected weapon, release emits no new sample",
+    "f3f2: tap produces one sample per selected weapon, release emits no new sample",
+    "mig15: tap produces one sample per selected weapon, release emits no new sample",
+    "meteor: tap produces one sample per selected weapon, release emits no new sample",
+    "Sample cadence follows physical shots, independently of old global 220 ms sound suppression; empty ammunition is silent",
+    "Player and enemy with the same sound do not suppress each other",
+    "Release cancels future player sounds; suspended/unloaded audio never replays queued shots",
+    "Jet engine uses one stationary looping node; throttle changes gain/pitch without restarting; pause stops it",
+    "Propeller engine sound follows RPM and stops at zero",
+    "F3F-2 uses the existing stationary propeller loop and short per-weapon samples",
+    "MiG-3 uses the exact I-15 piston engine buffer and I-15 machine gun samples for both guns",
+    "Late decoder completion after pause does not start an engine voice",
+    "B-29 turret packet plays once only when rounds are spent; no out-of-range loop"
+  ],
+  "cadence": [
+    {
+      "type": "bf109b1",
+      "fps": 30,
+      "seconds": 2,
+      "samples": 40,
+      "rounds": 80
+    },
+    {
+      "type": "bf109b1",
+      "fps": 60,
+      "seconds": 2,
+      "samples": 40,
+      "rounds": 80
+    },
+    {
+      "type": "bf109b1",
+      "fps": 120,
+      "seconds": 2,
+      "samples": 40,
+      "rounds": 80
+    }
+  ],
+  "result": "passed"
+}
