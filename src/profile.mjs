@@ -1,40 +1,66 @@
 function economyInteger(value, maximum = ECONOMY_RULES.maxBalance) {
   return Number.isFinite(value) ? Math.min(maximum, Math.max(0, Math.floor(value))) : 0;
 }
+function isAircraftResearchOpen(type) {
+  const tree = AIRCRAFT_TREE[type];
+  return !!tree && RELEASE_RESEARCH.nations.includes(tree.nation) && RELEASE_RESEARCH.ranks.includes(tree.rank);
+}
+function freshProgressionProfile() {
+  return {
+    format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    mode: 'standard', unlocked: [...STARTER_AIRCRAFT], selected: 'i15',
+    bomberLoadout: '18x1000',
+    economy: { rp: 0, gp: ECONOMY_RULES.startGP, research: {}, completedSorties: 0 }
+  };
+}
+function normalizeProgressionProfile(saved) {
+  if (!saved || typeof saved !== 'object' || Array.isArray(saved) ||
+      saved.format !== PROFILE_FORMAT || saved.version !== PROFILE_VERSION ||
+      saved.gameVersion !== GAME_VERSION || !['standard', 'all-aircraft'].includes(saved.mode) ||
+      !Array.isArray(saved.unlocked)) return null;
+  const allAircraft = saved.mode === 'all-aircraft';
+  const unlocked = [...new Set([...STARTER_AIRCRAFT, ...saved.unlocked.filter(id =>
+    typeof id === 'string' && AIRCRAFT_SPECS[id] && (allAircraft || isAircraftResearchOpen(id)))])];
+  const wallet = saved.economy;
+  const economy = wallet && typeof wallet === 'object' && !Array.isArray(wallet) ? {
+    rp: economyInteger(wallet.rp), gp: economyInteger(wallet.gp), research: {},
+    completedSorties: economyInteger(wallet.completedSorties)
+  } : freshProgressionProfile().economy;
+  if (wallet?.research && typeof wallet.research === 'object' && !Array.isArray(wallet.research)) {
+    for (const [type, value] of Object.entries(wallet.research)) {
+      if (RESEARCH_COSTS[type] && (allAircraft || isAircraftResearchOpen(type)))
+        economy.research[type] = economyInteger(value, RESEARCH_COSTS[type].rp);
+    }
+  }
+  return {
+    format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    mode: saved.mode, unlocked,
+    selected: unlocked.includes(saved.selected) ? saved.selected : 'i15',
+    bomberLoadout: BOMBER_LOADOUTS[saved.bomberLoadout] ? saved.bomberLoadout : '18x1000', economy
+  };
+}
+function applyProgressionProfile(record) {
+  profileState.profileMode = record.mode;
+  profileState.unlockedPlanes = record.unlocked;
+  profileState.selectedAircraft = record.selected;
+  profileState.selectedBombPayload = record.bomberLoadout;
+  profileState.economy = record.economy;
+}
 function loadProgressionProfile() {
   let saved = null;
   try {
     saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
   } catch {}
-  if (!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
-  const preserved = Array.isArray(saved.unlocked) ? saved.unlocked.filter(id => typeof id === 'string' && AIRCRAFT_SPECS[id]) : [];
-  profileState.unlockedPlanes = [...new Set(['i15', 'i15bis', ...preserved])];
-  profileState.selectedAircraft = profileState.unlockedPlanes.includes(saved.selected) ? saved.selected : 'i15';
-  if (BOMBER_LOADOUTS[saved.bomberLoadout]) profileState.selectedBombPayload = saved.bomberLoadout;
-  const wallet = saved.economy;
-  if (wallet && typeof wallet === 'object' && !Array.isArray(wallet)) {
-    profileState.economy = {
-      rp: economyInteger(wallet.rp),
-      gp: economyInteger(wallet.gp),
-      research: {},
-      completedSorties: economyInteger(wallet.completedSorties)
-    };
-    if (wallet.research && typeof wallet.research === 'object') for (const [type, value] of Object.entries(wallet.research)) if (RESEARCH_COSTS[type]) profileState.economy.research[type] = economyInteger(value, RESEARCH_COSTS[type].rp);
-  } else profileState.economy = {
-    rp: 0,
-    gp: ECONOMY_RULES.startGP,
-    research: {},
-    completedSorties: 0
-  };
+  applyProgressionProfile(normalizeProgressionProfile(saved) || freshProgressionProfile());
   session.playerPlane = profileState.selectedAircraft;
   saveHangar();
 }
 function researchStages() {
-  return [...new Set(Object.values(AIRCRAFT_TREE).map(info => info.rating))].sort((a, b) => a - b);
+  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(isAircraftResearchOpen).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
 }
 function researchPrerequisite(type) {
   const rating = AIRCRAFT_TREE[type]?.rating;
-  if (!Number.isFinite(rating)) return {
+  if (!Number.isFinite(rating) || !isAircraftResearchOpen(type)) return {
     allowed: false,
     rating: null,
     choices: []
@@ -45,7 +71,7 @@ function researchPrerequisite(type) {
     rating: null,
     choices: []
   };
-  const choices = Object.keys(AIRCRAFT_TREE).filter(id => Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
+  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
   return {
     allowed: choices.some(id => profileState.unlockedPlanes.includes(id)),
     rating: prior,
@@ -61,7 +87,7 @@ function aircraftResearchState(type) {
     progress = owned ? cost.rp : economyInteger(profileState.economy.research[type], cost.rp),
     prerequisite = researchPrerequisite(type);
   return {
-    status: owned ? 'owned' : !prerequisite.allowed ? 'blocked' : progress >= cost.rp ? 'ready' : 'research',
+    status: owned ? 'owned' : !isAircraftResearchOpen(type) ? 'unavailable' : !prerequisite.allowed ? 'blocked' : progress >= cost.rp ? 'ready' : 'research',
     owned,
     progress,
     cost,
@@ -169,7 +195,10 @@ function settleSortieEconomy(win) {
 function saveHangar() {
   try {
     localStorage.setItem(PROFILE_KEY, JSON.stringify({
-      version: 2,
+      format: PROFILE_FORMAT,
+      version: PROFILE_VERSION,
+      gameVersion: GAME_VERSION,
+      mode: profileState.profileMode,
       unlocked: profileState.unlockedPlanes,
       selected: profileState.selectedAircraft,
       bomberLoadout: profileState.selectedBombPayload,
@@ -180,6 +209,31 @@ function saveHangar() {
     console.warn('无法保存游戏进度', error);
     return false;
   }
+}
+function importProgressionProfile(text) {
+  if (session.playing || session.battlePaused) return { ok: false, reason: 'battle' };
+  let record;
+  try { record = normalizeProgressionProfile(JSON.parse(text)); } catch {}
+  if (!record) return { ok: false, reason: 'format' };
+  const before = {
+    mode: profileState.profileMode, unlocked: profileState.unlockedPlanes,
+    selected: profileState.selectedAircraft, bomberLoadout: profileState.selectedBombPayload,
+    economy: profileState.economy
+  };
+  applyProgressionProfile(record);
+  if (!saveHangar()) {
+    applyProgressionProfile(before);
+    return { ok: false, reason: 'storage' };
+  }
+  profileState.pendingRewards = [];
+  session.playerPlane = profileState.selectedAircraft;
+  stopGunSounds();
+  stopEngineSound();
+  updateThrottleUI();
+  renderHangar();
+  renderResearch();
+  updateEconomyDisplay();
+  return { ok: true, mode: record.mode, count: record.unlocked.length };
 }
 function setSelectedAircraft(type) {
   if (!profileState.unlockedPlanes.includes(type)) return false;

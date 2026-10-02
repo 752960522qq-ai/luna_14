@@ -201,12 +201,14 @@ function updateNonAirspaceStep(dt) {
       fireBomberTurrets(session.enemy, true, dt);
     }
     const campaignShotTargets = session.gameMode === 'campaign' ? campaignTargets() : null;
+    updateProjectileSmoke(dt);
     for (let i = session.bullets.length - 1; i >= 0; i--) {
       const bullet = session.bullets[i];
       (bullet.previousPosition ??= new THREE.Vector3()).copy(bullet.mesh.position);
       const shotStep = Math.min(dt, Math.max(0, bullet.life));
       bullet.mesh.position.addScaledVector(bullet.dir, bullet.speed * shotStep);
       bullet.life -= dt;
+      traceBulletSmoke(bullet, dt);
       let hit = false;
       if (bullet.enemy) {
         if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.player, bullet.radius)) {
@@ -310,6 +312,7 @@ function animate() {
   const elapsed = Math.max(0, viewState.clock.getDelta()),
     visualDt = Math.min(elapsed, .1);
   if (!session.playing && !session.battlePaused) {
+    updateProjectileSmoke(elapsed);
     if (session.gameMode === 'airspace') {
       for (const unit of session.airspaceUnits) if (!unit.dead) updatePropeller(unit.root, elapsed);
     } else updateAllPropellers(elapsed);
@@ -362,6 +365,7 @@ function clearBattleWorld() {
   for (const bomb of session.bombsInFlight) disposeBomb(bomb);
   session.bombsInFlight.length = 0;
   for (let i = session.bullets.length - 1; i >= 0; i--) releaseBullet(i);
+  clearProjectileSmoke();
   session.player = null;
   session.enemy = null;
 }

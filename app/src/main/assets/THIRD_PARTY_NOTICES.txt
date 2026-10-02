@@ -1,0 +1,15 @@
+Third-party model notices
+
+Aerial Grassy and Rocky Mountain 3
+Creator: Mike.xx / Sketchfab
+License: Creative Commons Attribution 4.0
+Source: https://sketchfab.com/3d-models/aerial-grassy-and-rocky-mountain-3-0dba72e32d0f448593f6cfb86742f696
+License: https://creativecommons.org/licenses/by/4.0/
+Changes: textures resized for the Android game; terrain mapped to the 1951 Korea scene.
+
+MiG-3
+Creator: manilov.ap / Sketchfab
+License: Creative Commons Attribution 4.0
+Source: https://sketchfab.com/3d-models/mig3-6ba63e06628e491a9836e4a9c54c50f1
+License: https://creativecommons.org/licenses/by/4.0/
+Changes: corrected orientation, unified dimensions, added propeller rotation nodes.

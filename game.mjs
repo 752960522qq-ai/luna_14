@@ -1247,6 +1247,125 @@ const AIRCRAFT_DATA={
     "sounds": {
       "default": "b29Gun"
     }
+  },
+  "bf109c1": {
+    "model": {
+      "chaseOffsetMeters": 2.6,
+      "chaseHeightMeters": 1.4,
+      "modelFile": "./bf109-c1.glb",
+      "lengthMeters": 8.55,
+      "rollRateDps": 135,
+      "control": {
+        "stickAttackSeconds": 0.055,
+        "stickReleaseSeconds": 0.075,
+        "rollResponse": 10,
+        "rollRelease": 12,
+        "pitchResponse": 7
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 9.65249324,
+        "y": 3.0071844,
+        "z": 8.55
+      },
+      "chaseFixed": true,
+      "levelDragCompensation": 0.018
+    },
+    "propeller": {
+      "idleRpm": 600,
+      "maxRpm": 2300,
+      "direction": -1,
+      "spoolUpSeconds": 3.2,
+      "spoolDownSeconds": 4.2,
+      "blurStartRpm": 850,
+      "blurFullRpm": 1350,
+      "radius": 1.504
+    },
+    "tree": {
+      "nation": "de",
+      "nationName": "德系",
+      "rating": 2,
+      "rank": "II",
+      "branch": "单发战斗机"
+    },
+    "performance": {
+      "name": "Bf-109 C-1",
+      "health": 390,
+      "maxSpeedKmh": 465,
+      "minLevelFlightKmh": 124,
+      "bestClimbMps": 13.2,
+      "turnTimeS": 19,
+      "horizontalTurnRateDps": 18.94736842105263,
+      "verticalTurnRateDps": 31.858407079646014,
+      "turnRadiusM": 300,
+      "intro": "早期梅塞施密特单翼战斗机，搭载燃油喷射Jumo210G发动机，四挺MG17机枪火力充足；能量机动优秀，擅长俯冲‑掠袭战术；水平回转弱于双翼对手。",
+      "verticalTurnTimeS": 11.3
+    },
+    "weapons": {
+      "mg": {
+        "rpm": 1200,
+        "damage": 14,
+        "speed": 855,
+        "cost": 4,
+        "count": 4,
+        "radius": 0.075,
+        "color": 16770222,
+        "offsets": [
+          [
+            -0.022,
+            0.036,
+            -0.288
+          ],
+          [
+            0.022,
+            0.036,
+            -0.288
+          ],
+          [
+            -0.211,
+            0.006,
+            -0.12
+          ],
+          [
+            0.211,
+            0.006,
+            -0.12
+          ]
+        ],
+        "label": "7.92mm MG17机枪"
+      }
+    },
+    "ai": {
+      "detectMeters": 2450,
+      "loseMeters": 2900,
+      "alignMeters": 700,
+      "breakMeters": 120,
+      "passSeconds": 2.6,
+      "gun": {
+        "mg": {
+          "rangeMeters": 550,
+          "coneDeg": 6
+        }
+      }
+    },
+    "researchCost": {
+      "rp": 1600,
+      "gp": 4500
+    },
+    "ammo": {
+      "mg": 1840,
+      "n37": 0,
+      "ns23": 0,
+      "hispano": 0
+    },
+    "sounds": {
+      "mg": "pv1Gun",
+      "default": "pv1Gun"
+    }
   }
 };
 
@@ -1375,6 +1494,7 @@ inputState.filteredControlY = 0;
 session.bullets = [];
 resourceState.bulletPool = [];
 resourceState.bulletResources = {};
+resourceState.projectileSmoke = null;
 session.bombsInFlight = [];
 inputState.bombKeyWasDown = false;
 mapState.clouds = [];
@@ -1412,7 +1532,7 @@ session.airspaceSpectating = false;
 session.airspaceObservedId = null;
 session.airspaceAccumulator = 0;
 session.airspacePrepareToken = 0;
-const CONTROL_SETTINGS_KEY = 'sky-duel.flight-controls.v1';
+const CONTROL_SETTINGS_KEY = 'silverwing.flight-controls.1.0';
 const DEFAULT_CONTROL_SETTINGS = {
   mode: 'cursor',
   sensitivity: 1
@@ -1467,7 +1587,13 @@ const BOMBER_LOADOUTS = {
     eachLb: 4000
   }
 };
-const PROFILE_KEY = 'sky-duel-profile-v1';
+const GAME_VERSION = '1.0';
+const PROFILE_FORMAT = 'silverwing-profile';
+const PROFILE_VERSION = 1;
+const PROFILE_KEY = 'silverwing.profile.1.0';
+const STARTER_AIRCRAFT = ['bf109b1', 'f3f2', 'i15bis', 'i15'];
+const RELEASE_RESEARCH = { nations: ['cn', 'de', 'us', 'ussr'], ranks: ['I', 'II'] };
+profileState.profileMode = 'standard';
 profileState.unlockedPlanes = [];
 profileState.selectedAircraft = 'i15';
 profileState.selectedBombPayload = '18x1000';
@@ -1690,7 +1816,7 @@ const FLIGHT_AXES = {
 // Source: src/ui.mjs
 function aircraftCatalogueSpecs(r) {
   const p = r.performance;
-  const rows = [['系别', r.tree.nationName], ['等级', r.tree.rank], ['战机权重', r.tree.rating.toFixed(1)], ['机体耐久', String(p.health)], ['最大航速', p.maxSpeedKmh + ' km/h'], ['最小航速', p.minLevelFlightKmh + ' km/h'], ['最佳爬升率', p.bestClimbMps + ' m/s'], ['水平转弯性能', p.turnTimeS + '秒'], ['垂直转弯性能', p.verticalTurnTimeS + '秒']];
+  const rows = [['系别', r.tree.nationName], ['等级', r.tree.rank], ['战机权重', r.tree.rating.toFixed(1)], ['机体耐久', String(p.health)], ['最大航速', p.maxSpeedKmh + ' km/h'], ['最小航速', p.minLevelFlightKmh + ' km/h'], ['最佳爬升率', p.bestClimbMps + ' m/s'], ['水平转弯性能', (Number.isInteger(p.turnTimeS) ? p.turnTimeS.toFixed(1) : p.turnTimeS) + '秒'], ['垂直转弯性能', (p.verticalTurnTimeS ?? Number((360 / p.verticalTurnRateDps).toFixed(2))) + '秒']];
   for (const [id, w] of Object.entries(r.weapons)) rows.push([w.label, w.count + '挺 · 合计备弹' + r.ammo[id] + '发 · 单管' + w.rpm + '发/分钟 · 伤害' + w.damage + ' · 弹速' + w.speed + ' m/s']);
   if (r.ammo.b29mg) rows.push(['炮塔武器', '5座炮塔 · 12挺机枪 · 备弹' + r.ammo.b29mg + '发'], ['炸弹挂载', '可在机库选择挂载']);
   return rows;
@@ -1863,16 +1989,22 @@ function updateEconomyDisplay() {
   if (choose) {
     choose.disabled = !campaignOwned;
     const label = choose.querySelector('span');
-    if (label) label.textContent = campaignOwned ? '米格之舞 · 1951·朝鲜 · 6×6公里' : '需先研发并购买 MiG-15';
+    if (label) label.textContent = campaignOwned ? '米格之舞 · 1951·朝鲜 · 6×6公里' : '本版本暂未开放 · 需要 MiG-15';
   }
   if (begin && $('#battleLoading')?.classList.contains('hidden')) begin.disabled = !campaignOwned;
   if (use) {
     use.disabled = !profileState.unlockedPlanes.includes(viewState.previewType);
-    use.textContent = use.disabled ? '请先在研发中解锁' : '设为出战机';
+    use.textContent = use.disabled ? isAircraftResearchOpen(viewState.previewType) ? '请先在研发中解锁' : '本版本暂未开放' : '设为出战机';
   }
+  const mode = $('#currentSaveMode');
+  if (mode) mode.textContent = profileState.profileMode === 'all-aircraft' ? '全解锁测试存档 · 全部飞机已入库' : '普通存档 · 中、德、美、苏四系 Rank I—II';
 }
 function handleResearchAircraft(type) {
   const state = aircraftResearchState(type);
+  if (state.status === 'unavailable' || state.status === 'invalid') {
+    toast('本版本暂未开放此飞机的研发');
+    return;
+  }
   if (state.status === 'owned') {
     setSelectedAircraft(type);
     renderResearch();
@@ -1967,22 +2099,17 @@ function renderResearch() {
     id: 'us',
     code: 'USA',
     name: '美系 · 美国',
-    types: ['f3f2', 'p36a', 'b29', 'f86']
+    types: ['f3f2', 'p36a']
   }, {
     id: 'ussr',
     code: 'USSR',
     name: '苏系 · 苏联',
-    types: ['i15', 'i16', 'mig3', 'mig15']
-  }, {
-    id: 'uk',
-    code: 'RAF',
-    name: '英系 · 英国',
-    types: ['meteor']
+    types: ['i15', 'i16', 'mig3']
   }, {
     id: 'de',
     code: 'GER',
     name: '德系 · 德国',
-    types: ['bf109b1']
+    types: ['bf109b1', 'bf109c1']
   }];
   const nations = allNations.filter(n => profileState.researchNation === 'all' || n.id === profileState.researchNation);
   host.innerHTML = nations.map(n => {
@@ -2012,6 +2139,7 @@ function renderResearch() {
   });
 }
 function showMenuScreen(id) {
+  clearProjectileSmoke();
   session.airspacePrepareToken++;
   setBattleLoading(false);
   $('#beginCampaign').disabled = false;
@@ -2497,6 +2625,7 @@ function fireAirspaceBomberTurrets(unit, dt) {
     } of active) {
       const rounds = Math.min(turret.guns, ammo.b29mg);
       ammo.b29mg -= rounds;
+      emitTurretSmoke(root, target.root, turret, rounds);
       let hits = 0;
       for (let n = 0; n < rounds; n++) if (Math.random() < .5) hits++;
       if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id);
@@ -2537,12 +2666,14 @@ function airspaceHitFraction(start, end, root, radius) {
   return enter;
 }
 function updateAirspaceBullets(dt) {
+  updateProjectileSmoke(dt);
   const live = airspaceLiveUnits();
   for (let i = session.bullets.length - 1; i >= 0; i--) {
     const bullet = session.bullets[i];
     (bullet.previousPosition ??= new THREE.Vector3()).copy(bullet.mesh.position);
     bullet.mesh.position.addScaledVector(bullet.dir, bullet.speed * Math.min(dt, Math.max(0, bullet.life)));
     bullet.life -= dt;
+    traceBulletSmoke(bullet, dt);
     let target = null,
       fraction = Infinity;
     for (const unit of live) {
@@ -3357,6 +3488,7 @@ function chaseFrameOffsets(type, aspect = viewState.camera.aspect) {
     baseBack = spec.lengthMeters * .5 + spec.chaseOffsetMeters,
     baseHeight = spec.chaseHeightMeters,
     narrow = CHASE_NARROW_PRESETS[type];
+  if (spec.chaseFixed) return { backMeters: baseBack, heightMeters: baseHeight };
   const t = (CHASE_REFERENCE_ASPECT / Math.max(aspect, 1) - 1) / (CHASE_REFERENCE_ASPECT / (16 / 9) - 1);
   return {
     backMeters: baseBack + (narrow[0] - baseBack) * t,
@@ -3737,6 +3869,7 @@ function fireWeapons(from, isEnemy, dt, enabled) {
         bullet.shooterId = unit?.id || null;
         bullet.damage = bulletDamage;
         bullet.weapon = id;
+        startBulletSmoke(bullet);
         viewState.scene.add(bullet.mesh);
         session.bullets.push(bullet);
       }
@@ -3752,6 +3885,8 @@ function fireWeapons(from, isEnemy, dt, enabled) {
 }
 function releaseBullet(index) {
   const bullet = session.bullets[index];
+  traceBulletSmoke(bullet, 0, true);
+  bullet.smokeActive = false;
   viewState.scene.remove(bullet.mesh);
   session.bullets.splice(index, 1);
   if (resourceState.bulletPool.length < 512) resourceState.bulletPool.push(bullet);
@@ -3806,6 +3941,13 @@ function fireBomberTurrets(from, isEnemy, dt) {
     const rounds = Math.min(eligibleGuns, state.b29mg);
     state.b29mg -= rounds;
     ammoSpent += rounds;
+    let visualRounds = rounds;
+    for (const turret of eligibleTurrets) {
+      const count = Math.min(turret.guns, visualRounds);
+      emitTurretSmoke(from, target, turret, count);
+      visualRounds -= count;
+      if (!visualRounds) break;
+    }
     playGunShot('b29Gun', from, isEnemy, interval, true);
     let hits = 0;
     for (let i = 0; i < rounds; i++) if (Math.random() < .5) hits++;
@@ -3907,6 +4049,131 @@ function ensureBulletResources(type, id) {
       color: spec.color
     })
   };
+}
+
+
+// Source: src/projectile-smoke.mjs
+const PROJECTILE_SMOKE_RULES = { capacity: 32768, lifeSeconds: .6, sampleSeconds: 1 / 30 };
+
+// One reusable GPU batch for every weapon and team. Smoke stays in world space.
+function ensureProjectileSmoke() {
+  if (resourceState.projectileSmoke) return resourceState.projectileSmoke;
+  const capacity = PROJECTILE_SMOKE_RULES.capacity;
+  const start = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 3), 3).setUsage(THREE.DynamicDrawUsage);
+  const end = new THREE.InstancedBufferAttribute(new Float32Array(capacity * 3), 3).setUsage(THREE.DynamicDrawUsage);
+  const birth = new THREE.InstancedBufferAttribute(new Float32Array(capacity), 1).setUsage(THREE.DynamicDrawUsage);
+  const geometry = new THREE.InstancedBufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute([-1,0,0, 1,0,0, -1,1,0, 1,1,0], 3));
+  geometry.setIndex([0,1,2, 2,1,3]);
+  geometry.setAttribute('smokeStart', start);
+  geometry.setAttribute('smokeEnd', end);
+  geometry.setAttribute('smokeBirth', birth);
+  geometry.instanceCount = 0;
+  const material = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, side: THREE.DoubleSide, toneMapped: false,
+    uniforms: { smokeTime: { value: 0 }, smokeLife: { value: PROJECTILE_SMOKE_RULES.lifeSeconds },
+      smokeViewport: { value: new THREE.Vector2(innerWidth, innerHeight) } },
+    vertexShader: `
+      attribute vec3 smokeStart;
+      attribute vec3 smokeEnd;
+      attribute float smokeBirth;
+      uniform float smokeTime;
+      uniform float smokeLife;
+      uniform vec2 smokeViewport;
+      varying float smokeAge;
+      varying float smokeAcross;
+      varying float smokeAlong;
+      void main() {
+        smokeAge = smokeTime - smokeBirth;
+        smokeAcross = position.x;
+        smokeAlong = position.y;
+        if (smokeAge < 0.0 || smokeAge >= smokeLife) { gl_Position = vec4(2.0,2.0,2.0,1.0); return; }
+        vec4 a = projectionMatrix * modelViewMatrix * vec4(smokeStart, 1.0);
+        vec4 b = projectionMatrix * modelViewMatrix * vec4(smokeEnd, 1.0);
+        if (a.w <= 0.02 || b.w <= 0.02) { gl_Position = vec4(2.0,2.0,2.0,1.0); return; }
+        vec2 delta = (b.xy / b.w - a.xy / a.w) * smokeViewport;
+        vec2 side = length(delta) > 0.001 ? normalize(vec2(-delta.y, delta.x)) : vec2(1.0,0.0);
+        vec4 center = mix(a, b, position.y);
+        float widthPixels = 1.1 + 1.8 * smokeAge / smokeLife;
+        center.xy += side * position.x * widthPixels * 2.0 / smokeViewport * center.w;
+        gl_Position = center;
+      }`,
+    fragmentShader: `
+      uniform float smokeLife;
+      varying float smokeAge;
+      varying float smokeAcross;
+      varying float smokeAlong;
+      void main() {
+        float fade = pow(max(0.0, 1.0 - smokeAge / smokeLife), 1.6);
+        float softEdge = exp(-3.0 * smokeAcross * smokeAcross);
+        float softEnd = smoothstep(0.0,0.035,smokeAlong) * smoothstep(0.0,0.035,1.0-smokeAlong);
+        float alpha = 0.68 * fade * softEdge * softEnd;
+        if (alpha < 0.004) discard;
+        gl_FragColor = vec4(1.0,1.0,1.0,alpha);
+      }`
+  });
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.name = 'WhiteProjectileSmoke';
+  mesh.frustumCulled = false;
+  mesh.renderOrder = 2;
+  viewState.scene.add(mesh);
+  return resourceState.projectileSmoke = { mesh, geometry, material, start, end, birth,
+    time: 0, lastEmission: -Infinity, count: 0, cursor: 0 };
+}
+function emitProjectileSmoke(x0, y0, z0, x1, y1, z1) {
+  if ((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2 < 1e-10) return;
+  const batch = ensureProjectileSmoke(), index = batch.cursor;
+  batch.start.setXYZ(index, x0, y0, z0);
+  batch.end.setXYZ(index, x1, y1, z1);
+  batch.birth.setX(index, batch.time);
+  batch.start.needsUpdate = batch.end.needsUpdate = batch.birth.needsUpdate = true;
+  batch.cursor = (index + 1) % PROJECTILE_SMOKE_RULES.capacity;
+  batch.count = Math.min(PROJECTILE_SMOKE_RULES.capacity, batch.count + 1);
+  batch.geometry.instanceCount = batch.count;
+  batch.lastEmission = batch.time;
+  batch.mesh.visible = true;
+}
+function startBulletSmoke(bullet) {
+  const point = bullet.mesh.position;
+  bullet.smokeX = point.x; bullet.smokeY = point.y; bullet.smokeZ = point.z;
+  bullet.smokeElapsed = 0;
+  bullet.smokeActive = true;
+}
+function traceBulletSmoke(bullet, dt = 0, flush = false) {
+  if (!bullet.smokeActive) return;
+  bullet.smokeElapsed += dt;
+  if (!flush && bullet.smokeElapsed + 1e-9 < PROJECTILE_SMOKE_RULES.sampleSeconds) return;
+  const point = bullet.mesh.position;
+  emitProjectileSmoke(bullet.smokeX, bullet.smokeY, bullet.smokeZ, point.x, point.y, point.z);
+  bullet.smokeX = point.x; bullet.smokeY = point.y; bullet.smokeZ = point.z;
+  bullet.smokeElapsed = 0;
+}
+function emitTurretSmoke(root, target, turret, rounds) {
+  const w = flightWorkspace(root, 'turretSmoke'), offset = turret.offset;
+  for (let i = 0; i < rounds; i++) {
+    const start = w.a.set(offset[0] + (i - (rounds - 1) / 2) * .012, offset[1], offset[2])
+      .multiplyScalar(root.scale.x).applyQuaternion(root.quaternion).add(root.position);
+    emitProjectileSmoke(start.x, start.y, start.z, target.position.x, target.position.y, target.position.z);
+  }
+}
+function updateProjectileSmoke(dt) {
+  const batch = resourceState.projectileSmoke;
+  if (!batch) return;
+  batch.time += dt;
+  batch.material.uniforms.smokeTime.value = batch.time;
+  batch.material.uniforms.smokeViewport.value.set(innerWidth, innerHeight);
+  if (batch.time - batch.lastEmission >= PROJECTILE_SMOKE_RULES.lifeSeconds) {
+    batch.count = batch.cursor = batch.geometry.instanceCount = 0;
+    batch.mesh.visible = false;
+  }
+}
+function clearProjectileSmoke() {
+  const batch = resourceState.projectileSmoke;
+  if (!batch) return;
+  batch.count = batch.cursor = batch.geometry.instanceCount = 0;
+  batch.time = batch.material.uniforms.smokeTime.value = 0;
+  batch.lastEmission = -Infinity;
+  batch.mesh.visible = false;
 }
 
 
@@ -4154,9 +4421,9 @@ function attachPropeller(root, source, spec) {
     pivot = source.getObjectByName('prop_49');
     blades = pivot?.children.filter(node => node.isMesh) || [];
   }
-  if (type === 'i15' || type === 'i16') {
+  if (type === 'i15' || type === 'i16' || type === 'bf109c1') {
     const authored = source.getObjectByName('prop01_1');
-    if (!authored) throw new Error('缺少 I-15 螺旋桨');
+    if (!authored) throw new Error('缺少螺旋桨节点：' + type);
     const center = new THREE.Box3().setFromObject(authored).getCenter(new THREE.Vector3());
     authored.parent.worldToLocal(center);
     pivot = new THREE.Group();
@@ -4177,7 +4444,7 @@ function attachPropeller(root, source, spec) {
     blades = [authored];
   }
   if (!pivot || !blades || Array.isArray(blades) && !blades.length) throw new Error('缺少螺旋桨旋转节点：' + type);
-  const scaled = ['i16', 'i15', 'p36a', 'f3f2', 'mig3'].includes(type),
+  const scaled = ['i16', 'i15', 'p36a', 'f3f2', 'mig3', 'bf109c1'].includes(type),
     worldScale = scaled ? pivot.getWorldScale(new THREE.Vector3()) : null;
   const discRadius = scaled ? settings.radius / METERS_PER_UNIT / Math.max(Math.abs(worldScale.x), .0001) : settings.radius;
   const disc = new THREE.Mesh(new THREE.PlaneGeometry(discRadius * 2, discRadius * 2), new THREE.MeshBasicMaterial({
@@ -4190,14 +4457,14 @@ function attachPropeller(root, source, spec) {
   ownAircraftResource(root, disc.geometry);
   ownAircraftResource(root, disc.material);
   disc.name = 'PropellerMotionBlur';
-  if (type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3') disc.position.z = -.015;else {
+  if (type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' || type === 'bf109c1') disc.position.z = -.015;else {
     disc.rotation.x = Math.PI / 2;
     disc.position.y = -.015;
   }
   disc.visible = false;
   disc.renderOrder = 2;
   pivot.add(disc);
-  const spinAxis = type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' ? new THREE.Vector3(0, 0, -1) : new THREE.Vector3(0, 1, 0);
+  const spinAxis = type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' || type === 'bf109c1' ? new THREE.Vector3(0, 0, -1) : new THREE.Vector3(0, 1, 0);
   root.userData.propeller = {
     pivot,
     blades,
@@ -4876,12 +5143,14 @@ function updateNonAirspaceStep(dt) {
       fireBomberTurrets(session.enemy, true, dt);
     }
     const campaignShotTargets = session.gameMode === 'campaign' ? campaignTargets() : null;
+    updateProjectileSmoke(dt);
     for (let i = session.bullets.length - 1; i >= 0; i--) {
       const bullet = session.bullets[i];
       (bullet.previousPosition ??= new THREE.Vector3()).copy(bullet.mesh.position);
       const shotStep = Math.min(dt, Math.max(0, bullet.life));
       bullet.mesh.position.addScaledVector(bullet.dir, bullet.speed * shotStep);
       bullet.life -= dt;
+      traceBulletSmoke(bullet, dt);
       let hit = false;
       if (bullet.enemy) {
         if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.player, bullet.radius)) {
@@ -4985,6 +5254,7 @@ function animate() {
   const elapsed = Math.max(0, viewState.clock.getDelta()),
     visualDt = Math.min(elapsed, .1);
   if (!session.playing && !session.battlePaused) {
+    updateProjectileSmoke(elapsed);
     if (session.gameMode === 'airspace') {
       for (const unit of session.airspaceUnits) if (!unit.dead) updatePropeller(unit.root, elapsed);
     } else updateAllPropellers(elapsed);
@@ -5037,6 +5307,7 @@ function clearBattleWorld() {
   for (const bomb of session.bombsInFlight) disposeBomb(bomb);
   session.bombsInFlight.length = 0;
   for (let i = session.bullets.length - 1; i >= 0; i--) releaseBullet(i);
+  clearProjectileSmoke();
   session.player = null;
   session.enemy = null;
 }
@@ -5891,40 +6162,66 @@ function stopMenuMusic() {
 function economyInteger(value, maximum = ECONOMY_RULES.maxBalance) {
   return Number.isFinite(value) ? Math.min(maximum, Math.max(0, Math.floor(value))) : 0;
 }
+function isAircraftResearchOpen(type) {
+  const tree = AIRCRAFT_TREE[type];
+  return !!tree && RELEASE_RESEARCH.nations.includes(tree.nation) && RELEASE_RESEARCH.ranks.includes(tree.rank);
+}
+function freshProgressionProfile() {
+  return {
+    format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    mode: 'standard', unlocked: [...STARTER_AIRCRAFT], selected: 'i15',
+    bomberLoadout: '18x1000',
+    economy: { rp: 0, gp: ECONOMY_RULES.startGP, research: {}, completedSorties: 0 }
+  };
+}
+function normalizeProgressionProfile(saved) {
+  if (!saved || typeof saved !== 'object' || Array.isArray(saved) ||
+      saved.format !== PROFILE_FORMAT || saved.version !== PROFILE_VERSION ||
+      saved.gameVersion !== GAME_VERSION || !['standard', 'all-aircraft'].includes(saved.mode) ||
+      !Array.isArray(saved.unlocked)) return null;
+  const allAircraft = saved.mode === 'all-aircraft';
+  const unlocked = [...new Set([...STARTER_AIRCRAFT, ...saved.unlocked.filter(id =>
+    typeof id === 'string' && AIRCRAFT_SPECS[id] && (allAircraft || isAircraftResearchOpen(id)))])];
+  const wallet = saved.economy;
+  const economy = wallet && typeof wallet === 'object' && !Array.isArray(wallet) ? {
+    rp: economyInteger(wallet.rp), gp: economyInteger(wallet.gp), research: {},
+    completedSorties: economyInteger(wallet.completedSorties)
+  } : freshProgressionProfile().economy;
+  if (wallet?.research && typeof wallet.research === 'object' && !Array.isArray(wallet.research)) {
+    for (const [type, value] of Object.entries(wallet.research)) {
+      if (RESEARCH_COSTS[type] && (allAircraft || isAircraftResearchOpen(type)))
+        economy.research[type] = economyInteger(value, RESEARCH_COSTS[type].rp);
+    }
+  }
+  return {
+    format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    mode: saved.mode, unlocked,
+    selected: unlocked.includes(saved.selected) ? saved.selected : 'i15',
+    bomberLoadout: BOMBER_LOADOUTS[saved.bomberLoadout] ? saved.bomberLoadout : '18x1000', economy
+  };
+}
+function applyProgressionProfile(record) {
+  profileState.profileMode = record.mode;
+  profileState.unlockedPlanes = record.unlocked;
+  profileState.selectedAircraft = record.selected;
+  profileState.selectedBombPayload = record.bomberLoadout;
+  profileState.economy = record.economy;
+}
 function loadProgressionProfile() {
   let saved = null;
   try {
     saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null');
   } catch {}
-  if (!saved || typeof saved !== 'object' || Array.isArray(saved)) saved = {};
-  const preserved = Array.isArray(saved.unlocked) ? saved.unlocked.filter(id => typeof id === 'string' && AIRCRAFT_SPECS[id]) : [];
-  profileState.unlockedPlanes = [...new Set(['i15', 'i15bis', ...preserved])];
-  profileState.selectedAircraft = profileState.unlockedPlanes.includes(saved.selected) ? saved.selected : 'i15';
-  if (BOMBER_LOADOUTS[saved.bomberLoadout]) profileState.selectedBombPayload = saved.bomberLoadout;
-  const wallet = saved.economy;
-  if (wallet && typeof wallet === 'object' && !Array.isArray(wallet)) {
-    profileState.economy = {
-      rp: economyInteger(wallet.rp),
-      gp: economyInteger(wallet.gp),
-      research: {},
-      completedSorties: economyInteger(wallet.completedSorties)
-    };
-    if (wallet.research && typeof wallet.research === 'object') for (const [type, value] of Object.entries(wallet.research)) if (RESEARCH_COSTS[type]) profileState.economy.research[type] = economyInteger(value, RESEARCH_COSTS[type].rp);
-  } else profileState.economy = {
-    rp: 0,
-    gp: ECONOMY_RULES.startGP,
-    research: {},
-    completedSorties: 0
-  };
+  applyProgressionProfile(normalizeProgressionProfile(saved) || freshProgressionProfile());
   session.playerPlane = profileState.selectedAircraft;
   saveHangar();
 }
 function researchStages() {
-  return [...new Set(Object.values(AIRCRAFT_TREE).map(info => info.rating))].sort((a, b) => a - b);
+  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(isAircraftResearchOpen).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
 }
 function researchPrerequisite(type) {
   const rating = AIRCRAFT_TREE[type]?.rating;
-  if (!Number.isFinite(rating)) return {
+  if (!Number.isFinite(rating) || !isAircraftResearchOpen(type)) return {
     allowed: false,
     rating: null,
     choices: []
@@ -5935,7 +6232,7 @@ function researchPrerequisite(type) {
     rating: null,
     choices: []
   };
-  const choices = Object.keys(AIRCRAFT_TREE).filter(id => Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
+  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
   return {
     allowed: choices.some(id => profileState.unlockedPlanes.includes(id)),
     rating: prior,
@@ -5951,7 +6248,7 @@ function aircraftResearchState(type) {
     progress = owned ? cost.rp : economyInteger(profileState.economy.research[type], cost.rp),
     prerequisite = researchPrerequisite(type);
   return {
-    status: owned ? 'owned' : !prerequisite.allowed ? 'blocked' : progress >= cost.rp ? 'ready' : 'research',
+    status: owned ? 'owned' : !isAircraftResearchOpen(type) ? 'unavailable' : !prerequisite.allowed ? 'blocked' : progress >= cost.rp ? 'ready' : 'research',
     owned,
     progress,
     cost,
@@ -6059,7 +6356,10 @@ function settleSortieEconomy(win) {
 function saveHangar() {
   try {
     localStorage.setItem(PROFILE_KEY, JSON.stringify({
-      version: 2,
+      format: PROFILE_FORMAT,
+      version: PROFILE_VERSION,
+      gameVersion: GAME_VERSION,
+      mode: profileState.profileMode,
       unlocked: profileState.unlockedPlanes,
       selected: profileState.selectedAircraft,
       bomberLoadout: profileState.selectedBombPayload,
@@ -6070,6 +6370,31 @@ function saveHangar() {
     console.warn('无法保存游戏进度', error);
     return false;
   }
+}
+function importProgressionProfile(text) {
+  if (session.playing || session.battlePaused) return { ok: false, reason: 'battle' };
+  let record;
+  try { record = normalizeProgressionProfile(JSON.parse(text)); } catch {}
+  if (!record) return { ok: false, reason: 'format' };
+  const before = {
+    mode: profileState.profileMode, unlocked: profileState.unlockedPlanes,
+    selected: profileState.selectedAircraft, bomberLoadout: profileState.selectedBombPayload,
+    economy: profileState.economy
+  };
+  applyProgressionProfile(record);
+  if (!saveHangar()) {
+    applyProgressionProfile(before);
+    return { ok: false, reason: 'storage' };
+  }
+  profileState.pendingRewards = [];
+  session.playerPlane = profileState.selectedAircraft;
+  stopGunSounds();
+  stopEngineSound();
+  updateThrottleUI();
+  renderHangar();
+  renderResearch();
+  updateEconomyDisplay();
+  return { ok: true, mode: record.mode, count: record.unlocked.length };
 }
 function setSelectedAircraft(type) {
   if (!profileState.unlockedPlanes.includes(type)) return false;
@@ -6201,6 +6526,23 @@ window.showPause = () => {
 };
 $('#openSettings').addEventListener('click', () => showMenuScreen('settings'));
 $('#settingsHome').addEventListener('click', () => showMenuScreen('menu'));
+$('#importProfile').addEventListener('click', () => $('#profileFile').click());
+$('#profileFile').addEventListener('change', async event => {
+  const file = event.target.files?.[0], status = $('#profileImportStatus');
+  if (!file) return;
+  if (file.size > 128 * 1024) {
+    status.textContent = '存档文件过大，请选择 1.0 版 JSON 存档。';
+    event.target.value = '';
+    return;
+  }
+  try {
+    const result = importProgressionProfile(await file.text());
+    status.textContent = result.ok ? '导入成功 · ' + result.count + ' 架飞机已入库' :
+      result.reason === 'storage' ? '保存失败，原有进度已保留。' :
+      result.reason === 'battle' ? '请先退出当前对局，再导入存档。' : '存档格式或版本不匹配，仅支持 1.0 版存档。';
+  } catch { status.textContent = '无法读取存档文件，原有进度已保留。'; }
+  event.target.value = '';
+});
 document.querySelectorAll('[name="flightControlMode"]').forEach(input => input.addEventListener('change', () => {
   if (input.checked) changeControlMode(input.value);
 }));

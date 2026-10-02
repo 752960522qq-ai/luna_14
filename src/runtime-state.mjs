@@ -116,6 +116,7 @@ inputState.filteredControlY = 0;
 session.bullets = [];
 resourceState.bulletPool = [];
 resourceState.bulletResources = {};
+resourceState.projectileSmoke = null;
 session.bombsInFlight = [];
 inputState.bombKeyWasDown = false;
 mapState.clouds = [];
@@ -153,7 +154,7 @@ session.airspaceSpectating = false;
 session.airspaceObservedId = null;
 session.airspaceAccumulator = 0;
 session.airspacePrepareToken = 0;
-const CONTROL_SETTINGS_KEY = 'sky-duel.flight-controls.v1';
+const CONTROL_SETTINGS_KEY = 'silverwing.flight-controls.1.0';
 const DEFAULT_CONTROL_SETTINGS = {
   mode: 'cursor',
   sensitivity: 1
@@ -208,7 +209,13 @@ const BOMBER_LOADOUTS = {
     eachLb: 4000
   }
 };
-const PROFILE_KEY = 'sky-duel-profile-v1';
+const GAME_VERSION = '1.0';
+const PROFILE_FORMAT = 'silverwing-profile';
+const PROFILE_VERSION = 1;
+const PROFILE_KEY = 'silverwing.profile.1.0';
+const STARTER_AIRCRAFT = ['bf109b1', 'f3f2', 'i15bis', 'i15'];
+const RELEASE_RESEARCH = { nations: ['cn', 'de', 'us', 'ussr'], ranks: ['I', 'II'] };
+profileState.profileMode = 'standard';
 profileState.unlockedPlanes = [];
 profileState.selectedAircraft = 'i15';
 profileState.selectedBombPayload = '18x1000';

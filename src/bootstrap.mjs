@@ -86,6 +86,23 @@ window.showPause = () => {
 };
 $('#openSettings').addEventListener('click', () => showMenuScreen('settings'));
 $('#settingsHome').addEventListener('click', () => showMenuScreen('menu'));
+$('#importProfile').addEventListener('click', () => $('#profileFile').click());
+$('#profileFile').addEventListener('change', async event => {
+  const file = event.target.files?.[0], status = $('#profileImportStatus');
+  if (!file) return;
+  if (file.size > 128 * 1024) {
+    status.textContent = '存档文件过大，请选择 1.0 版 JSON 存档。';
+    event.target.value = '';
+    return;
+  }
+  try {
+    const result = importProgressionProfile(await file.text());
+    status.textContent = result.ok ? '导入成功 · ' + result.count + ' 架飞机已入库' :
+      result.reason === 'storage' ? '保存失败，原有进度已保留。' :
+      result.reason === 'battle' ? '请先退出当前对局，再导入存档。' : '存档格式或版本不匹配，仅支持 1.0 版存档。';
+  } catch { status.textContent = '无法读取存档文件，原有进度已保留。'; }
+  event.target.value = '';
+});
 document.querySelectorAll('[name="flightControlMode"]').forEach(input => input.addEventListener('change', () => {
   if (input.checked) changeControlMode(input.value);
 }));

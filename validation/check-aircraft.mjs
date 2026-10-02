@@ -10,7 +10,7 @@ assert.equal(specs.lengthMeters,7.06);assert.equal(specs.chaseOffsetMeters,8.7);
 assert(Math.abs(info.horizontalTurnRateDps-360/16.5)<1e-12);assert(Math.abs(info.verticalTurnRateDps-360/10.1)<1e-12);
 for(const [id,expected] of [['m2',[750,34,860]],['mg762',[1000,13,810]]])assert.deepEqual([weapons[id].rpm,weapons[id].damage,weapons[id].speed],expected);
 assert.deepEqual(Array.from(run("selectedWeaponIds('f3f2','mg')")),['m2','mg762']);assert.equal(run("freshAmmo('f3f2').m2"),200);assert.equal(run("freshAmmo('f3f2').mg762"),500);
-assert.deepEqual(new Set(Array.from(run("duelOpponentsFor('f3f2')"))),new Set(['i15','f3f2','p36a','bf109b1','i15bis','mig3','i16']));report.checks.push('All supplied F3F-2 dimensions, health, speed, climb, turn and two-gun data match; BR 1.3 opponents remain within ±1.0');
+assert.deepEqual(new Set(Array.from(run("duelOpponentsFor('f3f2')"))),new Set(['i15','f3f2','p36a','bf109b1','i15bis','mig3','i16','bf109c1']));report.checks.push('All supplied F3F-2 dimensions, health, speed, climb, turn and two-gun data match; BR 1.3 opponents remain within ±1.0');
 for(const fps of [30,60,120]){
  const q=plane(h,'f3f2',true,new THREE.Vector3(0,100,0),true);h.ctx.player=q;h.ctx.playerPlane='f3f2';h.ctx.playerAmmo=run("freshAmmo('f3f2')");h.ctx.playerWeaponCooldowns={};h.ctx.weaponMode='mg';h.ctx.bullets=[];h.ctx.bulletPool=[];
  for(let frame=0;frame<2*fps;frame++)run(`fireWeapons(player,false,${1/fps},true)`);
@@ -42,7 +42,7 @@ run('AIRCRAFT_SPECS.f3f2.highSpeedTurnDrag=.014');assert(turnSpeeds[0]<turnSpeed
 report.highSpeedTurn={withAdditionalLossKmh:turnSpeeds[0],withoutAdditionalLossKmh:turnSpeeds[1],seconds:4};report.checks.push('Loaded high-speed turns lose more energy than the same maneuver without the F3F-2 turn-drag setting');
 
 const mig=run('planeInfo.mig3');assert.equal(mig.health,480);assert.equal(mig.maxSpeedKmh,640);assert.equal(mig.minLevelFlightKmh,155);assert.equal(mig.bestClimbMps,15.8);assert.equal(mig.turnTimeS,24);assert.equal(mig.verticalTurnTimeS,13.2);assert.equal(run('AIRCRAFT_SPECS.mig3.lengthMeters'),8.25);assert.equal(run('AIRCRAFT_SPECS.mig3.chaseOffsetMeters'),9.5);assert.equal(run('AIRCRAFT_TREE.mig3.rank'),'II');assert.equal(run('AIRCRAFT_TREE.mig3.rating'),2.3);assert.equal(run('AIRCRAFT_TREE.mig3.nation'),'ussr');
-assert.deepEqual(new Set(Array.from(run("duelOpponentsFor('mig3')"))),new Set(['mig3','f3f2','p36a','bf109b1','i16']));
+assert.deepEqual(new Set(Array.from(run("duelOpponentsFor('mig3')"))),new Set(['mig3','f3f2','p36a','bf109b1','i16','bf109c1']));
 for(const fps of [30,60,120]){
  h.ctx.player=plane(h,'mig3',true,new THREE.Vector3(0,100,0),true);h.ctx.playerPlane='mig3';h.ctx.playerAmmo=run("freshAmmo('mig3')");h.ctx.playerWeaponCooldowns={};h.ctx.weaponMode='mg';h.ctx.bullets=[];h.ctx.bulletPool=[];
  for(let frame=0;frame<2*fps;frame++)run(`fireWeapons(player,false,${1/fps},true)`);
@@ -60,4 +60,22 @@ for(const fps of [30,60,120]){
 }
 const i15Level=plane(h,'i15',true,new THREE.Vector3(0,1000,0),true);h.ctx.player=i15Level;for(let i=0;i<90*60;i++)run('advanceAircraft(player,1/60)');assert(Math.abs(i15Level.userData.airspeed*3.6-365)<1);report.i15LevelSpeedKmh=i15Level.userData.airspeed*3.6;
 report.checks.push('Soviet I-15 supplied stats, BR1.0 matching, four 750RPM PV-1 barrels with 3200 total rounds and 775m/s / 13 damage, and full-power 365km/h level flight pass');
-fs.writeFileSync(new URL('aircraft-v18.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+const c1=run('planeInfo.bf109c1'),c1Gun=run('weaponInfo.bf109c1.mg');
+assert.equal(c1.health,390);assert.equal(c1.maxSpeedKmh,465);assert.equal(c1.minLevelFlightKmh,124);assert.equal(c1.bestClimbMps,13.2);assert.equal(c1.turnTimeS,19);assert.equal(c1.verticalTurnTimeS,11.3);
+assert(Math.abs(c1.horizontalTurnRateDps-360/19)<1e-12);assert(Math.abs(c1.verticalTurnRateDps-360/11.3)<1e-12);
+assert.equal(run('AIRCRAFT_TREE.bf109c1.rating'),2);assert.equal(run('AIRCRAFT_TREE.bf109c1.rank'),'II');assert.equal(run('AIRCRAFT_TREE.bf109c1.nation'),'de');assert.equal(run('AIRCRAFT_SPECS.bf109c1.lengthMeters'),8.55);assert.equal(run('AIRCRAFT_SPECS.bf109c1.chaseOffsetMeters'),2.6);
+assert.deepEqual([c1Gun.rpm,c1Gun.damage,c1Gun.speed,c1Gun.count,c1Gun.cost],[1200,14,855,4,4]);
+for(const fps of [30,60,120]){
+ h.ctx.player=plane(h,'bf109c1',true,new THREE.Vector3(0,100,0),true);h.ctx.playerPlane='bf109c1';h.ctx.playerAmmo=run("freshAmmo('bf109c1')");h.ctx.playerWeaponCooldowns={};h.ctx.weaponMode='mg';h.ctx.bullets=[];h.ctx.bulletPool=[];
+ for(let frame=0;frame<2*fps;frame++)run(`fireWeapons(player,false,${1/fps},true)`);
+ const spent=1840-h.ctx.playerAmmo.mg;assert(Math.abs(spent-160)<=4);assert.equal(spent%4,0);assert.equal(h.ctx.bullets.length,spent);assert(h.ctx.bullets.every(b=>b.speed*10===855&&b.damage===14));
+ h.ctx.playerAmmo.mg=4;const prior=h.ctx.bullets.length;run('fireWeapons(player,false,1,true)');assert.equal(h.ctx.playerAmmo.mg,0);assert.equal(h.ctx.bullets.length,prior+4);run('fireWeapons(player,false,1,true)');assert.equal(h.ctx.bullets.length,prior+4);
+ report.cadence.push({type:'bf109c1',fps,seconds:2,spent});
+}
+for(const mode of ['cursor','joystick'])for(const fps of [30,120]){
+ const q=plane(h,'bf109c1',true,new THREE.Vector3(0,1000,0),true);h.ctx.player=q;h.ctx.playerPlane='bf109c1';h.ctx.controlSettings.mode=mode;h.ctx.keys.up=true;h.ctx.keys.right=true;h.ctx.joystickInput={x:.65,y:.45};setDirection(h,new THREE.Vector3(.65,.25,-1).normalize());
+ for(let i=0;i<fps*10;i++)playerStep(h,1/fps);assert(q.position.toArray().every(Number.isFinite));assert(Math.abs(q.quaternion.length()-1)<1e-6);report.flight.push({type:'bf109c1',mode,fps,endSpeedKmh:q.userData.airspeed*3.6});
+}
+const c1Level=plane(h,'bf109c1',true,new THREE.Vector3(0,1000,0),true);h.ctx.player=c1Level;for(let i=0;i<90*60;i++)run('advanceAircraft(player,1/60)');assert(Math.abs(c1Level.userData.airspeed*3.6-465)<1);report.bf109c1LevelSpeedKmh=c1Level.userData.airspeed*3.6;
+report.checks.push('Bf-109 C-1 supplied stats, four 1200 RPM MG17 barrels, total 1840 rounds, 855m/s / damage14, empty ammunition, both controls and calibrated 465km/h flight pass');
+fs.writeFileSync(new URL('aircraft-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

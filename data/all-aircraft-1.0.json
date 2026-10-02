@@ -1,0 +1,41 @@
+{
+  "format": "silverwing-profile",
+  "version": 1,
+  "gameVersion": "1.0",
+  "mode": "all-aircraft",
+  "unlocked": [
+    "bf109b1",
+    "f3f2",
+    "i15bis",
+    "i15",
+    "i16",
+    "mig3",
+    "p36a",
+    "mig15",
+    "f86",
+    "meteor",
+    "b29",
+    "bf109c1"
+  ],
+  "selected": "bf109c1",
+  "bomberLoadout": "18x1000",
+  "economy": {
+    "rp": 0,
+    "gp": 2000,
+    "research": {
+      "i16": 500,
+      "i15": 0,
+      "mig3": 1600,
+      "f3f2": 400,
+      "i15bis": 0,
+      "bf109b1": 500,
+      "p36a": 550,
+      "mig15": 7500,
+      "f86": 7800,
+      "meteor": 7000,
+      "b29": 4800,
+      "bf109c1": 1600
+    },
+    "completedSorties": 0
+  }
+}

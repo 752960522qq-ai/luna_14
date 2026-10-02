@@ -53,4 +53,4 @@ await Promise.all(run('[...audioLoads.values()]'));await Promise.resolve();asser
 clear();ctx.player=plane('b29');ctx.playerPlane='b29';ctx.enemy=plane('f86');ctx.enemy.position.set(0,100,-10);ctx.playerAmmo={b29mg:12000};
 run('fireBomberTurrets(player,false,.1)');assert.equal(sources.length,0);run('fireBomberTurrets(player,false,.04)');assert.equal(sources.length,1);assert(ctx.playerAmmo.b29mg<12000);ctx.enemy.position.z=-1000;run('fireBomberTurrets(player,false,.2)');assert.equal(sources.length,1);report.checks.push('B-29 turret packet plays once only when rounds are spent; no out-of-range loop');
 assert(!real.includes('setPV1GunLoop')&&!real.includes('setBomberGunLoop'));
-fs.writeFileSync(new URL('audio-behavior-v18.json',import.meta.url),JSON.stringify({...report,result:'passed'},null,2));console.log(JSON.stringify({...report,result:'passed'},null,2));
+fs.writeFileSync(new URL('audio-behavior-v19.json',import.meta.url),JSON.stringify({...report,result:'passed'},null,2));console.log(JSON.stringify({...report,result:'passed'},null,2));

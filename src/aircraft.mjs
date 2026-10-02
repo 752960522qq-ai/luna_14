@@ -241,9 +241,9 @@ function attachPropeller(root, source, spec) {
     pivot = source.getObjectByName('prop_49');
     blades = pivot?.children.filter(node => node.isMesh) || [];
   }
-  if (type === 'i15' || type === 'i16') {
+  if (type === 'i15' || type === 'i16' || type === 'bf109c1') {
     const authored = source.getObjectByName('prop01_1');
-    if (!authored) throw new Error('缺少 I-15 螺旋桨');
+    if (!authored) throw new Error('缺少螺旋桨节点：' + type);
     const center = new THREE.Box3().setFromObject(authored).getCenter(new THREE.Vector3());
     authored.parent.worldToLocal(center);
     pivot = new THREE.Group();
@@ -264,7 +264,7 @@ function attachPropeller(root, source, spec) {
     blades = [authored];
   }
   if (!pivot || !blades || Array.isArray(blades) && !blades.length) throw new Error('缺少螺旋桨旋转节点：' + type);
-  const scaled = ['i16', 'i15', 'p36a', 'f3f2', 'mig3'].includes(type),
+  const scaled = ['i16', 'i15', 'p36a', 'f3f2', 'mig3', 'bf109c1'].includes(type),
     worldScale = scaled ? pivot.getWorldScale(new THREE.Vector3()) : null;
   const discRadius = scaled ? settings.radius / METERS_PER_UNIT / Math.max(Math.abs(worldScale.x), .0001) : settings.radius;
   const disc = new THREE.Mesh(new THREE.PlaneGeometry(discRadius * 2, discRadius * 2), new THREE.MeshBasicMaterial({
@@ -277,14 +277,14 @@ function attachPropeller(root, source, spec) {
   ownAircraftResource(root, disc.geometry);
   ownAircraftResource(root, disc.material);
   disc.name = 'PropellerMotionBlur';
-  if (type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3') disc.position.z = -.015;else {
+  if (type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' || type === 'bf109c1') disc.position.z = -.015;else {
     disc.rotation.x = Math.PI / 2;
     disc.position.y = -.015;
   }
   disc.visible = false;
   disc.renderOrder = 2;
   pivot.add(disc);
-  const spinAxis = type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' ? new THREE.Vector3(0, 0, -1) : new THREE.Vector3(0, 1, 0);
+  const spinAxis = type === 'i16' || type === 'i15' || type === 'f3f2' || type === 'mig3' || type === 'bf109c1' ? new THREE.Vector3(0, 0, -1) : new THREE.Vector3(0, 1, 0);
   root.userData.propeller = {
     pivot,
     blades,
