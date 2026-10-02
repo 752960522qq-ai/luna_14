@@ -1,9 +1,16 @@
 {
-  "name": "sky-duel-i16-research-v17",
+  "name": "silverwing-lingyun",
   "private": true,
   "type": "module",
   "scripts": {
-    "check": "node --check game.mjs && node validation/check-source-v17.mjs && node validation/check-progression-v17.mjs && node validation/check-i16-v17.mjs && node validation/check-aircraft-v17.mjs && node validation/check-audio-v17.mjs && node validation/check-flight-v17.mjs && node validation/check-airspace-v17.mjs && node validation/check-stability-v17.mjs",
-    "check:browser": "node validation/check-browser-v17.cjs"
+    "build:source": "node scripts/build-source.mjs",
+    "check": "node scripts/build-source.mjs --check && node --check game.mjs && node validation/check-source.mjs && node validation/check-repairs.mjs && node validation/check-terrain.mjs && node validation/check-progression.mjs && node validation/check-i16.mjs && node validation/check-aircraft.mjs && node validation/check-audio.mjs && node validation/check-flight.mjs && node validation/check-airspace.mjs && node validation/check-stability.mjs",
+    "check:browser": "node validation/check-browser.cjs"
+  },
+  "devDependencies": {
+    "@babel/generator": "^7.28.5",
+    "@babel/parser": "^7.28.5",
+    "playwright": "1.62.1",
+    "postcss": "8.5.6"
   }
 }
