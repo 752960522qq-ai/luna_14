@@ -27,7 +27,6 @@ function renderControlSettings() {
   slider.value = inputState.controlSettings.sensitivity;
   slider.disabled = inputState.controlSettings.mode !== 'cursor';
   $('#cursorSensitivityValue').textContent = inputState.controlSettings.sensitivity.toFixed(1) + '×';
-  $('#homeControlMode').textContent = controlModeName();
   $('#controlInstructions').textContent = inputState.controlSettings.mode === 'cursor' ? '拖动空白区域移动方向环，松手保持指向。飞机会逐渐转向，实际准星对准提前量圈后再射击。按住“观察”并拖动可自由观察。' : '左右移动摇杆进行滚转；向下拉杆抬头，向上推杆俯冲。松手停止操纵，拖动空白区域可自由观察。指向敌机显示预瞄点，实际准星对齐后开火。';
   applyControlModeUI();
 }

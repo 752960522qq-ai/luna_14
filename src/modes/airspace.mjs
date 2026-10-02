@@ -35,6 +35,7 @@ function airspaceWithin(point, center, radiusMeters) {
 // A signed meter takes 15 seconds from neutral and 30 from the opposite end.
 // Only a strict numerical advantage advances it; ties and an empty point freeze it.
 function advanceAirspaceObjective(state, units, dt) {
+  dt = Math.min(Math.max(0, dt), Math.max(0, AIRSPACE_RULES.durationSeconds - state.elapsed));
   const counts = {
     blue: 0,
     red: 0
@@ -64,6 +65,11 @@ function advanceAirspaceObjective(state, units, dt) {
 function replenishAirspaceUnit(unit, base, dt) {
   if (unit.dead || unit.health <= 0 || !airspaceWithin(unit.root.position, base, AIRSPACE_RULES.baseRadiusMeters)) return false;
   unit.health = Math.min(unit.maxHealth, unit.health + unit.maxHealth * AIRSPACE_RULES.supplyRate * dt);
+  const data = unit.root.userData;
+  if (data.engineDamage > 0) {
+    data.engineDamage = Math.max(0, data.engineDamage - unit.maxHealth * COMBAT_FEEDBACK_RULES.engineHealthFraction * AIRSPACE_RULES.supplyRate * dt);
+    data.engineCritical = data.engineDamage >= unit.maxHealth * COMBAT_FEEDBACK_RULES.engineHealthFraction * (1 - COMBAT_FEEDBACK_RULES.engineCriticalFraction);
+  }
   for (const [id, capacity] of Object.entries(unit.maxAmmo)) {
     if (id === 'bombWeightLb' || capacity <= 0) continue;
     if (unit.ammo[id] >= capacity) {
@@ -95,6 +101,13 @@ function airspaceWinner(state, units) {
   if (!blue) return 'red';
   if (state.scores.blue >= AIRSPACE_RULES.scoreToWin - 1e-9) return 'blue';
   if (state.scores.red >= AIRSPACE_RULES.scoreToWin - 1e-9) return 'red';
+  if (state.elapsed >= AIRSPACE_RULES.durationSeconds - 1e-9) {
+    const bluePoints = Math.floor(state.scores.blue + 1e-9), redPoints = Math.floor(state.scores.red + 1e-9);
+    if (bluePoints !== redPoints) return bluePoints > redPoints ? 'blue' : 'red';
+    const blueAlive = units.filter(u => u.team === 'blue' && !u.dead && u.health > 0).length;
+    const redAlive = units.filter(u => u.team === 'red' && !u.dead && u.health > 0).length;
+    return blueAlive === redAlive ? null : blueAlive > redAlive ? 'blue' : 'red';
+  }
   return undefined;
 }
 function clearAirspaceEntities() {
@@ -140,6 +153,7 @@ function makeAirspaceUnit(team, index, type, root) {
       hispano: 0
     },
     dead: false,
+    damageContributors: new Map(),
     targetId: null,
     targetDecision: 0,
     resupplying: false,
@@ -286,9 +300,13 @@ function enterAirspaceSpectator() {
   $('#cursorStatus').classList.add('hidden');
   toast('战机已被击落 · 进入队友观战');
 }
-function damageAirspaceUnit(unit, amount, shooterId = null) {
+function damageAirspaceUnit(unit, amount, shooterId = null, hit = null) {
   if (!unit || unit.dead || !Number.isFinite(amount) || amount <= 0 || session.ended) return;
+  const shooter = session.airspaceUnits.find(u => u.id === shooterId);
+  if (shooter && shooter.team === unit.team) return;
+  const before = unit.health;
   unit.health = Math.max(0, unit.health - amount);
+  recordCombatDamage(unit.root, before, unit.health, hit || (shooter ? { source: shooter.root, projectile: false } : null));
   if (unit.isPlayer) {
     session.hp = unit.health;
     triggerDamageFlash();
@@ -298,7 +316,8 @@ function damageAirspaceUnit(unit, amount, shooterId = null) {
     unit.dead = true;
     unit.targetId = null;
     retireAircraft(unit.root);
-    const shooter = session.airspaceUnits.find(u => u.id === shooterId);
+    const assistants = reportAirspaceAssists(unit, shooterId);
+    addCombatFeed(shooter, unit, assistants);
     if (shooter?.isPlayer && shooter.team !== unit.team) {
       session.kills++;
       $('#kills').textContent = String(session.kills).padStart(2, '0');
@@ -320,14 +339,11 @@ function finishAirspaceBattle(winner) {
   stopGunSounds();
   stopEngineSound();
   $('#spectatorControls').classList.add('hidden');
-  $('#again').textContent = '再次升空　→';
-  $('#resultTitle').textContent = winner === null ? '双方全灭' : winner === 'blue' ? '空域争夺胜利' : '空域争夺失败';
-  const scores = session.airspaceState.scores,
-    reason = winner === null ? '双方载具均已被击落。' : scores[winner] >= AIRSPACE_RULES.scoreToWin - 1e-9 ? '据点积分达到100分。' : '对方编队已被全歼。';
-  $('#resultCopy').textContent = `${reason} 我方 ${Math.floor(scores.blue + 1e-9)} : ${Math.floor(scores.red + 1e-9)} 敌方 · 个人击落 ${session.kills} 架。`;
+  const state = session.airspaceState, scores = state.scores;
+  const reason = state.elapsed >= AIRSPACE_RULES.durationSeconds - 1e-9 ? '五分钟时限已到' : winner === null ? '双方编队全灭' : scores[winner] >= AIRSPACE_RULES.scoreToWin - 1e-9 ? '据点积分达到 100 分' : '对方编队已被全歼';
+  const alive = [airspaceLiveUnits('blue').length, airspaceLiveUnits('red').length];
   updateAirspaceHUD();
-  $('#end').classList.remove('hidden');
-  settleSortieEconomy(winner === null ? null : winner === 'blue');
+  renderBattleResult(winner === null ? null : winner === 'blue', `${reason} · 积分 ${Math.floor(scores.blue + 1e-9)} : ${Math.floor(scores.red + 1e-9)} · 存活 ${alive[0]} : ${alive[1]}`, settleSortieEconomy(winner === null ? null : winner === 'blue'));
 }
 function airspaceNavigationGoal(unit, dt) {
   const ammo = airspaceAmmoFraction(unit);
@@ -450,10 +466,11 @@ function fireAirspaceBomberTurrets(unit, dt) {
     } of active) {
       const rounds = Math.min(turret.guns, ammo.b29mg);
       ammo.b29mg -= rounds;
+      recordShotCount(root, rounds);
       emitTurretSmoke(root, target.root, turret, rounds);
       let hits = 0;
       for (let n = 0; n < rounds; n++) if (Math.random() < .5) hits++;
-      if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id);
+      if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id, turretImpact(root, target.root, hits));
     }
   }
 }
@@ -509,7 +526,7 @@ function updateAirspaceBullets(dt) {
         target = unit;
       }
     }
-    if (target) damageAirspaceUnit(target, bullet.damage, bullet.shooterId);
+    if (target) damageAirspaceUnit(target, bullet.damage, bullet.shooterId, projectileImpact(bullet, target.root, fraction));
     if (target || bullet.life <= 0 || bullet.mesh.position.y < terrainHeightAt(bullet.mesh.position.x, bullet.mesh.position.z)) releaseBullet(i);
   }
 }
@@ -529,7 +546,7 @@ function updateAirspaceBombs(dt) {
         target = unit;
       }
     }
-    if (target) damageAirspaceUnit(target, bomb.damage, airspaceUnitFor(session.player).id);
+    if (target) damageAirspaceUnit(target, bomb.damage, airspaceUnitFor(session.player).id, { source: session.player, point: bomb.mesh.position, projectile: false });
     if (target || bomb.life <= 0 || bomb.mesh.position.y <= terrainHeightAt(bomb.mesh.position.x, bomb.mesh.position.z)) {
       disposeBomb(bomb);
       session.bombsInFlight.splice(i, 1);
@@ -537,8 +554,16 @@ function updateAirspaceBombs(dt) {
   }
 }
 function updateAirspaceStep(dt) {
-  if (session.playing) profileState.battleRewardSeconds += dt;
   if (!session.playing || session.ended || !session.airspaceState) return;
+  dt = Math.min(Math.max(0, dt), Math.max(0, AIRSPACE_RULES.durationSeconds - session.airspaceState.elapsed));
+  if (dt <= 1e-9) {
+    const winner = airspaceWinner(session.airspaceState, session.airspaceUnits);
+    if (winner !== undefined) finishAirspaceBattle(winner);
+    return;
+  }
+  profileState.battleRewardSeconds += dt;
+  advanceCombatStats(dt);
+  updateCombatFeedback(dt);
   session.worldTime += dt;
   rememberAircraftFrameStart();
   for (const unit of airspaceLiveUnits()) updatePropeller(unit.root, dt);
@@ -633,6 +658,8 @@ function updateAirspaceHUD() {
   $('#redAlive').textContent = red;
   $('#blueScore').textContent = Math.floor(s.scores.blue + 1e-9);
   $('#redScore').textContent = Math.floor(s.scores.red + 1e-9);
+  $('#airspaceTimer').textContent = formatBattleTime(AIRSPACE_RULES.durationSeconds - s.elapsed);
+  $('#airspaceTimer').classList.toggle('time-warning', AIRSPACE_RULES.durationSeconds - s.elapsed <= 30);
   const owner = s.owner === 'blue' ? '我方占领' : s.owner === 'red' ? '敌方占领' : '中立';
   $('#aPointStatus').textContent = 'A · ' + owner;
   $('#aCaptureBlue').style.width = Math.max(0, s.progress) * 50 + '%';
@@ -640,7 +667,7 @@ function updateAirspaceHUD() {
   const direction = Math.sign(s.counts.blue - s.counts.red),
     goal = direction > 0 ? 1 : -1,
     remaining = direction ? Math.max(0, Math.abs(goal - s.progress) * AIRSPACE_RULES.captureSeconds) : 0;
-  $('#aCaptureText').textContent = `点内 ${s.counts.blue} : ${s.counts.red} · ` + (direction && remaining > .01 ? (direction > 0 ? '我方' : '敌方') + '占领 ' + Math.ceil(remaining - 1e-9) + '秒' : direction ? '占领完成' : s.counts.blue || s.counts.red ? '人数相等，进度暂停' : '等待进入');
+  $('#aCaptureText').textContent = `点内 ${s.counts.blue} : ${s.counts.red} · ` + (direction && remaining > .01 ? (direction > 0 ? '我方' : '敌方') + '占领 ' + Math.ceil(remaining - 1e-9) + '秒' : direction ? '占领完成' : s.counts.blue || s.counts.red ? '争夺中' : '未占领');
   $('#aPointStatus').style.color = s.owner === 'blue' ? '#76d5ff' : s.owner === 'red' ? '#ff8580' : '#ffcf71';
   const view = airspaceViewUnit();
   if (session.airspaceSpectating && view) {
@@ -649,7 +676,7 @@ function updateAirspaceHUD() {
   } else if (!session.airspaceSpectating) {
     const own = airspaceUnitFor(session.player),
       atBase = own && !own.dead && airspaceWithin(session.player.position, s.bases.blue, AIRSPACE_RULES.baseRadiusMeters);
-    $('#baseSupplyStatus').textContent = atBase ? '我方基地 · 生命与弹药补给中' : '回我方基地补给 · 距离 ' + Math.round(session.player.position.distanceTo(s.bases.blue) * METERS_PER_UNIT) + ' m';
+    $('#baseSupplyStatus').textContent = atBase ? '补给中' : '';
   }
 }
 function airspaceMarker(key, label, position, color, view) {

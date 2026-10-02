@@ -34,4 +34,4 @@ h.run("gameMode='airspace';reset();battleRewardSeconds=60;kills=1;finishAirspace
 h.run("gameMode='campaign';reset();battleRewardSeconds=300;kills=3;finish(true)");assert.equal(data(h).economy.rp,912);assert.equal(data(h).economy.gp,4532);checks.push('Original RP/GP reward rules and protection against duplicate results remain intact');
 h=loadGame();h.run("gameMode='airspace';reset()");for(let i=0;i<60;i++)h.advance(1/60);const t=h.run('battleRewardSeconds');assert(Math.abs(t-1)<1e-7);h.window.showPause();h.advance(120);assert.equal(h.run('battleRewardSeconds'),t);checks.push('Rewards exclude pause and loading time');
 const report={result:'passed',gameVersion:'1.0',checks,starter,allAircraftCount:all.unlocked.length,costs:JSON.parse(h.run('JSON.stringify(RESEARCH_COSTS)'))};
-fs.writeFileSync(new URL('progression-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('progression-v20.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

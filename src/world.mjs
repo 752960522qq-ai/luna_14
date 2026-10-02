@@ -296,11 +296,9 @@ function updateDuelBoundary(elapsed) {
       toast('越界超过15秒 · 战机自毁，进入观战');
       return;
     }
-    session.hp = 0;
     session.player.userData.desertionDestroyed = true;
+    damage('player', session.hp);
     updateHealthUI();
-    finish(false);
-    $('#resultTitle').textContent = '临阵脱逃';
     $('#resultCopy').textContent = '越界超过15秒，战机已执行强制自毁。';
   }
 }

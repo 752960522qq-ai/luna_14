@@ -35,4 +35,4 @@ run("gameMode='duel';reset();emitProjectileSmoke(0,0,0,0,0,-1)");h.window.showPa
 run('resumeBattle();finish(false)');h.advance(1);assert.equal(run('resourceState.projectileSmoke.geometry.instanceCount'),0);
 checks.push('One fixed-size batch is reused after overflow/reset; menus clear effects, battle pause freezes time, and completed battles allow fade-out');
 const report={result:'passed',checks,capacity:32768,lifeSeconds:.6,gpuDrawBatches:1};
-fs.writeFileSync(new URL('smoke-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('smoke-v20.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

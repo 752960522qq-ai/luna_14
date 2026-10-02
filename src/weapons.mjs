@@ -103,12 +103,14 @@ function fireWeapons(from, isEnemy, dt, enabled) {
         bullet.enemy = isEnemy;
         bullet.team = unit?.team || (isEnemy ? 'red' : 'blue');
         bullet.shooterId = unit?.id || null;
+        bullet.shooterRoot = from;
         bullet.damage = bulletDamage;
         bullet.weapon = id;
         startBulletSmoke(bullet);
         viewState.scene.add(bullet.mesh);
         session.bullets.push(bullet);
       }
+      recordShotCount(from, spec.offsets.length);
       state[id] -= spec.cost;
       ammoChanged = true;
       cooldowns[id] += 60 / spec.rpm;
@@ -123,6 +125,7 @@ function releaseBullet(index) {
   const bullet = session.bullets[index];
   traceBulletSmoke(bullet, 0, true);
   bullet.smokeActive = false;
+  bullet.shooterRoot = null;
   viewState.scene.remove(bullet.mesh);
   session.bullets.splice(index, 1);
   if (resourceState.bulletPool.length < 512) resourceState.bulletPool.push(bullet);
@@ -177,6 +180,7 @@ function fireBomberTurrets(from, isEnemy, dt) {
     const rounds = Math.min(eligibleGuns, state.b29mg);
     state.b29mg -= rounds;
     ammoSpent += rounds;
+    recordShotCount(from, rounds);
     let visualRounds = rounds;
     for (const turret of eligibleTurrets) {
       const count = Math.min(turret.guns, visualRounds);
@@ -187,7 +191,7 @@ function fireBomberTurrets(from, isEnemy, dt) {
     playGunShot('b29Gun', from, isEnemy, interval, true);
     let hits = 0;
     for (let i = 0; i < rounds; i++) if (Math.random() < .5) hits++;
-    if (hits) damage(isEnemy ? 'player' : 'enemy', hits * 20);
+    if (hits) damage(isEnemy ? 'player' : 'enemy', hits * 20, null, turretImpact(from, target, hits));
   }
   if (!isEnemy && ammoSpent > 0) updateAmmoUI();
 }
@@ -229,13 +233,13 @@ function updateDroppedBombs(dt) {
     if (session.gameMode === 'campaign') {
       for (const target of campaignTargets()) {
         if (insideAircraftHitbox(bomb.mesh.position, target.root, bomb.radius)) {
-          damage('enemy', bomb.damage, target);
+          damage('enemy', bomb.damage, target, { source: session.player, point: bomb.mesh.position, projectile: false });
           hit = true;
           break;
         }
       }
     } else if (session.enemy && insideAircraftHitbox(bomb.mesh.position, session.enemy, bomb.radius)) {
-      damage('enemy', bomb.damage);
+      damage('enemy', bomb.damage, null, { source: session.player, point: bomb.mesh.position, projectile: false });
       hit = true;
     }
     if (hit || bomb.mesh.position.y <= -90 || bomb.life <= 0) {

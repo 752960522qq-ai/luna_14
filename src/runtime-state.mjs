@@ -145,6 +145,7 @@ const AIRSPACE_RULES = {
   supplyRate: .1,
   scoreRate: 1,
   scoreToWin: 100,
+  durationSeconds: 300,
   stepSeconds: 1 / 60
 };
 session.airspaceUnits = [];
@@ -329,7 +330,8 @@ const AUDIO_FILES = {
   mig37Gun: './audio/mig37_gun_shot.wav',
   meteorGun: './audio/meteor20_gun_shot.wav',
   bombDrop: './audio/bomb_drop.mp3',
-  kill: './audio/kill_confirm.mp3'
+  kill: './audio/kill_confirm.mp3',
+  hit: './audio/hit_confirm.wav'
 };
 const AUDIO_VOLUMES = {
   f86Gun: .42,
@@ -339,7 +341,8 @@ const AUDIO_VOLUMES = {
   mig37Gun: .47,
   meteorGun: .5,
   bombDrop: .66,
-  kill: .7
+  kill: .7,
+  hit: .28
 };
 soundState.audioPools = Object.create(null);
 soundState.audioLastPlayed = Object.create(null);

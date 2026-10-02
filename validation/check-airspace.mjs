@@ -80,4 +80,4 @@ checks.push('Boundary death enters spectating; team elimination, 100-point victo
 run("gameMode='campaign';reset()");assert.equal(run('airspaceUnits.length'),0);assert.equal(run('campaignBombers.length'),3);assert.equal(run('campaignEscorts.length'),5);assert(find('#airspaceHud').classList.contains('hidden'));assert(!find('#campaignHud').classList.contains('hidden'));
 h.advance(.1);assert(run('playing'));checks.push('The original campaign still starts its three bombers and five escorts and runs its own animation');
 const report={result:'passed',method:'Entire embedded v18 module in Node VM with DOM/WebGL/audio adapters; actual game state, physics and combat functions.',checks};
-fs.writeFileSync(new URL('airspace-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('airspace-v20.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

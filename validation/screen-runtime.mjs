@@ -15,7 +15,7 @@ class Node {
  addEventListener(name,fn){(this.events[name]??=[]).push(fn)}
  fire(name,extra={}){for(const f of this.events[name]||[])f({target:this,preventDefault(){},button:0,...extra})}
  setAttribute(k,v){this[k]=v}getAttribute(k){return this[k]}
- appendChild(x){this.children.push(x);return x}append(x){this.children.push(x)}replaceChildren(...x){this.children=x}remove(){}
+ appendChild(x){this.children.push(x);x.parentNode=this;return x}append(x){this.children.push(x)}replaceChildren(...x){this.children=x}remove(){if(this.parentNode){this.parentNode.children=this.parentNode.children.filter(x=>x!==this);this.parentNode=null}}
  querySelectorAll(){return []}querySelector(selector){if(selector.startsWith('.')&&this.innerHTML.includes(selector.slice(1))){this._queried??=new Map();if(!this._queried.has(selector))this._queried.set(selector,new Node());return this._queried.get(selector)}return null}
  setPointerCapture(i){this.captures.add(i)}hasPointerCapture(i){return this.captures.has(i)}releasePointerCapture(i){this.captures.delete(i)}
  getBoundingClientRect(){return{left:0,top:0,width:150,height:150}}

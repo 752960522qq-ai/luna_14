@@ -1523,6 +1523,7 @@ const AIRSPACE_RULES = {
   supplyRate: .1,
   scoreRate: 1,
   scoreToWin: 100,
+  durationSeconds: 300,
   stepSeconds: 1 / 60
 };
 session.airspaceUnits = [];
@@ -1707,7 +1708,8 @@ const AUDIO_FILES = {
   mig37Gun: './audio/mig37_gun_shot.wav',
   meteorGun: './audio/meteor20_gun_shot.wav',
   bombDrop: './audio/bomb_drop.mp3',
-  kill: './audio/kill_confirm.mp3'
+  kill: './audio/kill_confirm.mp3',
+  hit: './audio/hit_confirm.wav'
 };
 const AUDIO_VOLUMES = {
   f86Gun: .42,
@@ -1717,7 +1719,8 @@ const AUDIO_VOLUMES = {
   mig37Gun: .47,
   meteorGun: .5,
   bombDrop: .66,
-  kill: .7
+  kill: .7,
+  hit: .28
 };
 soundState.audioPools = Object.create(null);
 soundState.audioLastPlayed = Object.create(null);
@@ -2139,6 +2142,10 @@ function renderResearch() {
   });
 }
 function showMenuScreen(id) {
+  clearCombatFeedback();
+  if (session.combatStats) session.combatStats.active = false;
+  $('#playerProfile').classList.add('hidden');
+  renderPlayerProfile();
   clearProjectileSmoke();
   session.airspacePrepareToken++;
   setBattleLoading(false);
@@ -2147,7 +2154,7 @@ function showMenuScreen(id) {
   $('#airspaceLoadStatus').textContent = '';
   stopEngineSound();
   clearFlightInputs();
-  if (id === 'menu') session.battlePaused = false;
+  session.battlePaused = false;
   session.playing = false;
   stopGunSounds();
   ['menu', 'settings', 'modeSelect', 'campaignBriefing', 'hangar', 'research', 'encyclopedia', 'end'].forEach(n => $('#' + n).classList.toggle('hidden', n !== id));
@@ -2161,6 +2168,7 @@ function showMenuScreen(id) {
   syncMenuMusic();
 }
 function renderSortieUI() {
+  $('#battleResults').classList.add('hidden');
   updateAmmoUI();
   updateThrottleUI();
   updateHealthUI();
@@ -2210,6 +2218,7 @@ function airspaceWithin(point, center, radiusMeters) {
 // A signed meter takes 15 seconds from neutral and 30 from the opposite end.
 // Only a strict numerical advantage advances it; ties and an empty point freeze it.
 function advanceAirspaceObjective(state, units, dt) {
+  dt = Math.min(Math.max(0, dt), Math.max(0, AIRSPACE_RULES.durationSeconds - state.elapsed));
   const counts = {
     blue: 0,
     red: 0
@@ -2239,6 +2248,11 @@ function advanceAirspaceObjective(state, units, dt) {
 function replenishAirspaceUnit(unit, base, dt) {
   if (unit.dead || unit.health <= 0 || !airspaceWithin(unit.root.position, base, AIRSPACE_RULES.baseRadiusMeters)) return false;
   unit.health = Math.min(unit.maxHealth, unit.health + unit.maxHealth * AIRSPACE_RULES.supplyRate * dt);
+  const data = unit.root.userData;
+  if (data.engineDamage > 0) {
+    data.engineDamage = Math.max(0, data.engineDamage - unit.maxHealth * COMBAT_FEEDBACK_RULES.engineHealthFraction * AIRSPACE_RULES.supplyRate * dt);
+    data.engineCritical = data.engineDamage >= unit.maxHealth * COMBAT_FEEDBACK_RULES.engineHealthFraction * (1 - COMBAT_FEEDBACK_RULES.engineCriticalFraction);
+  }
   for (const [id, capacity] of Object.entries(unit.maxAmmo)) {
     if (id === 'bombWeightLb' || capacity <= 0) continue;
     if (unit.ammo[id] >= capacity) {
@@ -2270,6 +2284,13 @@ function airspaceWinner(state, units) {
   if (!blue) return 'red';
   if (state.scores.blue >= AIRSPACE_RULES.scoreToWin - 1e-9) return 'blue';
   if (state.scores.red >= AIRSPACE_RULES.scoreToWin - 1e-9) return 'red';
+  if (state.elapsed >= AIRSPACE_RULES.durationSeconds - 1e-9) {
+    const bluePoints = Math.floor(state.scores.blue + 1e-9), redPoints = Math.floor(state.scores.red + 1e-9);
+    if (bluePoints !== redPoints) return bluePoints > redPoints ? 'blue' : 'red';
+    const blueAlive = units.filter(u => u.team === 'blue' && !u.dead && u.health > 0).length;
+    const redAlive = units.filter(u => u.team === 'red' && !u.dead && u.health > 0).length;
+    return blueAlive === redAlive ? null : blueAlive > redAlive ? 'blue' : 'red';
+  }
   return undefined;
 }
 function clearAirspaceEntities() {
@@ -2315,6 +2336,7 @@ function makeAirspaceUnit(team, index, type, root) {
       hispano: 0
     },
     dead: false,
+    damageContributors: new Map(),
     targetId: null,
     targetDecision: 0,
     resupplying: false,
@@ -2461,9 +2483,13 @@ function enterAirspaceSpectator() {
   $('#cursorStatus').classList.add('hidden');
   toast('战机已被击落 · 进入队友观战');
 }
-function damageAirspaceUnit(unit, amount, shooterId = null) {
+function damageAirspaceUnit(unit, amount, shooterId = null, hit = null) {
   if (!unit || unit.dead || !Number.isFinite(amount) || amount <= 0 || session.ended) return;
+  const shooter = session.airspaceUnits.find(u => u.id === shooterId);
+  if (shooter && shooter.team === unit.team) return;
+  const before = unit.health;
   unit.health = Math.max(0, unit.health - amount);
+  recordCombatDamage(unit.root, before, unit.health, hit || (shooter ? { source: shooter.root, projectile: false } : null));
   if (unit.isPlayer) {
     session.hp = unit.health;
     triggerDamageFlash();
@@ -2473,7 +2499,8 @@ function damageAirspaceUnit(unit, amount, shooterId = null) {
     unit.dead = true;
     unit.targetId = null;
     retireAircraft(unit.root);
-    const shooter = session.airspaceUnits.find(u => u.id === shooterId);
+    const assistants = reportAirspaceAssists(unit, shooterId);
+    addCombatFeed(shooter, unit, assistants);
     if (shooter?.isPlayer && shooter.team !== unit.team) {
       session.kills++;
       $('#kills').textContent = String(session.kills).padStart(2, '0');
@@ -2495,14 +2522,11 @@ function finishAirspaceBattle(winner) {
   stopGunSounds();
   stopEngineSound();
   $('#spectatorControls').classList.add('hidden');
-  $('#again').textContent = '再次升空　→';
-  $('#resultTitle').textContent = winner === null ? '双方全灭' : winner === 'blue' ? '空域争夺胜利' : '空域争夺失败';
-  const scores = session.airspaceState.scores,
-    reason = winner === null ? '双方载具均已被击落。' : scores[winner] >= AIRSPACE_RULES.scoreToWin - 1e-9 ? '据点积分达到100分。' : '对方编队已被全歼。';
-  $('#resultCopy').textContent = `${reason} 我方 ${Math.floor(scores.blue + 1e-9)} : ${Math.floor(scores.red + 1e-9)} 敌方 · 个人击落 ${session.kills} 架。`;
+  const state = session.airspaceState, scores = state.scores;
+  const reason = state.elapsed >= AIRSPACE_RULES.durationSeconds - 1e-9 ? '五分钟时限已到' : winner === null ? '双方编队全灭' : scores[winner] >= AIRSPACE_RULES.scoreToWin - 1e-9 ? '据点积分达到 100 分' : '对方编队已被全歼';
+  const alive = [airspaceLiveUnits('blue').length, airspaceLiveUnits('red').length];
   updateAirspaceHUD();
-  $('#end').classList.remove('hidden');
-  settleSortieEconomy(winner === null ? null : winner === 'blue');
+  renderBattleResult(winner === null ? null : winner === 'blue', `${reason} · 积分 ${Math.floor(scores.blue + 1e-9)} : ${Math.floor(scores.red + 1e-9)} · 存活 ${alive[0]} : ${alive[1]}`, settleSortieEconomy(winner === null ? null : winner === 'blue'));
 }
 function airspaceNavigationGoal(unit, dt) {
   const ammo = airspaceAmmoFraction(unit);
@@ -2625,10 +2649,11 @@ function fireAirspaceBomberTurrets(unit, dt) {
     } of active) {
       const rounds = Math.min(turret.guns, ammo.b29mg);
       ammo.b29mg -= rounds;
+      recordShotCount(root, rounds);
       emitTurretSmoke(root, target.root, turret, rounds);
       let hits = 0;
       for (let n = 0; n < rounds; n++) if (Math.random() < .5) hits++;
-      if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id);
+      if (hits && !target.dead) damageAirspaceUnit(target, hits * 20, unit.id, turretImpact(root, target.root, hits));
     }
   }
 }
@@ -2684,7 +2709,7 @@ function updateAirspaceBullets(dt) {
         target = unit;
       }
     }
-    if (target) damageAirspaceUnit(target, bullet.damage, bullet.shooterId);
+    if (target) damageAirspaceUnit(target, bullet.damage, bullet.shooterId, projectileImpact(bullet, target.root, fraction));
     if (target || bullet.life <= 0 || bullet.mesh.position.y < terrainHeightAt(bullet.mesh.position.x, bullet.mesh.position.z)) releaseBullet(i);
   }
 }
@@ -2704,7 +2729,7 @@ function updateAirspaceBombs(dt) {
         target = unit;
       }
     }
-    if (target) damageAirspaceUnit(target, bomb.damage, airspaceUnitFor(session.player).id);
+    if (target) damageAirspaceUnit(target, bomb.damage, airspaceUnitFor(session.player).id, { source: session.player, point: bomb.mesh.position, projectile: false });
     if (target || bomb.life <= 0 || bomb.mesh.position.y <= terrainHeightAt(bomb.mesh.position.x, bomb.mesh.position.z)) {
       disposeBomb(bomb);
       session.bombsInFlight.splice(i, 1);
@@ -2712,8 +2737,16 @@ function updateAirspaceBombs(dt) {
   }
 }
 function updateAirspaceStep(dt) {
-  if (session.playing) profileState.battleRewardSeconds += dt;
   if (!session.playing || session.ended || !session.airspaceState) return;
+  dt = Math.min(Math.max(0, dt), Math.max(0, AIRSPACE_RULES.durationSeconds - session.airspaceState.elapsed));
+  if (dt <= 1e-9) {
+    const winner = airspaceWinner(session.airspaceState, session.airspaceUnits);
+    if (winner !== undefined) finishAirspaceBattle(winner);
+    return;
+  }
+  profileState.battleRewardSeconds += dt;
+  advanceCombatStats(dt);
+  updateCombatFeedback(dt);
   session.worldTime += dt;
   rememberAircraftFrameStart();
   for (const unit of airspaceLiveUnits()) updatePropeller(unit.root, dt);
@@ -2808,6 +2841,8 @@ function updateAirspaceHUD() {
   $('#redAlive').textContent = red;
   $('#blueScore').textContent = Math.floor(s.scores.blue + 1e-9);
   $('#redScore').textContent = Math.floor(s.scores.red + 1e-9);
+  $('#airspaceTimer').textContent = formatBattleTime(AIRSPACE_RULES.durationSeconds - s.elapsed);
+  $('#airspaceTimer').classList.toggle('time-warning', AIRSPACE_RULES.durationSeconds - s.elapsed <= 30);
   const owner = s.owner === 'blue' ? '我方占领' : s.owner === 'red' ? '敌方占领' : '中立';
   $('#aPointStatus').textContent = 'A · ' + owner;
   $('#aCaptureBlue').style.width = Math.max(0, s.progress) * 50 + '%';
@@ -2815,7 +2850,7 @@ function updateAirspaceHUD() {
   const direction = Math.sign(s.counts.blue - s.counts.red),
     goal = direction > 0 ? 1 : -1,
     remaining = direction ? Math.max(0, Math.abs(goal - s.progress) * AIRSPACE_RULES.captureSeconds) : 0;
-  $('#aCaptureText').textContent = `点内 ${s.counts.blue} : ${s.counts.red} · ` + (direction && remaining > .01 ? (direction > 0 ? '我方' : '敌方') + '占领 ' + Math.ceil(remaining - 1e-9) + '秒' : direction ? '占领完成' : s.counts.blue || s.counts.red ? '人数相等，进度暂停' : '等待进入');
+  $('#aCaptureText').textContent = `点内 ${s.counts.blue} : ${s.counts.red} · ` + (direction && remaining > .01 ? (direction > 0 ? '我方' : '敌方') + '占领 ' + Math.ceil(remaining - 1e-9) + '秒' : direction ? '占领完成' : s.counts.blue || s.counts.red ? '争夺中' : '未占领');
   $('#aPointStatus').style.color = s.owner === 'blue' ? '#76d5ff' : s.owner === 'red' ? '#ff8580' : '#ffcf71';
   const view = airspaceViewUnit();
   if (session.airspaceSpectating && view) {
@@ -2824,7 +2859,7 @@ function updateAirspaceHUD() {
   } else if (!session.airspaceSpectating) {
     const own = airspaceUnitFor(session.player),
       atBase = own && !own.dead && airspaceWithin(session.player.position, s.bases.blue, AIRSPACE_RULES.baseRadiusMeters);
-    $('#baseSupplyStatus').textContent = atBase ? '我方基地 · 生命与弹药补给中' : '回我方基地补给 · 距离 ' + Math.round(session.player.position.distanceTo(s.bases.blue) * METERS_PER_UNIT) + ' m';
+    $('#baseSupplyStatus').textContent = atBase ? '补给中' : '';
   }
 }
 function airspaceMarker(key, label, position, color, view) {
@@ -2961,7 +2996,6 @@ function renderControlSettings() {
   slider.value = inputState.controlSettings.sensitivity;
   slider.disabled = inputState.controlSettings.mode !== 'cursor';
   $('#cursorSensitivityValue').textContent = inputState.controlSettings.sensitivity.toFixed(1) + '×';
-  $('#homeControlMode').textContent = controlModeName();
   $('#controlInstructions').textContent = inputState.controlSettings.mode === 'cursor' ? '拖动空白区域移动方向环，松手保持指向。飞机会逐渐转向，实际准星对准提前量圈后再射击。按住“观察”并拖动可自由观察。' : '左右移动摇杆进行滚转；向下拉杆抬头，向上推杆俯冲。松手停止操纵，拖动空白区域可自由观察。指向敌机显示预瞄点，实际准星对齐后开火。';
   applyControlModeUI();
 }
@@ -3867,12 +3901,14 @@ function fireWeapons(from, isEnemy, dt, enabled) {
         bullet.enemy = isEnemy;
         bullet.team = unit?.team || (isEnemy ? 'red' : 'blue');
         bullet.shooterId = unit?.id || null;
+        bullet.shooterRoot = from;
         bullet.damage = bulletDamage;
         bullet.weapon = id;
         startBulletSmoke(bullet);
         viewState.scene.add(bullet.mesh);
         session.bullets.push(bullet);
       }
+      recordShotCount(from, spec.offsets.length);
       state[id] -= spec.cost;
       ammoChanged = true;
       cooldowns[id] += 60 / spec.rpm;
@@ -3887,6 +3923,7 @@ function releaseBullet(index) {
   const bullet = session.bullets[index];
   traceBulletSmoke(bullet, 0, true);
   bullet.smokeActive = false;
+  bullet.shooterRoot = null;
   viewState.scene.remove(bullet.mesh);
   session.bullets.splice(index, 1);
   if (resourceState.bulletPool.length < 512) resourceState.bulletPool.push(bullet);
@@ -3941,6 +3978,7 @@ function fireBomberTurrets(from, isEnemy, dt) {
     const rounds = Math.min(eligibleGuns, state.b29mg);
     state.b29mg -= rounds;
     ammoSpent += rounds;
+    recordShotCount(from, rounds);
     let visualRounds = rounds;
     for (const turret of eligibleTurrets) {
       const count = Math.min(turret.guns, visualRounds);
@@ -3951,7 +3989,7 @@ function fireBomberTurrets(from, isEnemy, dt) {
     playGunShot('b29Gun', from, isEnemy, interval, true);
     let hits = 0;
     for (let i = 0; i < rounds; i++) if (Math.random() < .5) hits++;
-    if (hits) damage(isEnemy ? 'player' : 'enemy', hits * 20);
+    if (hits) damage(isEnemy ? 'player' : 'enemy', hits * 20, null, turretImpact(from, target, hits));
   }
   if (!isEnemy && ammoSpent > 0) updateAmmoUI();
 }
@@ -3993,13 +4031,13 @@ function updateDroppedBombs(dt) {
     if (session.gameMode === 'campaign') {
       for (const target of campaignTargets()) {
         if (insideAircraftHitbox(bomb.mesh.position, target.root, bomb.radius)) {
-          damage('enemy', bomb.damage, target);
+          damage('enemy', bomb.damage, target, { source: session.player, point: bomb.mesh.position, projectile: false });
           hit = true;
           break;
         }
       }
     } else if (session.enemy && insideAircraftHitbox(bomb.mesh.position, session.enemy, bomb.radius)) {
-      damage('enemy', bomb.damage);
+      damage('enemy', bomb.damage, null, { source: session.player, point: bomb.mesh.position, projectile: false });
       hit = true;
     }
     if (hit || bomb.mesh.position.y <= -90 || bomb.life <= 0) {
@@ -4174,6 +4212,222 @@ function clearProjectileSmoke() {
   batch.time = batch.material.uniforms.smokeTime.value = 0;
   batch.lastEmission = -Infinity;
   batch.mesh.visible = false;
+}
+
+
+// Source: src/combat-feedback.mjs
+const COMBAT_FEEDBACK_RULES = {
+  sparks: 192, smoke: 320, sparkSeconds: .18, smokeSeconds: 2.4,
+  heavySmokeSeconds: 2, engineHealthFraction: .35, engineCriticalFraction: .3,
+  assistDamageFraction: .05, assistSeconds: 30
+};
+
+function beginCombatStats() {
+  session.combatStats = { shots: 0, hits: 0, damageTaken: 0, survival: 0, assists: 0, active: true };
+  session.lastBattleResult = null;
+  clearCombatFeedback();
+}
+function recordShotCount(root, count) {
+  if (session.combatStats?.active && root === session.player) session.combatStats.shots += count;
+}
+function advanceCombatStats(dt) {
+  if (!session.combatStats?.active || !session.playing) return;
+  if (session.hp > 0 && (session.gameMode !== 'airspace' || airspacePlayerAlive())) session.combatStats.survival += dt;
+}
+function projectileImpact(bullet, target, fraction = null) {
+  const point = bullet.mesh.position.clone();
+  if (fraction === null) fraction = airspaceHitFraction(bullet.previousPosition, point, target, bullet.radius);
+  if (fraction !== null) point.lerpVectors(bullet.previousPosition, bullet.mesh.position, fraction);
+  return { source: bullet.shooterRoot, point, projectile: true, hits: 1 };
+}
+function turretImpact(source, target, hits) {
+  const fraction = airspaceHitFraction(source.position, target.position, target, 0);
+  return { source, point: source.position.clone().lerp(target.position, fraction ?? 1), projectile: true, hits };
+}
+function recordCombatDamage(root, before, after, hit = null) {
+  const amount = Math.max(0, before - after);
+  if (!root || amount <= 0) return;
+  const stats = session.combatStats;
+  if (stats?.active && root === session.player) stats.damageTaken += amount;
+  if (!hit) return;
+  const unit = airspaceUnitFor(root), shooter = airspaceUnitFor(hit.source);
+  if (unit && shooter && unit.team === shooter.team) return;
+  if (stats?.active && hit.projectile && hit.source === session.player) {
+    stats.hits += hit.hits || 1;
+    viewState.hitFlashRemaining = .14;
+    $('#reticle').classList.add('hit-confirm');
+    playSfx('hit', .075);
+  }
+  if (unit && shooter && unit.team !== shooter.team) {
+    const contributors = unit.damageContributors ??= new Map();
+    const previous = contributors.get(shooter.id)?.damage || 0;
+    contributors.set(shooter.id, { damage: previous + amount, at: session.airspaceState.elapsed });
+  }
+  const maxHealth = planeInfo[root.userData.type]?.health || before;
+  if (after > 0 && (amount >= maxHealth * .15 || before > maxHealth * .5 && after <= maxHealth * .5)) {
+    root.userData.heavySmokeRemaining = COMBAT_FEEDBACK_RULES.heavySmokeSeconds;
+  }
+  if (hit.projectile) {
+    const point = hit.point || root.position;
+    emitImpactSparks(point, Math.min(10, 4 + (hit.hits || 1)));
+    const half = root.userData.collisionHalfExtents;
+    if (half) {
+      const local = root.worldToLocal(point.clone()), type = root.userData.type;
+      const engineHit = type === 'b29' ? Math.abs(local.x) > half.x * .25 && Math.abs(local.x) < half.x * .85 && Math.abs(local.z) < half.z * .5 :
+        Math.abs(local.x) < half.x * .3 && (PROPELLER_SPECS[type] ? local.z < -half.z * .2 : local.z > -half.z * .25);
+      if (engineHit) {
+        root.userData.engineDamage = (root.userData.engineDamage || 0) + amount;
+        root.userData.engineCritical = root.userData.engineDamage >= maxHealth * COMBAT_FEEDBACK_RULES.engineHealthFraction * (1 - COMBAT_FEEDBACK_RULES.engineCriticalFraction);
+        if (root.userData.engineCritical) root.userData.smokeLocalPoint = local;
+      }
+    }
+  }
+}
+function reportAirspaceAssists(victim, killerId) {
+  const contributors = victim.damageContributors;
+  if (!contributors) return [];
+  const assistants = [];
+  for (const [id, record] of contributors) {
+    if (id === killerId || session.airspaceState.elapsed - record.at > COMBAT_FEEDBACK_RULES.assistSeconds ||
+        record.damage < victim.maxHealth * COMBAT_FEEDBACK_RULES.assistDamageFraction) continue;
+    const unit = session.airspaceUnits.find(u => u.id === id);
+    if (!unit || unit.team === victim.team) continue;
+    assistants.push(unit);
+    if (unit.isPlayer && session.combatStats?.active) {
+      session.combatStats.assists++;
+      toast('助攻 · ' + planeInfo[victim.type].name);
+    }
+  }
+  return assistants;
+}
+function combatUnitName(unit) {
+  return unit?.isPlayer ? profileState.playerName : unit ? planeInfo[unit.type].name + ' #' + (unit.index + 1) : '环境';
+}
+function addCombatFeed(killer, victim, assistants) {
+  const host = $('#killFeed'), node = document.createElement('div');
+  node.className = victim.team === 'red' ? 'feed-friendly' : 'feed-enemy';
+  node.textContent = combatUnitName(killer) + ' 击落 ' + combatUnitName(victim) +
+    (assistants.length ? ' · 助攻：' + assistants.map(combatUnitName).join('、') : '');
+  host.appendChild(node);
+  while (host.children.length > 4) host.children[0].remove();
+  node.dataset.expires = String(session.worldTime + 6);
+}
+function clearCombatFeedback() {
+  resourceState.combatEffects?.clear();
+  viewState.hitFlashRemaining = 0;
+  $('#reticle')?.classList.remove('hit-confirm');
+  $('#killFeed')?.replaceChildren();
+}
+
+class CombatParticles {
+  constructor() {
+    this.capacity = COMBAT_FEEDBACK_RULES.sparks + COMBAT_FEEDBACK_RULES.smoke;
+    this.sparkCursor = 0; this.smokeCursor = COMBAT_FEEDBACK_RULES.sparks;
+    this.life = new Float32Array(this.capacity); this.duration = new Float32Array(this.capacity);
+    this.velocity = new Float32Array(this.capacity * 3);
+    this.positions = new Float32Array(this.capacity * 3);
+    this.colors = new Float32Array(this.capacity * 3);
+    this.sizes = new Float32Array(this.capacity); this.alphas = new Float32Array(this.capacity);
+    this.geometry = new THREE.BufferGeometry();
+    for (const [name, values, count] of [['position', this.positions, 3], ['aColor', this.colors, 3], ['aSize', this.sizes, 1], ['aAlpha', this.alphas, 1]]) {
+      this.geometry.setAttribute(name, new THREE.BufferAttribute(values, count).setUsage(THREE.DynamicDrawUsage));
+    }
+    this.material = new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false,
+      uniforms: { uHeight: { value: innerHeight } },
+      vertexShader: `attribute vec3 aColor; attribute float aSize; attribute float aAlpha;
+        uniform float uHeight; varying vec4 vColor;
+        void main(){ vec4 p=modelViewMatrix*vec4(position,1.0); gl_Position=projectionMatrix*p;
+          gl_PointSize=clamp(aSize*uHeight*projectionMatrix[1][1]/max(.1,-p.z),2.0,72.0);
+          vColor=vec4(aColor,aAlpha); }`,
+      fragmentShader: `varying vec4 vColor;
+        void main(){ float r=length(gl_PointCoord-vec2(.5))*2.0;
+          float alpha=vColor.a*(1.0-smoothstep(.2,1.0,r));
+          if(alpha<.005) discard; gl_FragColor=vec4(vColor.rgb,alpha); }`
+    });
+    this.mesh = new THREE.Points(this.geometry, this.material);
+    this.mesh.frustumCulled = false; this.mesh.renderOrder = 5;
+    viewState.scene.add(this.mesh);
+  }
+  emit(point, smoke) {
+    const i = smoke ? this.smokeCursor++ : this.sparkCursor++, at = i * 3;
+    if (this.sparkCursor >= COMBAT_FEEDBACK_RULES.sparks) this.sparkCursor = 0;
+    if (this.smokeCursor >= this.capacity) this.smokeCursor = COMBAT_FEEDBACK_RULES.sparks;
+    this.life[i] = this.duration[i] = smoke ? COMBAT_FEEDBACK_RULES.smokeSeconds : COMBAT_FEEDBACK_RULES.sparkSeconds;
+    this.positions[at] = point.x; this.positions[at + 1] = point.y; this.positions[at + 2] = point.z;
+    this.velocity[at] = (Math.random() - .5) * (smoke ? .15 : 1.2);
+    this.velocity[at + 1] = smoke ? .12 : (Math.random() - .3) * 1.2;
+    this.velocity[at + 2] = (Math.random() - .5) * (smoke ? .15 : 1.2);
+    this.colors[at] = smoke ? .055 : 1; this.colors[at + 1] = smoke ? .06 : .72; this.colors[at + 2] = smoke ? .065 : .22;
+    this.sizes[i] = smoke ? .09 : .025; this.alphas[i] = smoke ? .65 : 1;
+    this.refresh();
+  }
+  refresh() {
+    for (const attribute of Object.values(this.geometry.attributes)) attribute.needsUpdate = true;
+  }
+  update(dt) {
+    for (let i = 0; i < this.capacity; i++) {
+      if (this.life[i] <= 0) continue;
+      this.life[i] = Math.max(0, this.life[i] - dt);
+      const at = i * 3, fraction = this.life[i] / this.duration[i];
+      for (let axis = 0; axis < 3; axis++) this.positions[at + axis] += this.velocity[at + axis] * dt;
+      this.alphas[i] = fraction * (i < COMBAT_FEEDBACK_RULES.sparks ? 1 : .65);
+      if (i >= COMBAT_FEEDBACK_RULES.sparks) this.sizes[i] = .09 + (1 - fraction) * .5;
+    }
+    this.material.uniforms.uHeight.value = innerHeight * Math.min(devicePixelRatio, 1.6);
+    this.refresh();
+  }
+  clear() { this.life.fill(0); this.alphas.fill(0); this.refresh(); }
+}
+function ensureCombatParticles() {
+  return resourceState.combatEffects ??= new CombatParticles();
+}
+function emitImpactSparks(point, count) {
+  const batch = ensureCombatParticles();
+  for (let i = 0; i < count; i++) batch.emit(point, false);
+}
+function updateCombatFeedback(dt) {
+  resourceState.combatEffects?.update(dt);
+  viewState.hitFlashRemaining = Math.max(0, (viewState.hitFlashRemaining || 0) - dt);
+  if (!viewState.hitFlashRemaining) $('#reticle').classList.remove('hit-confirm');
+  for (const node of [...$('#killFeed').children]) if (Number(node.dataset.expires) <= session.worldTime) node.remove();
+  if (!session.playing || session.ended) return;
+  for (const root of activeBattleAircraft()) {
+    const data = root.userData;
+    data.heavySmokeRemaining = Math.max(0, (data.heavySmokeRemaining || 0) - dt);
+    if (data.destroyed || data.disposed || !data.engineCritical && !data.heavySmokeRemaining) continue;
+    data.damageSmokeClock = (data.damageSmokeClock || 0) - dt;
+    if (data.damageSmokeClock > 0) continue;
+    data.damageSmokeClock = 1 / 12;
+    const half = data.collisionHalfExtents;
+    const point = (data.damageSmokePoint ??= new THREE.Vector3()).copy(data.smokeLocalPoint || FLIGHT_AXES.y);
+    if (!data.smokeLocalPoint) point.set(0, 0, (half?.z || .1) * (PROPELLER_SPECS[data.type] ? -.7 : .7));
+    root.localToWorld(point);
+    ensureCombatParticles().emit(point, true);
+  }
+}
+function renderBattleResult(win, reason, reward) {
+  if (session.combatStats) session.combatStats.active = false;
+  const stats = session.combatStats || { shots: 0, hits: 0, damageTaken: 0, survival: 0, assists: 0 };
+  session.lastBattleResult = { ...stats, kills: session.kills, win, reward };
+  $('#end').dataset.outcome = win === null ? 'draw' : win ? 'win' : 'loss';
+  $('#resultTitle').textContent = win === null ? '平局' : win ? '胜利' : '失败';
+  $('#resultCopy').textContent = reason;
+  const values = {
+    resultKills: session.kills, resultAssists: stats.assists, resultHits: stats.hits, resultShots: stats.shots,
+    resultAccuracy: (stats.shots ? Math.min(100, stats.hits / stats.shots * 100) : 0).toFixed(1) + '%',
+    resultDamage: Math.round(stats.damageTaken), resultSurvival: formatBattleTime(Math.floor(stats.survival + 1e-9)),
+    resultGP: (reward?.gp || 0).toLocaleString('zh-CN'), resultRP: (reward?.rp || 0).toLocaleString('zh-CN')
+  };
+  for (const [id, value] of Object.entries(values)) $('#' + id).textContent = value;
+  $('#battleResults').classList.remove('hidden');
+  $('#end').classList.remove('hidden');
+  $('#again').textContent = '再次出战';
+  $('#sortieRewards').classList.toggle('save-error', !!profileState.pendingRewards.length);
+}
+function formatBattleTime(seconds) {
+  const value = Math.max(0, Math.ceil(seconds - 1e-9));
+  return String(Math.floor(value / 60)).padStart(2, '0') + ':' + String(value % 60).padStart(2, '0');
 }
 
 
@@ -4805,9 +5059,11 @@ function updateCampaign(dt) {
   }
   updateCampaignEscortAI(dt);
 }
-function damageCampaignTarget(target, n) {
+function damageCampaignTarget(target, n, hit = null) {
   if (!target || target.health <= 0) return;
+  const before = target.health;
   target.health = Math.max(0, target.health - n);
+  recordCombatDamage(target.root, before, target.health, hit);
   if (target.health > 0) {
     updateHealthUI();
     return;
@@ -5031,7 +5287,7 @@ function reset(options = {}) {
   resetDuelBoundary();
   session.battlePaused = false;
   clearFlightInputs();
-  $('#again').textContent = '再次升空　→';
+  $('#again').textContent = '再次出战';
   stopGunSounds();
   stopEngineSound();
   session.playerPlane = session.gameMode === 'campaign' ? 'mig15' : profileState.selectedAircraft;
@@ -5056,17 +5312,20 @@ function reset(options = {}) {
   syncMenuMusic();
   viewState.clock.getDelta();
 }
-function damage(target, n, campaignTarget = null) {
+function damage(target, n, campaignTarget = null, hit = null) {
+  if (session.ended || !Number.isFinite(n) || n <= 0) return;
   if (session.gameMode === 'airspace') {
-    damageAirspaceUnit(target === 'player' ? airspaceUnitFor(session.player) : campaignTarget || airspaceUnitFor(session.enemy), n);
+    damageAirspaceUnit(target === 'player' ? airspaceUnitFor(session.player) : campaignTarget || airspaceUnitFor(session.enemy), n, airspaceUnitFor(hit?.source)?.id || null, hit);
     return;
   }
   if (target === 'enemy' && session.gameMode === 'campaign' && campaignTarget) {
-    damageCampaignTarget(campaignTarget, n);
+    damageCampaignTarget(campaignTarget, n, hit);
     return;
   }
   if (target === 'enemy') {
+    const before = session.eHp;
     session.eHp = Math.max(0, session.eHp - n);
+    recordCombatDamage(session.enemy, before, session.eHp, hit);
     $('#enemyHealth').style.width = session.eHp / planeInfo[session.enemyPlaneType].health * 100 + '%';
     if (session.eHp === 0) {
       playSfx('kill', .35);
@@ -5080,7 +5339,9 @@ function damage(target, n, campaignTarget = null) {
       if (session.kills >= 3) finish(true);
     }
   } else {
+    const before = session.hp;
     session.hp = Math.max(0, session.hp - n);
+    recordCombatDamage(session.player, before, session.hp, hit);
     $('#playerHealth').style.width = session.hp / planeInfo[session.playerPlane].health * 100 + '%';
     $('#hpText').textContent = Math.round(session.hp / planeInfo[session.playerPlane].health * 100) + '%';
     triggerDamageFlash();
@@ -5107,26 +5368,20 @@ function finish(win) {
   stopGunSounds();
   stopEngineSound();
   updateCampaignHud();
-  if (session.gameMode === 'campaign') {
-    $('#resultTitle').textContent = win ? '战役胜利' : '任务失败';
-    $('#resultCopy').textContent = win ? '米格之舞完成：3架 B-29 均已击落。' : session.hp <= 0 ? 'MIG-15 已被击落，南市空战失败。' : '300秒时限已到，仍有 B-29 未被击落。';
-  } else {
-    $('#resultTitle').textContent = win ? '王牌飞行员' : '任务失败';
-    $('#resultCopy').textContent = win ? `空战战果：${session.kills} 架。你已夺取局部制空权。` : `你击落了 ${session.kills} 架敌机。整备机体，再次出击。`;
-  }
-  $('#end').classList.remove('hidden');
-  settleSortieEconomy(win);
+  const reason = session.gameMode === 'campaign' ? win ? 'B-29 编队已被全部击落' : session.hp <= 0 ? '出战飞机已被击落' : '五分钟时限已到' : win ? '完成空战任务' : '出战飞机已被击落';
+  renderBattleResult(win, reason, settleSortieEconomy(win));
 }
 function updateNonAirspaceStep(dt) {
+  advanceCombatStats(dt);
+  updateCombatFeedback(dt);
   profileState.battleRewardSeconds += dt;
   session.worldTime += dt;
   rememberAircraftFrameStart();
   updateAllPropellers(dt);
   updatePlayerFlightControls(dt);
   if (session.player.position.y < terrainHeightAt(session.player.position.x, session.player.position.z)) {
-    session.hp = 0;
+    damage('player', session.hp);
     updateHealthUI();
-    finish(false);
   }
   if (session.playing) {
     if (session.gameMode === 'campaign') updateCampaign(dt);else updateDuelEnemy(dt);
@@ -5154,19 +5409,19 @@ function updateNonAirspaceStep(dt) {
       let hit = false;
       if (bullet.enemy) {
         if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.player, bullet.radius)) {
-          damage('player', bullet.damage);
+          damage('player', bullet.damage, null, projectileImpact(bullet, session.player));
           hit = true;
         }
       } else if (session.gameMode === 'campaign') {
         for (const target of campaignShotTargets) {
           if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, target.root, bullet.radius)) {
-            damage('enemy', bullet.damage, target);
+            damage('enemy', bullet.damage, target, projectileImpact(bullet, target.root));
             hit = true;
             break;
           }
         }
       } else if (session.enemy && sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.enemy, bullet.radius)) {
-        damage('enemy', bullet.damage);
+        damage('enemy', bullet.damage, null, projectileImpact(bullet, session.enemy));
         hit = true;
       }
       if (hit || bullet.life <= 0) releaseBullet(i);
@@ -5253,8 +5508,10 @@ function animate() {
   if (!viewState.scene) return;
   const elapsed = Math.max(0, viewState.clock.getDelta()),
     visualDt = Math.min(elapsed, .1);
+  if (!$('#menu').classList.contains('hidden')) return;
   if (!session.playing && !session.battlePaused) {
     updateProjectileSmoke(elapsed);
+    updateCombatFeedback(elapsed);
     if (session.gameMode === 'airspace') {
       for (const unit of session.airspaceUnits) if (!unit.dead) updatePropeller(unit.root, elapsed);
     } else updateAllPropellers(elapsed);
@@ -5298,6 +5555,7 @@ function animate() {
 // One owned aircraft opens the next BR stage, across all national branches.
 
 function clearBattleWorld() {
+  clearCombatFeedback();
   disposeAircraft(session.player);
   disposeAircraft(session.enemy);
   clearCampaignEntities();
@@ -5630,11 +5888,9 @@ function updateDuelBoundary(elapsed) {
       toast('越界超过15秒 · 战机自毁，进入观战');
       return;
     }
-    session.hp = 0;
     session.player.userData.desertionDestroyed = true;
+    damage('player', session.hp);
     updateHealthUI();
-    finish(false);
-    $('#resultTitle').textContent = '临阵脱逃';
     $('#resultCopy').textContent = '越界超过15秒，战机已执行强制自毁。';
   }
 }
@@ -6110,7 +6366,7 @@ function updateEngineAudio() {
   let volume, rate;
   if (soundState.engineAudioType === 'prop') {
     const fraction = THREE.MathUtils.clamp((data.propRpm || 0) / PROPELLER_SPECS[session.playerPlane].maxRpm, 0, 1);
-    volume = (.10 + fraction * .24) * THREE.MathUtils.smoothstep(fraction, 0, .15);
+    volume = 1.5 * (.10 + fraction * .24) * THREE.MathUtils.smoothstep(fraction, 0, .15);
     rate = .65 + fraction * .52;
     if (!data.engineRunning && (data.propRpm || 0) === 0) {
       stopEngineSound();
@@ -6121,7 +6377,7 @@ function updateEngineAudio() {
       stopEngineSound();
       return;
     }
-    volume = soundState.engineAudioType === 'b29' ? .27 + throttle * .17 : .13 + throttle * .13;
+    volume = soundState.engineAudioType === 'b29' ? 1.5 * (.27 + throttle * .17) : .13 + throttle * .13;
     rate = .84 + .30 * throttle;
   }
   if (soundState.engineAudio.source) {
@@ -6137,6 +6393,7 @@ function gunSoundFor(type, id) {
   return AIRCRAFT_DATA[type].sounds[id] || AIRCRAFT_DATA[type].sounds.default;
 }
 function syncMenuMusic() {
+  syncLobbyVideo();
   const allowed = !document.hidden && !soundState.nativeSuspended && ($('#hud').classList.contains('hidden') || session.ended) && !session.battlePaused;
   if (!soundState.menuMusic) {
     soundState.menuMusic = new Audio('./audio/menu-bgm-1.mp3');
@@ -6154,6 +6411,7 @@ function syncMenuMusic() {
   }
 }
 function stopMenuMusic() {
+  $('#menuVideo').pause?.();
   soundState.menuMusic?.pause();
 }
 
@@ -6169,6 +6427,7 @@ function isAircraftResearchOpen(type) {
 function freshProgressionProfile() {
   return {
     format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    playerName: randomPlayerName(),
     mode: 'standard', unlocked: [...STARTER_AIRCRAFT], selected: 'i15',
     bomberLoadout: '18x1000',
     economy: { rp: 0, gp: ECONOMY_RULES.startGP, research: {}, completedSorties: 0 }
@@ -6195,12 +6454,14 @@ function normalizeProgressionProfile(saved) {
   }
   return {
     format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    playerName: validPlayerName(saved.playerName) ? saved.playerName : profileState.playerName || randomPlayerName(),
     mode: saved.mode, unlocked,
     selected: unlocked.includes(saved.selected) ? saved.selected : 'i15',
     bomberLoadout: BOMBER_LOADOUTS[saved.bomberLoadout] ? saved.bomberLoadout : '18x1000', economy
   };
 }
 function applyProgressionProfile(record) {
+  profileState.playerName = record.playerName;
   profileState.profileMode = record.mode;
   profileState.unlockedPlanes = record.unlocked;
   profileState.selectedAircraft = record.selected;
@@ -6320,6 +6581,7 @@ function purchaseResearchedAircraft(type) {
   };
 }
 function beginSortieEconomy() {
+  beginCombatStats();
   profileState.battleRewardSeconds = 0;
   profileState.battleRewardSettled = false;
   const reward = $('#sortieRewards');
@@ -6359,6 +6621,7 @@ function saveHangar() {
       format: PROFILE_FORMAT,
       version: PROFILE_VERSION,
       gameVersion: GAME_VERSION,
+      playerName: profileState.playerName,
       mode: profileState.profileMode,
       unlocked: profileState.unlockedPlanes,
       selected: profileState.selectedAircraft,
@@ -6377,6 +6640,7 @@ function importProgressionProfile(text) {
   try { record = normalizeProgressionProfile(JSON.parse(text)); } catch {}
   if (!record) return { ok: false, reason: 'format' };
   const before = {
+    playerName: profileState.playerName,
     mode: profileState.profileMode, unlocked: profileState.unlockedPlanes,
     selected: profileState.selectedAircraft, bomberLoadout: profileState.selectedBombPayload,
     economy: profileState.economy
@@ -6388,6 +6652,7 @@ function importProgressionProfile(text) {
   }
   profileState.pendingRewards = [];
   session.playerPlane = profileState.selectedAircraft;
+  renderPlayerProfile();
   stopGunSounds();
   stopEngineSound();
   updateThrottleUI();
@@ -6434,6 +6699,57 @@ function retryPendingRewards() {
   profileState.pendingRewards = [];
   updateEconomyDisplay();
   return true;
+}
+
+
+// Source: src/lobby.mjs
+function validPlayerName(name) {
+  return typeof name === 'string' && /^[\p{L}\p{N}_ -]{2,16}$/u.test(name);
+}
+function randomPlayerName() {
+  const values = new Uint32Array(1);
+  try { globalThis.crypto.getRandomValues(values); } catch { values[0] = Math.floor(Math.random() * 10000); }
+  return 'player_' + String(values[0] % 10000).padStart(4, '0');
+}
+function renderPlayerProfile() {
+  $('#playerName').textContent = profileState.playerName;
+}
+function openPlayerProfile() {
+  $('#profileNameInput').value = profileState.playerName;
+  $('#profileNameStatus').textContent = '';
+  $('#playerProfile').classList.remove('hidden');
+  $('#profileNameInput').focus?.();
+}
+function savePlayerName() {
+  const name = $('#profileNameInput').value.trim();
+  if (!validPlayerName(name)) {
+    $('#profileNameStatus').textContent = '请输入 2—16 位文字、数字、空格或下划线。';
+    return false;
+  }
+  const before = profileState.playerName;
+  profileState.playerName = name;
+  if (!saveHangar()) {
+    profileState.playerName = before;
+    $('#profileNameStatus').textContent = '昵称保存失败，请重试。';
+    return false;
+  }
+  renderPlayerProfile();
+  $('#playerProfile').classList.add('hidden');
+  return true;
+}
+function syncLobbyVideo() {
+  const video = $('#menuVideo');
+  const allowed = !document.hidden && !soundState.nativeSuspended && !$('#menu').classList.contains('hidden');
+  if (!allowed) { video.pause?.(); return; }
+  video.muted = true;
+  const attempt = video.play?.();
+  attempt?.catch?.(() => {});
+}
+function lobbyNotice() {
+  const node = $('#menuNotice');
+  node.textContent = '暂未开放'; node.classList.add('show');
+  clearTimeout(node._timer);
+  node._timer = setTimeout(() => node.classList.remove('show'), 1400);
 }
 
 
@@ -6503,8 +6819,9 @@ $('#chooseCampaign').addEventListener('click', () => showMenuScreen('campaignBri
 $('#campaignBack').addEventListener('click', () => showMenuScreen('modeSelect'));
 $('#beginCampaign').addEventListener('click', prepareCampaignBattle);
 $('#again').addEventListener('click', () => session.battlePaused && !session.ended ? resumeBattle() : session.gameMode === 'campaign' ? prepareCampaignBattle() : session.gameMode === 'airspace' ? prepareAirspaceBattle() : reset());
-$('#returnHome').addEventListener('click', () => showMenuScreen('menu'));
+$('#returnHome').addEventListener('click', () => showMenuScreen('hangar'));
 window.showPause = () => {
+  if (!$('#playerProfile').classList.contains('hidden')) { $('#playerProfile').classList.add('hidden'); return; }
   if (!$('#settings').classList.contains('hidden')) {
     showMenuScreen('menu');
     return;
@@ -6517,13 +6834,21 @@ window.showPause = () => {
     session.player.userData.engineRunning = false;
     stopGunSounds();
     stopEngineSound();
-    $('#again').textContent = '继续战斗　→';
+    $('#battleResults').classList.add('hidden');
+    $('#sortieRewards').classList.add('hidden');
+    $('#again').textContent = '继续战斗';
     $('#end').classList.remove('hidden');
     $('#resultTitle').textContent = '任务暂停';
-    $('#resultCopy').textContent = '点击继续战斗返回当前空战。';
+    $('#resultCopy').textContent = '';
   } else if (session.ended) reset();
   syncMenuMusic();
 };
+$('#openPlayerProfile').addEventListener('click', openPlayerProfile);
+$('#savePlayerName').addEventListener('click', savePlayerName);
+$('#closePlayerProfile').addEventListener('click', () => $('#playerProfile').classList.add('hidden'));
+$('#profileNameInput').addEventListener('keydown', event => { if (event.key === 'Enter') savePlayerName(); });
+document.querySelectorAll('[data-unavailable]').forEach(button => button.addEventListener('click', lobbyNotice));
+$('#menuVideo').addEventListener('loadeddata', syncLobbyVideo);
 $('#openSettings').addEventListener('click', () => showMenuScreen('settings'));
 $('#settingsHome').addEventListener('click', () => showMenuScreen('menu'));
 $('#importProfile').addEventListener('click', () => $('#profileFile').click());

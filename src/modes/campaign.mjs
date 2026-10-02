@@ -175,9 +175,11 @@ function updateCampaign(dt) {
   }
   updateCampaignEscortAI(dt);
 }
-function damageCampaignTarget(target, n) {
+function damageCampaignTarget(target, n, hit = null) {
   if (!target || target.health <= 0) return;
+  const before = target.health;
   target.health = Math.max(0, target.health - n);
+  recordCombatDamage(target.root, before, target.health, hit);
   if (target.health > 0) {
     updateHealthUI();
     return;

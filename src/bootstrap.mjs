@@ -63,8 +63,9 @@ $('#chooseCampaign').addEventListener('click', () => showMenuScreen('campaignBri
 $('#campaignBack').addEventListener('click', () => showMenuScreen('modeSelect'));
 $('#beginCampaign').addEventListener('click', prepareCampaignBattle);
 $('#again').addEventListener('click', () => session.battlePaused && !session.ended ? resumeBattle() : session.gameMode === 'campaign' ? prepareCampaignBattle() : session.gameMode === 'airspace' ? prepareAirspaceBattle() : reset());
-$('#returnHome').addEventListener('click', () => showMenuScreen('menu'));
+$('#returnHome').addEventListener('click', () => showMenuScreen('hangar'));
 window.showPause = () => {
+  if (!$('#playerProfile').classList.contains('hidden')) { $('#playerProfile').classList.add('hidden'); return; }
   if (!$('#settings').classList.contains('hidden')) {
     showMenuScreen('menu');
     return;
@@ -77,13 +78,21 @@ window.showPause = () => {
     session.player.userData.engineRunning = false;
     stopGunSounds();
     stopEngineSound();
-    $('#again').textContent = '继续战斗　→';
+    $('#battleResults').classList.add('hidden');
+    $('#sortieRewards').classList.add('hidden');
+    $('#again').textContent = '继续战斗';
     $('#end').classList.remove('hidden');
     $('#resultTitle').textContent = '任务暂停';
-    $('#resultCopy').textContent = '点击继续战斗返回当前空战。';
+    $('#resultCopy').textContent = '';
   } else if (session.ended) reset();
   syncMenuMusic();
 };
+$('#openPlayerProfile').addEventListener('click', openPlayerProfile);
+$('#savePlayerName').addEventListener('click', savePlayerName);
+$('#closePlayerProfile').addEventListener('click', () => $('#playerProfile').classList.add('hidden'));
+$('#profileNameInput').addEventListener('keydown', event => { if (event.key === 'Enter') savePlayerName(); });
+document.querySelectorAll('[data-unavailable]').forEach(button => button.addEventListener('click', lobbyNotice));
+$('#menuVideo').addEventListener('loadeddata', syncLobbyVideo);
 $('#openSettings').addEventListener('click', () => showMenuScreen('settings'));
 $('#settingsHome').addEventListener('click', () => showMenuScreen('menu'));
 $('#importProfile').addEventListener('click', () => $('#profileFile').click());
