@@ -55,6 +55,8 @@ window.__qa={
     clearProjectileSmoke();clearCombatFeedback();
     const victim=session.airspaceUnits.find(u=>u.team==='red'),half=victim.root.userData.collisionHalfExtents;
     victim.root.position.copy(session.player.position).add(new THREE.Vector3(0,0,-6).applyQuaternion(session.player.quaternion));
+    // Face the attacked engine toward the chase camera so the airframe does not occlude the spark pixels.
+    victim.root.quaternion.copy(session.player.quaternion).multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0),Math.PI));
     victim.root.updateMatrixWorld(true);
     const point=victim.root.localToWorld(new THREE.Vector3(0,0,-half.z-.02));
     damageAirspaceUnit(victim,victim.maxHealth*.3,'blue-0',{source:session.player,point,projectile:true,hits:1});
