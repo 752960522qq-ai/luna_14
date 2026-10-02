@@ -2,7 +2,7 @@ name: Build Android APK
 
 on:
   push:
-    branches: [main]
+    branches: [main, codex/luna14-v18-silverwing]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -18,13 +18,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Verify generated v17 source
-        run: |
-          python3 normalize-mig3.py
-          python3 update-v17.py
-          git diff --exit-code -- game.mjs app/src/main/assets/index.html app/src/main/assets/mig3.glb app/build.gradle
-      - name: Check progression, I-16, flight, stability, weapons, audio and 5v5 rules
+      - name: Install JavaScript test dependencies
+        run: npm ci
+      - name: Verify maintained source and aircraft data
+        run: node scripts/build-source.mjs --check
+      - name: Check repairs, terrain, progression, flight, weapons, audio and 5v5 rules
         run: npm run check
+      - name: Install browser for native WebGL and UI checks
+        run: npx playwright install --with-deps chromium
+      - name: Check actual browser UI, models, BGM and scene transitions
+        run: npm run check:browser
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -39,11 +42,24 @@ jobs:
           packages: 'platform-tools'
       - name: Install Android SDK platform
         run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
-      - name: Build debug APK
+      - name: Build Android APK
         run: gradle --no-daemon assembleDebug
+      - name: Collect APK and signing tools
+        run: |
+          mkdir -p deliverables
+          cp app/build/outputs/apk/debug/app-debug.apk deliverables/silverwing-v18.apk
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" deliverables/apksigner.jar
       - uses: actions/upload-artifact@v4
         with:
-          name: sky-duel-v17-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: silverwing-v18-apk
+          path: deliverables/*
           if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: silverwing-v18-validation
+          path: |
+            validation/*-v18.json
+            validation/*-v18.png
           retention-days: 30

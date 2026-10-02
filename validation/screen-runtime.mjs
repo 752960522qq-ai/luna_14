@@ -2,9 +2,10 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import * as Three from '../app/src/main/assets/three.module.js';
+import {bridgeState} from './state-bridge.mjs';
 
 
-export function loadGame({random=()=>.1,profile}={}){
+export function loadGame({random=()=>.1,profile,adapters={}}={}){
 const html=fs.readFileSync(new URL('../app/src/main/assets/index.html',import.meta.url),'utf8'),source=html.split('<script type="module">')[1].split('</script>')[0];
 const nodes=new Map(),events=new Map(),storage=new Map();
 if(profile!==undefined)storage.set('sky-duel-profile-v1',JSON.stringify(profile));
@@ -32,11 +33,13 @@ const document={querySelector:find,querySelectorAll:all,createElement:t=>new Nod
 let elapsed=0,renders=0;class Clock{getDelta(){const value=elapsed;elapsed=0;return value}}
 class Renderer{constructor(options={}){this.domElement=options.canvas||new Node('canvas')}setPixelRatio(){}setSize(){}render(){renders++}}
 class Loader{setDecoderPath(){return this}setDRACOLoader(){return this}loadAsync(){return new Promise(()=>{})}}
-class Audio{constructor(){this.paused=true;this.currentTime=0}load(){}pause(){this.paused=true}play(){this.paused=false;return Promise.resolve()}}
+class Audio{constructor(src){this.src=src;this.paused=true;this.currentTime=0}load(){}pause(){this.paused=true}play(){this.paused=false;return Promise.resolve()}}
 const math=Object.create(Math);math.random=random;
 const window={addEventListener:(n,f)=>(events.get(n)||events.set(n,[]).get(n)).push(f)};
-const context=vm.createContext({THREE:{...Three,WebGLRenderer:Renderer,Clock},GLTFLoader:Loader,DRACOLoader:Loader,window,document,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},console,Math:math,Audio,innerWidth:900,innerHeight:500,devicePixelRatio:1,requestAnimationFrame(){},addEventListener:window.addEventListener,setTimeout:()=>1,clearTimeout(){},performance:{now:()=>1000}});
+Object.assign(window,adapters.window||{});
+const context=vm.createContext({THREE:{...Three,WebGLRenderer:Renderer,Clock},GLTFLoader:Loader,DRACOLoader:Loader,window,document,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},console,Math:math,Audio,innerWidth:900,innerHeight:500,devicePixelRatio:1,requestAnimationFrame(){},addEventListener:window.addEventListener,setTimeout:()=>1,clearTimeout(){},performance:{now:()=>1000},...Object.fromEntries(Object.entries(adapters).filter(([k])=>k!=='window'))});
 const run=s=>vm.runInContext(s,context);run(source.replace(/^import .*?;\s*$/gm,''));
+bridgeState(context,run);
 
 return {run,context,find,nodes,groups,window,events,storage,advance:(seconds)=>{elapsed=seconds;run("animate()")},renders:()=>renders};
 }

@@ -1,0 +1,1671 @@
+{
+  "AIRCRAFT_SPECS": {
+    "i16": {
+      "chaseOffsetMeters": 8.7,
+      "chaseHeightMeters": 3.5,
+      "modelFile": "./i16-type5.glb",
+      "lengthMeters": 6,
+      "levelDragCompensation": 0.018,
+      "rollRateDps": 185,
+      "control": {
+        "stickAttackSeconds": 0.045,
+        "stickReleaseSeconds": 0.06,
+        "rollResponse": 13,
+        "rollRelease": 14,
+        "pitchResponse": 8
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 9.0064495,
+        "y": 2.96361132,
+        "z": 6
+      }
+    },
+    "i15": {
+      "chaseOffsetMeters": 9.3,
+      "chaseHeightMeters": 3.9,
+      "modelFile": "./i15-soviet.glb",
+      "lengthMeters": 6.1,
+      "levelDragCompensation": 0.018,
+      "rollRateDps": 165,
+      "control": {
+        "stickAttackSeconds": 0.045,
+        "stickReleaseSeconds": 0.065,
+        "rollResponse": 12,
+        "rollRelease": 13,
+        "pitchResponse": 8
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 9.58293027,
+        "y": 3.29077148,
+        "z": 6.1
+      }
+    },
+    "mig3": {
+      "chaseOffsetMeters": 9.5,
+      "chaseHeightMeters": 4.3,
+      "modelFile": "./mig3.glb",
+      "lengthMeters": 8.25,
+      "levelDragCompensation": 0.018,
+      "rollRateDps": 120,
+      "control": {
+        "stickAttackSeconds": 0.06,
+        "stickReleaseSeconds": 0.08,
+        "rollResponse": 9,
+        "rollRelease": 11,
+        "pitchResponse": 6.8
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 10.231,
+        "y": 3.287,
+        "z": 8.25
+      }
+    },
+    "f3f2": {
+      "chaseOffsetMeters": 8.7,
+      "chaseHeightMeters": 3.5,
+      "modelFile": "./f3f2_yellow_wings.glb",
+      "lengthMeters": 7.06,
+      "rollRateDps": 145,
+      "levelDragCompensation": 0.018,
+      "highSpeedTurnDrag": 0.014,
+      "control": {
+        "stickAttackSeconds": 0.05,
+        "stickReleaseSeconds": 0.07,
+        "rollResponse": 11,
+        "rollRelease": 13,
+        "pitchResponse": 8
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 9.807017,
+        "y": 2.81643,
+        "z": 7.06
+      }
+    },
+    "i15bis": {
+      "chaseOffsetMeters": 9.8,
+      "chaseHeightMeters": 3.9,
+      "modelFile": "./taiwanese_i-15bis_animated.glb",
+      "lengthMeters": 6.28,
+      "rollRateDps": 160,
+      "control": {
+        "stickAttackSeconds": 0.045,
+        "stickReleaseSeconds": 0.065,
+        "rollResponse": 12,
+        "rollRelease": 13,
+        "pitchResponse": 8
+      },
+      "axisFlip": [
+        -1,
+        1,
+        -1
+      ],
+      "collisionMeters": {
+        "x": 10.2,
+        "y": 3.4,
+        "z": 6.28
+      }
+    },
+    "bf109b1": {
+      "chaseOffsetMeters": 8,
+      "chaseHeightMeters": 3.8,
+      "modelFile": "./bf_109_b-1_animated.glb",
+      "lengthMeters": 8.55,
+      "rollRateDps": 135,
+      "control": {
+        "stickAttackSeconds": 0.055,
+        "stickReleaseSeconds": 0.075,
+        "rollResponse": 10,
+        "rollRelease": 12,
+        "pitchResponse": 7
+      },
+      "axisFlip": [
+        -1,
+        1,
+        -1
+      ],
+      "collisionMeters": {
+        "x": 9.65,
+        "y": 3.05,
+        "z": 8.55
+      }
+    },
+    "p36a": {
+      "chaseOffsetMeters": 8.9,
+      "chaseHeightMeters": 4.2,
+      "modelFile": "./p36a_hawk.glb",
+      "lengthMeters": 8.7,
+      "rollRateDps": 105,
+      "control": {
+        "stickAttackSeconds": 0.065,
+        "stickReleaseSeconds": 0.08,
+        "rollResponse": 8.5,
+        "rollRelease": 10,
+        "pitchResponse": 6.2
+      },
+      "axisFlip": [
+        -1,
+        1,
+        -1
+      ],
+      "collisionMeters": {
+        "x": 10.58,
+        "y": 3.69,
+        "z": 8.7
+      }
+    },
+    "mig15": {
+      "chaseOffsetMeters": 10.3,
+      "chaseHeightMeters": 3.7,
+      "modelFile": "./mig15.glb",
+      "lengthMeters": 10.1,
+      "rollRateDps": 140,
+      "control": {
+        "stickAttackSeconds": 0.052,
+        "stickReleaseSeconds": 0.07,
+        "rollResponse": 11,
+        "rollRelease": 13,
+        "pitchResponse": 7.3
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "collisionMeters": {
+        "x": 10.08,
+        "y": 3.7,
+        "z": 10.1
+      }
+    },
+    "f86": {
+      "chaseOffsetMeters": 12,
+      "chaseHeightMeters": 4.3,
+      "modelFile": "./f-86f-2_sabre_custom_war_thunder.glb",
+      "lengthMeters": 11.4,
+      "rollRateDps": 155,
+      "control": {
+        "stickAttackSeconds": 0.048,
+        "stickReleaseSeconds": 0.065,
+        "rollResponse": 12,
+        "rollRelease": 14,
+        "pitchResponse": 7.8
+      },
+      "axisFlip": [
+        -1,
+        1,
+        -1
+      ],
+      "collisionMeters": {
+        "x": 11.3,
+        "y": 4.5,
+        "z": 11.4
+      }
+    },
+    "meteor": {
+      "chaseOffsetMeters": 11.4,
+      "chaseHeightMeters": 4.4,
+      "modelFile": "./meteor_f_mk_4_g.41f_war_thunder.glb",
+      "lengthMeters": 12.6,
+      "rollRateDps": 125,
+      "control": {
+        "stickAttackSeconds": 0.06,
+        "stickReleaseSeconds": 0.075,
+        "rollResponse": 9.5,
+        "rollRelease": 11,
+        "pitchResponse": 6.7
+      },
+      "axisFlip": [
+        -1,
+        1,
+        -1
+      ],
+      "collisionMeters": {
+        "x": 13.2,
+        "y": 3,
+        "z": 12.6
+      }
+    },
+    "b29": {
+      "chaseOffsetMeters": 42.9,
+      "chaseHeightMeters": 15.5,
+      "modelFile": "./b29.glb",
+      "lengthMeters": 30.18,
+      "rollRateDps": 35,
+      "control": {
+        "stickAttackSeconds": 0.11,
+        "stickReleaseSeconds": 0.13,
+        "rollResponse": 4.4,
+        "rollRelease": 5,
+        "pitchResponse": 3.4
+      },
+      "axisFlip": [
+        1,
+        1,
+        1
+      ],
+      "axisRotationY": -1.5707963267948966,
+      "collisionMeters": {
+        "x": 43.05,
+        "y": 8.46,
+        "z": 30.18
+      }
+    }
+  },
+  "PROPELLER_SPECS": {
+    "i16": {
+      "idleRpm": 550,
+      "maxRpm": 1900,
+      "direction": 1,
+      "spoolUpSeconds": 2.7,
+      "spoolDownSeconds": 3.5,
+      "blurStartRpm": 750,
+      "blurFullRpm": 1200,
+      "radius": 1.384
+    },
+    "i15": {
+      "idleRpm": 550,
+      "maxRpm": 1900,
+      "direction": 1,
+      "spoolUpSeconds": 2.7,
+      "spoolDownSeconds": 3.5,
+      "blurStartRpm": 750,
+      "blurFullRpm": 1200,
+      "radius": 1.324
+    },
+    "mig3": {
+      "idleRpm": 600,
+      "maxRpm": 2400,
+      "direction": 1,
+      "spoolUpSeconds": 2.7,
+      "spoolDownSeconds": 3.5,
+      "blurStartRpm": 850,
+      "blurFullRpm": 1400,
+      "radius": 1.5
+    },
+    "f3f2": {
+      "idleRpm": 550,
+      "maxRpm": 1900,
+      "direction": 1,
+      "spoolUpSeconds": 2.8,
+      "spoolDownSeconds": 3.7,
+      "blurStartRpm": 800,
+      "blurFullRpm": 1250,
+      "radius": 1.4
+    },
+    "i15bis": {
+      "idleRpm": 550,
+      "maxRpm": 1900,
+      "direction": 1,
+      "spoolUpSeconds": 2.7,
+      "spoolDownSeconds": 3.5,
+      "blurStartRpm": 750,
+      "blurFullRpm": 1200,
+      "radius": 1.365
+    },
+    "bf109b1": {
+      "idleRpm": 600,
+      "maxRpm": 2300,
+      "direction": -1,
+      "spoolUpSeconds": 3.2,
+      "spoolDownSeconds": 4.2,
+      "blurStartRpm": 850,
+      "blurFullRpm": 1350,
+      "radius": 1.546
+    },
+    "p36a": {
+      "idleRpm": 550,
+      "maxRpm": 1900,
+      "direction": 1,
+      "spoolUpSeconds": 3,
+      "spoolDownSeconds": 3.8,
+      "blurStartRpm": 800,
+      "blurFullRpm": 1250,
+      "radius": 1.5
+    }
+  },
+  "AIRCRAFT_TREE": {
+    "i16": {
+      "nation": "ussr",
+      "nationName": "苏系",
+      "rating": 1.3,
+      "rank": "I",
+      "branch": "单发战斗机"
+    },
+    "i15": {
+      "nation": "ussr",
+      "nationName": "苏系",
+      "rating": 1,
+      "rank": "I",
+      "branch": "双翼战斗机"
+    },
+    "mig3": {
+      "nation": "ussr",
+      "nationName": "苏系",
+      "rating": 2.3,
+      "rank": "II",
+      "branch": "单发战斗机"
+    },
+    "f3f2": {
+      "nation": "us",
+      "nationName": "美系",
+      "rating": 1.3,
+      "rank": "I",
+      "branch": "双翼战斗机"
+    },
+    "bf109b1": {
+      "nation": "de",
+      "nationName": "德系",
+      "rating": 1.3,
+      "rank": "I",
+      "branch": "单发战斗机"
+    },
+    "i15bis": {
+      "nation": "cn",
+      "nationName": "中系",
+      "rating": 1,
+      "rank": "I",
+      "branch": "双翼战斗机"
+    },
+    "f86": {
+      "nation": "us",
+      "nationName": "美系",
+      "rating": 8,
+      "rank": "V",
+      "branch": "喷气战斗机"
+    },
+    "mig15": {
+      "nation": "ussr",
+      "nationName": "苏系",
+      "rating": 8,
+      "rank": "V",
+      "branch": "喷气战斗机"
+    },
+    "meteor": {
+      "nation": "uk",
+      "nationName": "英系",
+      "rating": 8,
+      "rank": "V",
+      "branch": "喷气战斗机"
+    },
+    "b29": {
+      "nation": "us",
+      "nationName": "美系",
+      "rating": 6.7,
+      "rank": "IV",
+      "branch": "重型轰炸机"
+    },
+    "p36a": {
+      "nation": "us",
+      "nationName": "美系",
+      "rating": 1.3,
+      "rank": "I",
+      "branch": "单发战斗机"
+    }
+  },
+  "planeInfo": {
+    "i16": {
+      "name": "I-16 type 5",
+      "health": 350,
+      "maxSpeedKmh": 445,
+      "minLevelFlightKmh": 118,
+      "bestClimbMps": 13.4,
+      "turnTimeS": 17.8,
+      "horizontalTurnRateDps": 20.224719101123593,
+      "verticalTurnTimeS": 9.8,
+      "verticalTurnRateDps": 36.73469387755102,
+      "turnRadiusM": 165,
+      "intro": "早期量产型伊-16，M-25A发动机，机体比24型更短；滚转性能优异，水平缠斗强；动力弱于后期型号，极速有限，俯冲不能过快，适合中低空作战。",
+      "specs": [
+        [
+          "系别",
+          "苏联"
+        ],
+        [
+          "等级",
+          "I"
+        ],
+        [
+          "战机权重",
+          "1.3"
+        ],
+        [
+          "机体耐久",
+          "350"
+        ],
+        [
+          "最大航速",
+          "445 km/h"
+        ],
+        [
+          "最小航速",
+          "118 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "13.4 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "17.8秒"
+        ],
+        [
+          "垂直转弯性能",
+          "9.8秒"
+        ],
+        [
+          "7.62mm ShKAS施卡斯机枪",
+          "机头2挺 · 合计备弹850发 · 单管1800发/分钟 · 伤害16 · 弹速825 m/s"
+        ]
+      ]
+    },
+    "i15": {
+      "name": "I-15",
+      "health": 340,
+      "maxSpeedKmh": 365,
+      "minLevelFlightKmh": 105,
+      "bestClimbMps": 12.7,
+      "turnTimeS": 13.8,
+      "horizontalTurnRateDps": 26.08695652173913,
+      "verticalTurnTimeS": 8.6,
+      "verticalTurnRateDps": 41.86046511627907,
+      "turnRadiusM": 130,
+      "intro": "经典海鸥翼双翼战斗机，拥有极强的水平缠斗能力，回转极为灵活；采用固定起落架，极速不高，高空性能弱，适合低空低速狗斗，不适合高速俯冲交战，西班牙内战大量使用。",
+      "specs": [
+        [
+          "系别",
+          "苏联"
+        ],
+        [
+          "等级",
+          "I"
+        ],
+        [
+          "战机权重",
+          "1.0"
+        ],
+        [
+          "机体耐久",
+          "340"
+        ],
+        [
+          "最大航速",
+          "365 km/h"
+        ],
+        [
+          "最小航速",
+          "105 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "12.7 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "13.8秒"
+        ],
+        [
+          "垂直转弯性能",
+          "8.6秒"
+        ],
+        [
+          "7.62mm PV-1航空机枪",
+          "4挺 · 总备弹3200发 · 单管750发/分钟 · 伤害13 · 弹速775 m/s"
+        ]
+      ]
+    },
+    "mig3": {
+      "name": "MiG-3",
+      "health": 480,
+      "maxSpeedKmh": 640,
+      "minLevelFlightKmh": 155,
+      "bestClimbMps": 15.8,
+      "turnTimeS": 24,
+      "horizontalTurnRateDps": 15,
+      "verticalTurnTimeS": 13.2,
+      "verticalTurnRateDps": 27.272727272727273,
+      "turnRadiusM": 300,
+      "intro": "二战苏联高空拦截战斗机，高空极速优秀，擅长万米高度拦截轰炸机；低空水平盘旋性能较差，发动机脆弱，适合抢占高度后俯冲攻击，避免长时间水平狗斗。",
+      "specs": [
+        [
+          "系别",
+          "苏联"
+        ],
+        [
+          "等级",
+          "II"
+        ],
+        [
+          "战机权重",
+          "2.3"
+        ],
+        [
+          "机体耐久",
+          "480"
+        ],
+        [
+          "最大航速",
+          "640 km/h"
+        ],
+        [
+          "最小航速",
+          "155 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "15.8 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "24秒"
+        ],
+        [
+          "垂直转弯性能",
+          "13.2秒"
+        ],
+        [
+          "12.7mm UBS别列津机枪",
+          "1挺 · 备弹280发 · 1000发/分钟 · 伤害28 · 弹速860 m/s"
+        ],
+        [
+          "7.62mm ShKAS施卡斯机枪",
+          "2挺 · 合计备弹1500发 · 单管1800发/分钟 · 伤害15 · 弹速820 m/s"
+        ]
+      ]
+    },
+    "f3f2": {
+      "name": "F3F-2",
+      "health": 360,
+      "maxSpeedKmh": 425,
+      "minLevelFlightKmh": 118,
+      "bestClimbMps": 14,
+      "turnTimeS": 16.5,
+      "horizontalTurnRateDps": 21.818181818181817,
+      "verticalTurnTimeS": 10.1,
+      "verticalTurnRateDps": 35.64356435643565,
+      "turnRadiusM": 145,
+      "intro": "美军末代舰载双翼战斗机，拥有极为优秀的水平盘旋能力，低空机动灵活；极速偏低，高速下能量损耗严重，适合低速缠斗，不适合与高速单翼机进行俯冲交战。",
+      "specs": [
+        [
+          "系别",
+          "美国"
+        ],
+        [
+          "战机权重",
+          "美系 1.3"
+        ],
+        [
+          "机体耐久",
+          "360"
+        ],
+        [
+          "机长",
+          "7.06 m"
+        ],
+        [
+          "最大航速",
+          "425 km/h"
+        ],
+        [
+          "最小航速",
+          "118 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.0 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "16.5 s · 21.82°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "10.1 s · 35.64°/s"
+        ],
+        [
+          "武器",
+          "1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁"
+        ],
+        [
+          "备弹",
+          "M2：200发；7.62 mm：500发"
+        ],
+        [
+          "射速",
+          "M2：750发/分；7.62 mm：1000发/分"
+        ],
+        [
+          "单发伤害",
+          "M2：34；7.62 mm：13"
+        ],
+        [
+          "弹速",
+          "M2：860 m/s；7.62 mm：810 m/s"
+        ]
+      ]
+    },
+    "i15bis": {
+      "name": "I-15bis",
+      "health": 320,
+      "maxSpeedKmh": 380,
+      "minLevelFlightKmh": 112,
+      "bestClimbMps": 14.2,
+      "turnTimeS": 14.88,
+      "horizontalTurnRateDps": 24.2,
+      "verticalTurnRateDps": 26,
+      "turnRadiusM": 250,
+      "intro": "早期双翼战斗机，低速盘旋性能极强，速度平庸，高空性能较差。四挺 PV-1 机枪适合近距狗斗。",
+      "specs": [
+        [
+          "战机权重",
+          "中系 1.0"
+        ],
+        [
+          "机体耐久",
+          "320"
+        ],
+        [
+          "机长",
+          "6.28 m"
+        ],
+        [
+          "最大航速",
+          "380 km/h"
+        ],
+        [
+          "最小航速",
+          "112 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.2 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "24.2°/s · 360° 14.88 s · 半径 约250 m"
+        ],
+        [
+          "垂直转弯性能",
+          "26.0°/s"
+        ],
+        [
+          "武器",
+          "4挺 7.62 mm PV-1 机枪"
+        ],
+        [
+          "总备弹",
+          "3050发 · 四挺合计"
+        ],
+        [
+          "射速",
+          "每挺750发/分"
+        ],
+        [
+          "单发伤害",
+          "13"
+        ],
+        [
+          "弹速",
+          "820 m/s"
+        ]
+      ]
+    },
+    "p36a": {
+      "name": "P-36A",
+      "health": 320,
+      "maxSpeedKmh": 504,
+      "minLevelFlightKmh": 120,
+      "bestClimbMps": 14,
+      "turnTimeS": 17.14,
+      "horizontalTurnRateDps": 21,
+      "verticalTurnRateDps": 22.5,
+      "turnRadiusM": 300,
+      "intro": "三十年代后期的单翼战斗机，盘旋性能优秀，水平狗斗强势；武器配置较弱，高空功率衰减明显，适合中低空缠斗。",
+      "specs": [
+        [
+          "系别",
+          "美国"
+        ],
+        [
+          "战机权重",
+          "美系 1.3"
+        ],
+        [
+          "机体耐久",
+          "320"
+        ],
+        [
+          "机长",
+          "8.70 m"
+        ],
+        [
+          "最大航速",
+          "504 km/h"
+        ],
+        [
+          "最小航速",
+          "120 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "14.0 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "21.0°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "22.5°/s"
+        ],
+        [
+          "武器",
+          "1挺 12.7 mm M2勃朗宁 + 1挺 7.62 mm勃朗宁"
+        ],
+        [
+          "备弹",
+          "M2：200发；7.62 mm：500发"
+        ],
+        [
+          "射速",
+          "M2：750发/分；7.62 mm：1000发/分"
+        ],
+        [
+          "单发伤害",
+          "M2：32；7.62 mm：14"
+        ],
+        [
+          "弹速",
+          "M2：860 m/s；7.62 mm：810 m/s"
+        ]
+      ]
+    },
+    "bf109b1": {
+      "name": "Bf-109 B-1",
+      "health": 310,
+      "maxSpeedKmh": 465,
+      "minLevelFlightKmh": 135,
+      "bestClimbMps": 13.2,
+      "turnTimeS": 23.08,
+      "horizontalTurnRateDps": 15.6,
+      "verticalTurnRateDps": 19,
+      "turnRadiusM": 300,
+      "intro": "早期Bf-109，搭载Jumo-210D发动机，火力偏弱，以能量战术为主。水平盘旋一般，高速性能尚可；仅有机鼻机枪，无机翼机枪。",
+      "specs": [
+        [
+          "战机权重",
+          "德系 1.3"
+        ],
+        [
+          "机体耐久",
+          "310"
+        ],
+        [
+          "机长",
+          "8.55 m"
+        ],
+        [
+          "最大航速",
+          "465 km/h"
+        ],
+        [
+          "最小航速",
+          "135 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "13.2 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "15.6°/s"
+        ],
+        [
+          "垂直转弯性能",
+          "19.0°/s"
+        ],
+        [
+          "武器",
+          "2挺 7.92 mm MG-17机枪（机鼻）"
+        ],
+        [
+          "总备弹",
+          "1000发 · 两挺合计"
+        ],
+        [
+          "射速",
+          "每挺1200发/分"
+        ],
+        [
+          "单发伤害",
+          "14"
+        ],
+        [
+          "弹速",
+          "790 m/s"
+        ]
+      ]
+    },
+    "mig15": {
+      "name": "MIG-15",
+      "health": 600,
+      "maxSpeedKmh": 1076,
+      "minLevelFlightKmh": 220,
+      "bestClimbMps": 50,
+      "turnTimeS": 20.7,
+      "horizontalTurnRateDps": 17.3,
+      "verticalTurnRateDps": 22,
+      "turnRadiusM": 245,
+      "intro": "苏联早期后掠翼喷气式战斗机。机鼻集中安装大口径航炮，单次命中威力大。",
+      "specs": [
+        [
+          "机体耐久",
+          "600"
+        ],
+        [
+          "最大航速",
+          "1076 km/h"
+        ],
+        [
+          "最小航速",
+          "220 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "50 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 20.7 s · 17.3°/s · 半径 245 m"
+        ],
+        [
+          "垂直转弯性能",
+          "22°/s"
+        ],
+        [
+          "37 mm N-37",
+          "1门 · 备弹40 · 400发/分 · 伤害304 · 弹速690 m/s"
+        ],
+        [
+          "23 mm NS-23",
+          "2门 · 总备弹160 · 每门550发/分 · 伤害106 · 弹速610 m/s"
+        ],
+        [
+          "射击模式",
+          "N-37 / 双NS-23 / 三炮齐射"
+        ]
+      ]
+    },
+    "f86": {
+      "name": "F-86 佩刀",
+      "health": 700,
+      "maxSpeedKmh": 1106,
+      "minLevelFlightKmh": 240,
+      "bestClimbMps": 46.7,
+      "turnTimeS": 24,
+      "horizontalTurnRateDps": 15,
+      "verticalTurnRateDps": 25,
+      "turnRadiusM": 310,
+      "intro": "美国早期喷气式战斗机，六挺勃朗宁机枪形成密集弹幕。",
+      "specs": [
+        [
+          "机体耐久",
+          "700"
+        ],
+        [
+          "最大航速",
+          "1106 km/h"
+        ],
+        [
+          "最小航速",
+          "240 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "46.7 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 24.0 s · 15°/s · 半径 310 m"
+        ],
+        [
+          "垂直转弯性能",
+          "25°/s"
+        ],
+        [
+          "武器",
+          "6挺 12.7 mm 勃朗宁机枪"
+        ],
+        [
+          "总备弹",
+          "1800发 · 6挺合计"
+        ],
+        [
+          "射速",
+          "每挺600发/分"
+        ],
+        [
+          "单发伤害",
+          "34"
+        ],
+        [
+          "弹速",
+          "945 m/s"
+        ]
+      ]
+    },
+    "meteor": {
+      "name": "Meteor F Mk 4 G.41G",
+      "health": 560,
+      "maxSpeedKmh": 912,
+      "minLevelFlightKmh": 290,
+      "bestClimbMps": 30.9,
+      "turnTimeS": 20,
+      "horizontalTurnRateDps": 18,
+      "verticalTurnRateDps": 20.5,
+      "turnRadiusM": 282,
+      "intro": "英国系短翼流星 F.4 喷气式战斗机，四门 Hispano Mk.II 20 mm 机炮。",
+      "specs": [
+        [
+          "战机权重",
+          "8.0"
+        ],
+        [
+          "机体耐久",
+          "560"
+        ],
+        [
+          "机长",
+          "12.6 m"
+        ],
+        [
+          "最大航速",
+          "912 km/h"
+        ],
+        [
+          "最小航速",
+          "290 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "30.9 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 20.0 s · 18°/s · 半径 282 m"
+        ],
+        [
+          "垂直转弯性能",
+          "20.5°/s"
+        ],
+        [
+          "武器",
+          "4门 20 mm Hispano Mk.II"
+        ],
+        [
+          "总备弹",
+          "720发 · 每门180发"
+        ],
+        [
+          "射速",
+          "每门600发/分"
+        ],
+        [
+          "单发伤害",
+          "85"
+        ],
+        [
+          "弹速",
+          "880 m/s"
+        ]
+      ]
+    },
+    "b29": {
+      "name": "B-29 超级堡垒",
+      "health": 1200,
+      "maxSpeedKmh": 575,
+      "minLevelFlightKmh": 180,
+      "bestClimbMps": 8.5,
+      "turnTimeS": 85.7,
+      "horizontalTurnRateDps": 4.2,
+      "verticalTurnRateDps": 5.5,
+      "turnRadiusM": 1150,
+      "intro": "美系重型战略轰炸机。5座炮塔共12挺12.7 mm机枪，敌机进入250 m且落入对应射界时自动射击；炮塔不能手动操控。载弹量可在仓库调整。",
+      "specs": [
+        [
+          "战机权重",
+          "美系 6.7"
+        ],
+        [
+          "机体耐久",
+          "1200"
+        ],
+        [
+          "机长",
+          "30.18 m"
+        ],
+        [
+          "最大航速",
+          "575 km/h"
+        ],
+        [
+          "最小航速",
+          "180 km/h"
+        ],
+        [
+          "最佳爬升率",
+          "8.5 m/s"
+        ],
+        [
+          "水平转弯性能",
+          "360° 约85.7 s · 4.2°/s · 半径 1150 m"
+        ],
+        [
+          "垂直转弯性能",
+          "5.5°/s"
+        ],
+        [
+          "防御武器",
+          "5座炮塔 · 12挺 12.7 mm机枪"
+        ],
+        [
+          "前上炮塔",
+          "4挺 · 前半球上方，下俯限2.5°"
+        ],
+        [
+          "后上炮塔",
+          "2挺 · 后半球水平线以上"
+        ],
+        [
+          "前下炮塔",
+          "2挺 · 前半球下方，仰角限5°"
+        ],
+        [
+          "后下炮塔",
+          "2挺 · 后半球下方，仰角限5°"
+        ],
+        [
+          "尾炮塔",
+          "2挺 · 后向±30°，俯仰±30°"
+        ],
+        [
+          "射速",
+          "每挺450发/分"
+        ],
+        [
+          "单发伤害",
+          "20"
+        ],
+        [
+          "机枪弹速",
+          "945 m/s"
+        ],
+        [
+          "命中率",
+          "约50%"
+        ],
+        [
+          "自动开火距离",
+          "250 m"
+        ],
+        [
+          "机枪备弹",
+          "12000发 · 炮塔自动使用"
+        ],
+        [
+          "炸弹挂载",
+          "20×500 / 40×500 / 18×1000 / 8×2000 / 4×4000 磅"
+        ]
+      ]
+    }
+  },
+  "weaponInfo": {
+    "i16": {
+      "mg": {
+        "rpm": 1800,
+        "damage": 16,
+        "speed": 825,
+        "cost": 2,
+        "count": 2,
+        "radius": 0.06,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.018,
+            0.027,
+            -0.246
+          ],
+          [
+            0.018,
+            0.027,
+            -0.246
+          ]
+        ]
+      }
+    },
+    "i15": {
+      "mg": {
+        "rpm": 750,
+        "damage": 13,
+        "speed": 775,
+        "cost": 4,
+        "count": 4,
+        "radius": 0.07,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.032,
+            0.026,
+            -0.235
+          ],
+          [
+            -0.032,
+            -0.014,
+            -0.235
+          ],
+          [
+            0.032,
+            0.026,
+            -0.235
+          ],
+          [
+            0.032,
+            -0.014,
+            -0.235
+          ]
+        ]
+      }
+    },
+    "mig3": {
+      "m2": {
+        "rpm": 1000,
+        "damage": 28,
+        "speed": 860,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.08,
+        "color": 16768918,
+        "offsets": [
+          [
+            0,
+            0.047,
+            -0.29
+          ]
+        ]
+      },
+      "mg762": {
+        "rpm": 1800,
+        "damage": 15,
+        "speed": 820,
+        "cost": 2,
+        "count": 2,
+        "radius": 0.06,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.019,
+            0.04,
+            -0.29
+          ],
+          [
+            0.019,
+            0.04,
+            -0.29
+          ]
+        ]
+      }
+    },
+    "f3f2": {
+      "m2": {
+        "rpm": 750,
+        "damage": 34,
+        "speed": 860,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.08,
+        "color": 16768918,
+        "offsets": [
+          [
+            0.018,
+            -0.04,
+            -0.3
+          ]
+        ]
+      },
+      "mg762": {
+        "rpm": 1000,
+        "damage": 13,
+        "speed": 810,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.06,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.018,
+            -0.04,
+            -0.3
+          ]
+        ]
+      }
+    },
+    "p36a": {
+      "m2": {
+        "rpm": 750,
+        "damage": 32,
+        "speed": 860,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.08,
+        "color": 16768918,
+        "offsets": [
+          [
+            0.018,
+            0.005,
+            -0.36
+          ]
+        ]
+      },
+      "mg762": {
+        "rpm": 1000,
+        "damage": 14,
+        "speed": 810,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.06,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.018,
+            0.005,
+            -0.36
+          ]
+        ]
+      }
+    },
+    "i15bis": {
+      "mg": {
+        "rpm": 750,
+        "damage": 13,
+        "speed": 820,
+        "cost": 4,
+        "count": 4,
+        "radius": 0.07,
+        "color": 16768918,
+        "offsets": [
+          [
+            -0.22,
+            -0.015,
+            -0.27
+          ],
+          [
+            -0.08,
+            -0.015,
+            -0.3
+          ],
+          [
+            0.08,
+            -0.015,
+            -0.3
+          ],
+          [
+            0.22,
+            -0.015,
+            -0.27
+          ]
+        ]
+      }
+    },
+    "bf109b1": {
+      "mg": {
+        "rpm": 1200,
+        "damage": 14,
+        "speed": 790,
+        "cost": 2,
+        "count": 2,
+        "radius": 0.075,
+        "color": 16770222,
+        "offsets": [
+          [
+            -0.078,
+            -0.018,
+            -0.35
+          ],
+          [
+            0.078,
+            -0.018,
+            -0.35
+          ]
+        ]
+      }
+    },
+    "f86": {
+      "mg": {
+        "rpm": 600,
+        "damage": 34,
+        "speed": 945,
+        "cost": 6,
+        "count": 6,
+        "radius": 0.09,
+        "color": 10351871,
+        "offsets": [
+          [
+            -0.245,
+            -0.008,
+            -0.135
+          ],
+          [
+            -0.205,
+            -0.008,
+            -0.11
+          ],
+          [
+            -0.165,
+            -0.008,
+            -0.085
+          ],
+          [
+            0.165,
+            -0.008,
+            -0.085
+          ],
+          [
+            0.205,
+            -0.008,
+            -0.11
+          ],
+          [
+            0.245,
+            -0.008,
+            -0.135
+          ]
+        ]
+      }
+    },
+    "mig15": {
+      "n37": {
+        "rpm": 400,
+        "damage": 304,
+        "speed": 690,
+        "cost": 1,
+        "count": 1,
+        "radius": 0.22,
+        "color": 16765806,
+        "offsets": [
+          [
+            0,
+            -0.01,
+            -0.55
+          ]
+        ]
+      },
+      "ns23": {
+        "rpm": 550,
+        "damage": 106,
+        "speed": 610,
+        "cost": 2,
+        "count": 2,
+        "radius": 0.16,
+        "color": 16773019,
+        "offsets": [
+          [
+            -0.032,
+            -0.01,
+            -0.53
+          ],
+          [
+            0.032,
+            -0.01,
+            -0.53
+          ]
+        ]
+      }
+    },
+    "meteor": {
+      "hispano": {
+        "rpm": 600,
+        "damage": 85,
+        "speed": 880,
+        "cost": 4,
+        "count": 4,
+        "radius": 0.15,
+        "color": 16773019,
+        "offsets": [
+          [
+            -0.32,
+            -0.01,
+            -0.4
+          ],
+          [
+            -0.24,
+            -0.01,
+            -0.42
+          ],
+          [
+            0.24,
+            -0.01,
+            -0.42
+          ],
+          [
+            0.32,
+            -0.01,
+            -0.4
+          ]
+        ]
+      }
+    }
+  },
+  "AI_FIGHTER": {
+    "i16": {
+      "detectMeters": 2500,
+      "loseMeters": 3000,
+      "alignMeters": 660,
+      "breakMeters": 110,
+      "passSeconds": 2.6,
+      "gun": {
+        "mg": {
+          "rangeMeters": 540,
+          "coneDeg": 6.3
+        }
+      }
+    },
+    "i15": {
+      "detectMeters": 2350,
+      "loseMeters": 2850,
+      "alignMeters": 600,
+      "breakMeters": 100,
+      "passSeconds": 2.7,
+      "gun": {
+        "mg": {
+          "rangeMeters": 500,
+          "coneDeg": 6.5
+        }
+      }
+    },
+    "mig3": {
+      "detectMeters": 2500,
+      "loseMeters": 3000,
+      "alignMeters": 750,
+      "breakMeters": 130,
+      "passSeconds": 2.7,
+      "gun": {
+        "m2": {
+          "rangeMeters": 600,
+          "coneDeg": 6
+        },
+        "mg762": {
+          "rangeMeters": 550,
+          "coneDeg": 6.5
+        }
+      }
+    },
+    "f3f2": {
+      "detectMeters": 2350,
+      "loseMeters": 2850,
+      "alignMeters": 600,
+      "breakMeters": 100,
+      "passSeconds": 2.5,
+      "gun": {
+        "m2": {
+          "rangeMeters": 520,
+          "coneDeg": 6.5
+        },
+        "mg762": {
+          "rangeMeters": 480,
+          "coneDeg": 6.8
+        }
+      }
+    },
+    "p36a": {
+      "detectMeters": 2350,
+      "loseMeters": 2850,
+      "alignMeters": 650,
+      "breakMeters": 115,
+      "passSeconds": 2.8,
+      "gun": {
+        "m2": {
+          "rangeMeters": 520,
+          "coneDeg": 6.5
+        },
+        "mg762": {
+          "rangeMeters": 480,
+          "coneDeg": 6.8
+        }
+      }
+    },
+    "bf109b1": {
+      "detectMeters": 2450,
+      "loseMeters": 2900,
+      "alignMeters": 700,
+      "breakMeters": 120,
+      "passSeconds": 2.6,
+      "gun": {
+        "mg": {
+          "rangeMeters": 550,
+          "coneDeg": 6
+        }
+      }
+    },
+    "i15bis": {
+      "detectMeters": 2400,
+      "loseMeters": 2900,
+      "alignMeters": 640,
+      "breakMeters": 110,
+      "passSeconds": 2.7,
+      "gun": {
+        "mg": {
+          "rangeMeters": 520,
+          "coneDeg": 6.5
+        }
+      }
+    },
+    "mig15": {
+      "detectMeters": 3000,
+      "loseMeters": 3500,
+      "alignMeters": 870,
+      "breakMeters": 150,
+      "passSeconds": 2.8,
+      "gun": {
+        "n37": {
+          "rangeMeters": 630,
+          "coneDeg": 4.2
+        },
+        "ns23": {
+          "rangeMeters": 710,
+          "coneDeg": 5.2
+        }
+      }
+    },
+    "f86": {
+      "detectMeters": 3000,
+      "loseMeters": 3500,
+      "alignMeters": 900,
+      "breakMeters": 150,
+      "passSeconds": 2.8,
+      "gun": {
+        "mg": {
+          "rangeMeters": 760,
+          "coneDeg": 5.4
+        }
+      }
+    },
+    "meteor": {
+      "detectMeters": 2800,
+      "loseMeters": 3300,
+      "alignMeters": 840,
+      "breakMeters": 140,
+      "passSeconds": 2.7,
+      "gun": {
+        "hispano": {
+          "rangeMeters": 700,
+          "coneDeg": 5.2
+        }
+      }
+    }
+  },
+  "RESEARCH_COSTS": {
+    "i15": {
+      "rp": 0,
+      "gp": 0
+    },
+    "i15bis": {
+      "rp": 0,
+      "gp": 0
+    },
+    "f3f2": {
+      "rp": 400,
+      "gp": 1200
+    },
+    "bf109b1": {
+      "rp": 500,
+      "gp": 1400
+    },
+    "i16": {
+      "rp": 500,
+      "gp": 1400
+    },
+    "p36a": {
+      "rp": 550,
+      "gp": 1600
+    },
+    "mig3": {
+      "rp": 1600,
+      "gp": 4500
+    },
+    "b29": {
+      "rp": 4800,
+      "gp": 14000
+    },
+    "meteor": {
+      "rp": 7000,
+      "gp": 22000
+    },
+    "mig15": {
+      "rp": 7500,
+      "gp": 24000
+    },
+    "f86": {
+      "rp": 7800,
+      "gp": 26000
+    }
+  }
+}

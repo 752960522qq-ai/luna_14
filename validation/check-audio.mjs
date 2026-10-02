@@ -2,8 +2,9 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import {THREE,func,declaration} from './runtime.mjs';
+import {loadGame} from './screen-runtime.mjs';
 
-const sources=[],fallback=[],report={method:'Actual generated v17 audio and weapon functions, Web Audio/HTML audio adapters; PCM checks are separate.',checks:[],cadence:[]};
+const sources=[],fallback=[],report={method:'Actual generated v18 audio and weapon functions, Web Audio/HTML audio adapters; PCM checks are separate.',checks:[],cadence:[]};
 class Param{constructor(){this.value=0;this.events=[]}setTargetAtTime(value,time,constant){this.value=value;this.events.push({value,time,constant})}cancelScheduledValues(){}}
 class Audio{constructor(path){this.src=path;this.paused=true;fallback.push(this)}load(){}pause(){this.paused=true}play(){this.paused=false;return Promise.resolve()}}
 class Context{
@@ -14,11 +15,11 @@ class Context{
  resume(){this.state='running';return Promise.resolve()}
  decodeAudioData(raw){const view=new DataView(raw);return Promise.resolve({duration:view.getUint32(40,true)/view.getUint32(28,true)})}
 }
-const real=fs.readFileSync(new URL('../game.mjs',import.meta.url),'utf8'),base=real.slice(real.indexOf('const AUDIO_FILES='),real.indexOf('function updateEngineUI('));
-const ctx=vm.createContext({THREE,Math,console,Audio,fetch:async path=>{const buf=fs.readFileSync(new URL('../app/src/main/assets/'+path.replace('./',''),import.meta.url));return{ok:true,arrayBuffer:async()=>buf.buffer.slice(buf.byteOffset,buf.byteOffset+buf.byteLength)}},window:{AudioContext:Context},performance:{now:()=>ctx.now*1000},now:0,playing:true,playerPlane:'f86',enemyPlaneType:'f86',gameMode:'duel',keys:{fire:false},player:null,enemy:null,throttleValue:1,scene:{add(){}},updateAmmoUI(){},toast(){},damage(){},playerAmmo:{},enemyAmmo:{},playerWeaponCooldowns:{},enemyWeaponCooldowns:{},weaponMode:'mg',enemyWeaponMode:'mg'});
-vm.runInContext(base,ctx);const run=s=>vm.runInContext(s,ctx);run('prepareGameAudio()');await Promise.all(run('[...audioLoads.values()]'));assert.equal(run('audioBuffers.size'),9);report.checks.push('Nine PCM slices decode and preload; no long engine recording loaded');
-const functions=['ensureBulletResources','fireWeapons','fireBomberTurrets','bomberTurretCanTrack','selectedWeaponIds','gunSoundFor'],declarations=['weaponInfo','METERS_PER_UNIT','PROPELLER_SPECS','B29_TURRETS'];
-vm.runInContext(declarations.map(declaration).concat(functions.map(func)).join('\n')+'\nconst bullets=[],bulletPool=[],bulletResources={};',ctx);
+const real=fs.readFileSync(new URL('../game.mjs',import.meta.url),'utf8');
+let ctx;
+const harness=loadGame({adapters:{Audio,fetch:async path=>{const buf=fs.readFileSync(new URL('../app/src/main/assets/'+path.replace('./',''),import.meta.url));return{ok:true,arrayBuffer:async()=>buf.buffer.slice(buf.byteOffset,buf.byteOffset+buf.byteLength)}},window:{AudioContext:Context},performance:{now:()=>((ctx?.now)||0)*1000}}});
+ctx=harness.context;ctx.now=0;ctx.playing=true;ctx.gameMode='duel';ctx.weaponMode='mg';ctx.enemyWeaponMode='mg';
+const run=harness.run;await Promise.all(run('[...audioLoads.values()]'));assert.equal(run('audioBuffers.size'),9);report.checks.push('Nine PCM slices decode and preload; no long engine recording loaded');
 function plane(type){const p=new THREE.Group();p.position.set(0,100,0);p.userData={type,throttle:1,engineRunning:true,propRpm:type==='bf109b1'?2300:1900,bomberGunClock:0,bomberGunsActive:false};return p}
 function clear(){sources.length=0;run('stopGunSounds();nextGunStart=new WeakMap()');ctx.playerWeaponCooldowns={};ctx.enemyWeaponCooldowns={}}
 for(const [type,mode,ammo,ids] of [['i15','mg',{mg:3200},['mg']],['mig3','mg',{m2:280,mg762:1500},['m2','mg762']],['f86','mg',{mg:1800},['mg']],['bf109b1','mg',{mg:1000},['mg']],['i15bis','mg',{mg:3050},['mg']],['p36a','mg',{m2:200,mg762:500},['m2','mg762']],['f3f2','mg',{m2:200,mg762:500},['m2','mg762']],['mig15','both',{n37:40,ns23:160},['n37','ns23']],['meteor','hispano',{hispano:720},['hispano']]]){
@@ -52,4 +53,4 @@ await Promise.all(run('[...audioLoads.values()]'));await Promise.resolve();asser
 clear();ctx.player=plane('b29');ctx.playerPlane='b29';ctx.enemy=plane('f86');ctx.enemy.position.set(0,100,-10);ctx.playerAmmo={b29mg:12000};
 run('fireBomberTurrets(player,false,.1)');assert.equal(sources.length,0);run('fireBomberTurrets(player,false,.04)');assert.equal(sources.length,1);assert(ctx.playerAmmo.b29mg<12000);ctx.enemy.position.z=-1000;run('fireBomberTurrets(player,false,.2)');assert.equal(sources.length,1);report.checks.push('B-29 turret packet plays once only when rounds are spent; no out-of-range loop');
 assert(!real.includes('setPV1GunLoop')&&!real.includes('setBomberGunLoop'));
-fs.writeFileSync(new URL('audio-behavior-v17.json',import.meta.url),JSON.stringify({...report,result:'passed'},null,2));console.log(JSON.stringify({...report,result:'passed'},null,2));
+fs.writeFileSync(new URL('audio-behavior-v18.json',import.meta.url),JSON.stringify({...report,result:'passed'},null,2));console.log(JSON.stringify({...report,result:'passed'},null,2));

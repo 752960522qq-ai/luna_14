@@ -15,6 +15,7 @@ import android.webkit.WebResourceResponse;
 
 public class MainActivity extends Activity {
     private WebView game;
+    private boolean foreground;
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -39,5 +40,39 @@ public class MainActivity extends Activity {
     }
     @Override public void onBackPressed() {
         game.evaluateJavascript("window.showPause && window.showPause()", null);
+    }
+
+    @Override protected void onPause() {
+        foreground = false;
+        if (game != null) {
+            game.evaluateJavascript("window.onNativePause && window.onNativePause()", ignored -> {
+                if (!foreground && game != null) {
+                    game.onPause();
+                    game.pauseTimers();
+                }
+            });
+        }
+        super.onPause();
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        foreground = true;
+        if (game != null) {
+            game.onResume();
+            game.resumeTimers();
+            game.evaluateJavascript("window.onNativeResume && window.onNativeResume()", null);
+        }
+    }
+
+    @Override protected void onDestroy() {
+        if (game != null) {
+            game.evaluateJavascript("window.onNativePause && window.onNativePause()", null);
+            game.stopLoading();
+            game.loadUrl("about:blank");
+            game.destroy();
+            game = null;
+        }
+        super.onDestroy();
     }
 }

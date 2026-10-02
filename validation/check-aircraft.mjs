@@ -60,4 +60,4 @@ for(const fps of [30,60,120]){
 }
 const i15Level=plane(h,'i15',true,new THREE.Vector3(0,1000,0),true);h.ctx.player=i15Level;for(let i=0;i<90*60;i++)run('advanceAircraft(player,1/60)');assert(Math.abs(i15Level.userData.airspeed*3.6-365)<1);report.i15LevelSpeedKmh=i15Level.userData.airspeed*3.6;
 report.checks.push('Soviet I-15 supplied stats, BR1.0 matching, four 750RPM PV-1 barrels with 3200 total rounds and 775m/s / 13 damage, and full-power 365km/h level flight pass');
-fs.writeFileSync(new URL('aircraft-v17.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('aircraft-v18.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
