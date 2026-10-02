@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build:source": "node scripts/build-source.mjs",
-    "check": "node scripts/build-source.mjs --check && node --check game.mjs && node validation/check-source.mjs && node validation/check-repairs.mjs && node validation/check-terrain.mjs && node validation/check-progression.mjs && node validation/check-smoke.mjs && node validation/check-i16.mjs && node validation/check-aircraft.mjs && node validation/check-audio.mjs && node validation/check-flight.mjs && node validation/check-airspace.mjs && node validation/check-stability.mjs",
+    "check": "node scripts/build-source.mjs --check && node --check game.mjs && node validation/check-source.mjs && node validation/check-repairs.mjs && node validation/check-terrain.mjs && node validation/check-progression.mjs && node validation/check-smoke.mjs && node validation/check-i16.mjs && node validation/check-aircraft.mjs && node validation/check-audio.mjs && node validation/check-flight.mjs && node validation/check-airspace.mjs && node validation/check-stability.mjs && node validation/check-combat-update.mjs",
     "check:browser": "node validation/check-browser.cjs"
   },
   "devDependencies": {

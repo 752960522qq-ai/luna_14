@@ -8,6 +8,7 @@
   "ai.mjs",
   "weapons.mjs",
   "projectile-smoke.mjs",
+  "combat-feedback.mjs",
   "aircraft.mjs",
   "modes/campaign.mjs",
   "session.mjs",
@@ -15,5 +16,6 @@
   "flight.mjs",
   "audio.mjs",
   "profile.mjs",
+  "lobby.mjs",
   "bootstrap.mjs"
 ]

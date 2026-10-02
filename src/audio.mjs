@@ -242,7 +242,7 @@ function updateEngineAudio() {
   let volume, rate;
   if (soundState.engineAudioType === 'prop') {
     const fraction = THREE.MathUtils.clamp((data.propRpm || 0) / PROPELLER_SPECS[session.playerPlane].maxRpm, 0, 1);
-    volume = (.10 + fraction * .24) * THREE.MathUtils.smoothstep(fraction, 0, .15);
+    volume = 1.5 * (.10 + fraction * .24) * THREE.MathUtils.smoothstep(fraction, 0, .15);
     rate = .65 + fraction * .52;
     if (!data.engineRunning && (data.propRpm || 0) === 0) {
       stopEngineSound();
@@ -253,7 +253,7 @@ function updateEngineAudio() {
       stopEngineSound();
       return;
     }
-    volume = soundState.engineAudioType === 'b29' ? .27 + throttle * .17 : .13 + throttle * .13;
+    volume = soundState.engineAudioType === 'b29' ? 1.5 * (.27 + throttle * .17) : .13 + throttle * .13;
     rate = .84 + .30 * throttle;
   }
   if (soundState.engineAudio.source) {
@@ -269,6 +269,7 @@ function gunSoundFor(type, id) {
   return AIRCRAFT_DATA[type].sounds[id] || AIRCRAFT_DATA[type].sounds.default;
 }
 function syncMenuMusic() {
+  syncLobbyVideo();
   const allowed = !document.hidden && !soundState.nativeSuspended && ($('#hud').classList.contains('hidden') || session.ended) && !session.battlePaused;
   if (!soundState.menuMusic) {
     soundState.menuMusic = new Audio('./audio/menu-bgm-1.mp3');
@@ -286,5 +287,6 @@ function syncMenuMusic() {
   }
 }
 function stopMenuMusic() {
+  $('#menuVideo').pause?.();
   soundState.menuMusic?.pause();
 }

@@ -59,4 +59,4 @@ const report={result:'passed',checks:[]};
  assert(allocations<46685*.4,'Vector allocation regression');
  report.vectorAllocations={before:46685,after:allocations,simulationSeconds:1,units:10,modelsLoaded:false,webglMeasured:false};
 }
-fs.writeFileSync(new URL('repairs-v19.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('repairs-v20.json',import.meta.url),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report,null,2));

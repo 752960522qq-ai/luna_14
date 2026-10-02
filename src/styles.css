@@ -728,10 +728,6 @@ canvas {
     width: min(94vw,670px);
   }
 
-  .menu-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .research-track {
     min-width: 520px;
   }
@@ -741,33 +737,13 @@ canvas {
   }
 }
 
-.home-panel,.section-panel {
+.section-panel {
   max-height: 94dvh;
   overflow: auto;
   touch-action: pan-y;
 }
 
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(2,minmax(0,1fr));
-  gap: 12px;
-  margin: 22px 0;
-}
 
-.menu-action {
-  min-height: 74px;
-  border: 1px solid #83dbed55;
-  background: linear-gradient(135deg,#132b40,#0c1a2a);
-  color: #eafaff;
-  font-size: clamp(18px,3vw,24px);
-  font-weight: 800;
-  letter-spacing: .12em;
-}
-
-.menu-action:first-child {
-  background: linear-gradient(110deg,#69d8e9,#a5edee);
-  color: #06202c;
-}
 
 .hangar-list {
   display: grid;
@@ -1901,9 +1877,6 @@ canvas {
   border-color: #c2f8ff;
 }
 
-.home-panel #homeControlMode {
-  color: #76e3f7;
-}
 
 @media (max-width:640px) {
   .control-mode-choice {
@@ -2524,3 +2497,227 @@ canvas {
 .save-controls h2 { font-size: 16px; margin: 0 0 8px; }
 .save-controls p { font-size: 12px; line-height: 1.5; margin: 7px 0; }
 #profileImportStatus { color: #f4d989; min-height: 18px; }
+
+.lobby {
+  padding: 0;
+  display: block;
+  background: #102333;
+  isolation: isolate;
+}
+.lobby-video,.lobby-shade {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.lobby-video { object-fit: cover; }
+.lobby-shade { background: linear-gradient(#0c192b55,transparent 30%,transparent 65%,#030a1880); }
+.lobby-top {
+  position: absolute;
+  top: max(12px,env(safe-area-inset-top));
+  left: max(14px,env(safe-area-inset-left));
+  right: max(14px,env(safe-area-inset-right));
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(6px,1vw,16px);
+}
+.lobby button {
+  color: #edf0ed;
+  font: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.player-badge {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 115px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+}
+.pilot-avatar {
+  width: clamp(38px,6vw,78px);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border: 2px solid #d7e5e7;
+  box-shadow: 0 0 0 2px #101a20,0 3px 14px #0007;
+}
+.player-badge-copy {
+  position: relative;
+  padding: 8px 12px;
+  min-width: 95px;
+  max-width: 220px;
+  background: linear-gradient(100deg,#121b24ed,#1c2b37ad);
+  border: 1px solid #adbcc955;
+  box-shadow: 0 4px 14px #0005;
+}
+.player-badge-copy strong {
+  display: block;
+  font-size: clamp(13px,2.2vw,26px);
+  font-weight: 750;
+  max-width: 16ch;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pilot-wings { width: 55px; height: 15px; margin-top: 3px; opacity: .8; }
+.lobby-wallet { display: flex; gap: clamp(5px,1vw,14px); }
+.currency-button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 5px;
+  border: 1px solid #a7b2b344;
+  background: linear-gradient(110deg,#101921ed,#29343ee0);
+  box-shadow: 0 2px 6px #0005;
+  min-width: clamp(75px,12vw,174px);
+}
+.currency-icon { width: clamp(21px,3vw,36px); height: clamp(21px,3vw,36px); flex-shrink: 0; }
+.currency-value { flex: 1; text-align: right; min-width: 0; }
+.currency-value b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font: 700 clamp(13px,2.2vw,24px)/1.15 monospace; }
+.currency-value small { display: block; font-size: clamp(9px,1vw,12px); color: #c0c8cb; }
+.currency-plus { border-left: 1px solid #a3b4c13a; padding-left: 6px; font: 500 clamp(19px,2.7vw,28px)/1 monospace; }
+.lobby-extras { display: flex; gap: 5px; }
+.lobby-extras button {
+  width: clamp(30px,4.7vw,54px);
+  height: clamp(35px,5.2vw,56px);
+  padding: 6px;
+  border: 1px solid #88959c55;
+  background: linear-gradient(#172737e8,#101a26eb);
+}
+.lobby-extras svg { width: 100%; height: 100%; }
+.lobby-dock {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: stretch;
+  height: clamp(92px,26vh,190px);
+  padding: 10px max(14px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));
+  gap: 12px;
+  background: linear-gradient(178deg,#253544 0%,#101922 25%,#111b26 100%);
+  border-top: 3px solid #7f898e;
+  box-shadow: 0 -4px 0 #090f18,0 -14px 30px #00101c80;
+}
+.lobby-dock:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 2px;
+  height: 2px;
+  background: linear-gradient(90deg,#ed302b 0 12%,#ee593833 25%,transparent 60%,#e74133 95%);
+}
+.lobby-nav { display: grid; grid-template-columns: 1.65fr repeat(3,1fr); gap: 6px; flex: 1; min-width: 0; }
+.lobby-nav-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+  border: 1px solid #9ba6acaa;
+  border-top: 3px solid #c1cbcc;
+  background: linear-gradient(130deg,#2c3842,#141c25 65%,#243442);
+  box-shadow: inset 0 0 16px #0006,0 4px 4px #0007;
+  transform: skew(-5deg);
+}
+.lobby-nav-button svg { width: 40%; height: 47%; max-width: 72px; transform: skew(5deg); filter: drop-shadow(0 2px 2px #0008); }
+.lobby-nav-button strong { font-size: clamp(17px,2.3vw,30px); letter-spacing: .15em; transform: skew(5deg); }
+.lobby-nav .sortie-button {
+  flex-direction: row;
+  gap: 9px;
+  color: #fff4df;
+  border-color: #ff6a52;
+  background: radial-gradient(ellipse at 35% 45%,#a42d1a,#651b16 65%,#2d191a);
+  box-shadow: inset 0 0 24px #fb513046,0 0 12px #ff57255e;
+}
+.sortie-button svg { width: 37%; height: 76%; }
+.sortie-button strong { font-size: clamp(22px,4vw,43px); }
+.lobby-aircraft {
+  display: flex;
+  width: 22%;
+  padding: 5px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px solid #76889688;
+  background: repeating-linear-gradient(0deg,transparent 0 12px,#d7e4e70a 13px 14px),linear-gradient(135deg,#172836,#121c25);
+}
+.lobby-aircraft svg { width: 70%; height: 50%; color: #8eaebc; }
+.lobby-aircraft strong { font-size: clamp(11px,1.6vw,21px); }
+.lobby-aircraft span { color: #8da4b1; font-size: clamp(9px,1vw,12px); margin-top: 3px; }
+.lobby-notice {
+  position: fixed;
+  left: 50%;
+  top: 35%;
+  transform: translate(-50%,-8px);
+  z-index: 100;
+  padding: 12px 28px;
+  background: #081520ee;
+  border: 1px solid #d4dde570;
+  box-shadow: 0 5px 24px #0006;
+  opacity: 0;
+  transition: opacity .15s,transform .15s;
+  pointer-events: none;
+  font-size: 16px;
+}
+.lobby-notice.show { opacity: 1; transform: translate(-50%,0); }
+.profile-modal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: #020b18b0; padding: 16px; }
+.profile-card { width: min(370px,90vw); padding: 22px; border: 1px solid #a3b8c677; background: #122231; box-shadow: 0 18px 65px #0009; }
+.profile-card h2 { margin: 0 0 15px; font-size: 23px; }
+.profile-card label { display: block; color: #a8c1cf; font-size: 13px; margin-bottom: 7px; }
+.profile-card input { width: 100%; padding: 12px; border: 1px solid #96b5c855; background: #091923; color: white; font-size: 16px; font-family: inherit; user-select: text; touch-action: auto; }
+.profile-card p { min-height: 18px; font-size: 12px; color: #ffc690; margin: 8px 0; }
+.profile-actions { display: flex; gap: 10px; }
+.profile-actions button { flex: 1; padding: 10px; border: 1px solid #7795a5; color: #e8f3ef; background: #263948; font-size: 15px; }
+.profile-actions button:last-child { background: #9c3323; border-color: #e18656; }
+.profile-avatar-change { margin-top: 13px; border: 0; color: #a7bfce; background: none; font-size: 12px; }
+.airspace-clock { display: flex; align-items: center; justify-content: center; gap: 12px; }
+#airspaceTimer { font: 700 15px monospace; color: #f3f3df; }
+#airspaceTimer.time-warning { color: #ff8273; }
+#baseSupplyStatus:empty { display: none; }
+#cursorStatus { display: none; }
+.hit-lines { display: none; position: absolute; inset: 12px; color: #ff4234; }
+.hit-lines:before,.hit-lines:after { content: ""; position: absolute; top: 50%; width: 100%; height: 2px; background: currentColor; box-shadow: 0 0 5px #ff573d; }
+.hit-lines:before { transform: rotate(45deg); }
+.hit-lines:after { transform: rotate(-45deg); }
+.reticle.hit-confirm .hit-lines { display: block; }
+.reticle.hit-confirm:before,.reticle.hit-confirm:after { background: #ff5145; }
+.combat-feed { position: absolute; left: 3%; top: 22%; width: min(330px,40vw); font: 11px/1.6 system-ui,sans-serif; text-shadow: 0 1px 3px #000; }
+.combat-feed>div { padding: 2px 5px; margin-bottom: 2px; background: #071827a0; }
+.feed-friendly { color: #91dff9; }
+.feed-enemy { color: #ffa99b; }
+.result-panel { width: min(700px,94vw); padding: 20px 28px; max-height: 94vh; overflow-y: auto; touch-action: pan-y; }
+.result-panel h2 { margin: 0; font-size: clamp(30px,5vh,48px); color: #f1d296; letter-spacing: .14em; }
+#end[data-outcome="loss"] h2 { color: #ff9a8b; }
+.result-panel #resultCopy { margin: 8px 0 14px; font-size: 12px; }
+.battle-results { display: grid; grid-template-columns: repeat(3,1fr); gap: 9px 16px; margin-bottom: 18px; }
+.battle-results div { padding: 7px 10px; border-bottom: 1px solid #94b7c82f; background: #0b1a275c; }
+.battle-results dt { font-size: 11px; color: #9eb7c3; }
+.battle-results dd { margin: 3px 0 0; font: 650 20px monospace; color: #f3f4ed; }
+.battle-results .result-currency dd { color: #f0cf80; }
+.result-panel .sortie-rewards:not(.save-error) { display: none; }
+.result-panel .end-actions { margin-top: 0; }
+.result-panel .end-actions button { padding: 12px 22px; font-size: 16px; }
+@media (max-width: 650px) {
+  .lobby-top { left: 9px; right: 9px; top: 9px; gap: 4px; }
+  .player-badge-copy { min-width: 85px; max-width: 110px; padding: 5px 6px; }
+  .pilot-wings { width: 38px; height: 11px; }
+  .currency-button { padding: 3px; gap: 3px; min-width: 66px; }
+  .currency-plus { padding-left: 3px; }
+  .lobby-extras { gap: 3px; }
+  .lobby-extras button { width: 26px; height: 33px; padding: 4px; }
+  .lobby-dock { gap: 6px; padding: 8px 9px 10px; }
+  .lobby-nav { gap: 4px; }
+  .sortie-button strong { font-size: 23px; }
+  .lobby-nav .sortie-button { gap: 1px; }
+  .lobby-aircraft { width: 21%; }
+  .result-panel { padding: 15px 20px; }
+  .battle-results { gap: 4px 10px; margin-bottom: 12px; }
+  .battle-results div { padding: 5px 7px; }
+  .battle-results dd { font-size: 18px; }
+}

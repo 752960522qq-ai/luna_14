@@ -78,4 +78,4 @@ for(const mode of ['cursor','joystick'])for(const fps of [30,120]){
 }
 const c1Level=plane(h,'bf109c1',true,new THREE.Vector3(0,1000,0),true);h.ctx.player=c1Level;for(let i=0;i<90*60;i++)run('advanceAircraft(player,1/60)');assert(Math.abs(c1Level.userData.airspeed*3.6-465)<1);report.bf109c1LevelSpeedKmh=c1Level.userData.airspeed*3.6;
 report.checks.push('Bf-109 C-1 supplied stats, four 1200 RPM MG17 barrels, total 1840 rounds, 855m/s / damage14, empty ammunition, both controls and calibrated 465km/h flight pass');
-fs.writeFileSync(new URL('aircraft-v19.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));
+fs.writeFileSync(new URL('aircraft-v20.json',import.meta.url),JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

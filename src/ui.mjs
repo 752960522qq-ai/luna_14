@@ -323,6 +323,10 @@ function renderResearch() {
   });
 }
 function showMenuScreen(id) {
+  clearCombatFeedback();
+  if (session.combatStats) session.combatStats.active = false;
+  $('#playerProfile').classList.add('hidden');
+  renderPlayerProfile();
   clearProjectileSmoke();
   session.airspacePrepareToken++;
   setBattleLoading(false);
@@ -331,7 +335,7 @@ function showMenuScreen(id) {
   $('#airspaceLoadStatus').textContent = '';
   stopEngineSound();
   clearFlightInputs();
-  if (id === 'menu') session.battlePaused = false;
+  session.battlePaused = false;
   session.playing = false;
   stopGunSounds();
   ['menu', 'settings', 'modeSelect', 'campaignBriefing', 'hangar', 'research', 'encyclopedia', 'end'].forEach(n => $('#' + n).classList.toggle('hidden', n !== id));
@@ -345,6 +349,7 @@ function showMenuScreen(id) {
   syncMenuMusic();
 }
 function renderSortieUI() {
+  $('#battleResults').classList.add('hidden');
   updateAmmoUI();
   updateThrottleUI();
   updateHealthUI();

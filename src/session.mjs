@@ -89,7 +89,7 @@ function reset(options = {}) {
   resetDuelBoundary();
   session.battlePaused = false;
   clearFlightInputs();
-  $('#again').textContent = '再次升空　→';
+  $('#again').textContent = '再次出战';
   stopGunSounds();
   stopEngineSound();
   session.playerPlane = session.gameMode === 'campaign' ? 'mig15' : profileState.selectedAircraft;
@@ -114,17 +114,20 @@ function reset(options = {}) {
   syncMenuMusic();
   viewState.clock.getDelta();
 }
-function damage(target, n, campaignTarget = null) {
+function damage(target, n, campaignTarget = null, hit = null) {
+  if (session.ended || !Number.isFinite(n) || n <= 0) return;
   if (session.gameMode === 'airspace') {
-    damageAirspaceUnit(target === 'player' ? airspaceUnitFor(session.player) : campaignTarget || airspaceUnitFor(session.enemy), n);
+    damageAirspaceUnit(target === 'player' ? airspaceUnitFor(session.player) : campaignTarget || airspaceUnitFor(session.enemy), n, airspaceUnitFor(hit?.source)?.id || null, hit);
     return;
   }
   if (target === 'enemy' && session.gameMode === 'campaign' && campaignTarget) {
-    damageCampaignTarget(campaignTarget, n);
+    damageCampaignTarget(campaignTarget, n, hit);
     return;
   }
   if (target === 'enemy') {
+    const before = session.eHp;
     session.eHp = Math.max(0, session.eHp - n);
+    recordCombatDamage(session.enemy, before, session.eHp, hit);
     $('#enemyHealth').style.width = session.eHp / planeInfo[session.enemyPlaneType].health * 100 + '%';
     if (session.eHp === 0) {
       playSfx('kill', .35);
@@ -138,7 +141,9 @@ function damage(target, n, campaignTarget = null) {
       if (session.kills >= 3) finish(true);
     }
   } else {
+    const before = session.hp;
     session.hp = Math.max(0, session.hp - n);
+    recordCombatDamage(session.player, before, session.hp, hit);
     $('#playerHealth').style.width = session.hp / planeInfo[session.playerPlane].health * 100 + '%';
     $('#hpText').textContent = Math.round(session.hp / planeInfo[session.playerPlane].health * 100) + '%';
     triggerDamageFlash();
@@ -165,26 +170,20 @@ function finish(win) {
   stopGunSounds();
   stopEngineSound();
   updateCampaignHud();
-  if (session.gameMode === 'campaign') {
-    $('#resultTitle').textContent = win ? '战役胜利' : '任务失败';
-    $('#resultCopy').textContent = win ? '米格之舞完成：3架 B-29 均已击落。' : session.hp <= 0 ? 'MIG-15 已被击落，南市空战失败。' : '300秒时限已到，仍有 B-29 未被击落。';
-  } else {
-    $('#resultTitle').textContent = win ? '王牌飞行员' : '任务失败';
-    $('#resultCopy').textContent = win ? `空战战果：${session.kills} 架。你已夺取局部制空权。` : `你击落了 ${session.kills} 架敌机。整备机体，再次出击。`;
-  }
-  $('#end').classList.remove('hidden');
-  settleSortieEconomy(win);
+  const reason = session.gameMode === 'campaign' ? win ? 'B-29 编队已被全部击落' : session.hp <= 0 ? '出战飞机已被击落' : '五分钟时限已到' : win ? '完成空战任务' : '出战飞机已被击落';
+  renderBattleResult(win, reason, settleSortieEconomy(win));
 }
 function updateNonAirspaceStep(dt) {
+  advanceCombatStats(dt);
+  updateCombatFeedback(dt);
   profileState.battleRewardSeconds += dt;
   session.worldTime += dt;
   rememberAircraftFrameStart();
   updateAllPropellers(dt);
   updatePlayerFlightControls(dt);
   if (session.player.position.y < terrainHeightAt(session.player.position.x, session.player.position.z)) {
-    session.hp = 0;
+    damage('player', session.hp);
     updateHealthUI();
-    finish(false);
   }
   if (session.playing) {
     if (session.gameMode === 'campaign') updateCampaign(dt);else updateDuelEnemy(dt);
@@ -212,19 +211,19 @@ function updateNonAirspaceStep(dt) {
       let hit = false;
       if (bullet.enemy) {
         if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.player, bullet.radius)) {
-          damage('player', bullet.damage);
+          damage('player', bullet.damage, null, projectileImpact(bullet, session.player));
           hit = true;
         }
       } else if (session.gameMode === 'campaign') {
         for (const target of campaignShotTargets) {
           if (sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, target.root, bullet.radius)) {
-            damage('enemy', bullet.damage, target);
+            damage('enemy', bullet.damage, target, projectileImpact(bullet, target.root));
             hit = true;
             break;
           }
         }
       } else if (session.enemy && sweptAircraftHit(bullet.previousPosition, bullet.mesh.position, session.enemy, bullet.radius)) {
-        damage('enemy', bullet.damage);
+        damage('enemy', bullet.damage, null, projectileImpact(bullet, session.enemy));
         hit = true;
       }
       if (hit || bullet.life <= 0) releaseBullet(i);
@@ -311,8 +310,10 @@ function animate() {
   if (!viewState.scene) return;
   const elapsed = Math.max(0, viewState.clock.getDelta()),
     visualDt = Math.min(elapsed, .1);
+  if (!$('#menu').classList.contains('hidden')) return;
   if (!session.playing && !session.battlePaused) {
     updateProjectileSmoke(elapsed);
+    updateCombatFeedback(elapsed);
     if (session.gameMode === 'airspace') {
       for (const unit of session.airspaceUnits) if (!unit.dead) updatePropeller(unit.root, elapsed);
     } else updateAllPropellers(elapsed);
@@ -356,6 +357,7 @@ function animate() {
 // One owned aircraft opens the next BR stage, across all national branches.
 
 function clearBattleWorld() {
+  clearCombatFeedback();
   disposeAircraft(session.player);
   disposeAircraft(session.enemy);
   clearCampaignEntities();

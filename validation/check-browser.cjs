@@ -54,7 +54,14 @@ window.__qa={
  render:()=>{if(gameMode==='airspace')updateAirspaceFrame(0,1/60);else{updateChaseCamera(0);updateCampaignHud()}renderer.render(scene,camera)}
 };`;
 async function main(){
- const server=http.createServer((req,res)=>{const file=path.resolve(assets,'.'+new URL(req.url,'http://localhost').pathname);if(!file.startsWith(assets+'/')||!fs.existsSync(file)){res.writeHead(404);return res.end()}res.writeHead(200,{'Content-Type':({'.js':'text/javascript','.html':'text/html','.wasm':'application/wasm'}[path.extname(file)]||'application/octet-stream')});fs.createReadStream(file).pipe(res)});
+ const server=http.createServer((req,res)=>{
+  const file=path.resolve(assets,'.'+new URL(req.url,'http://localhost').pathname);
+  if(!file.startsWith(assets+'/')||!fs.existsSync(file)){res.writeHead(404);return res.end()}
+  const size=fs.statSync(file).size,range=req.headers.range?.match(/^bytes=(\d+)-(\d*)$/);
+  const headers={'Content-Type':({'.js':'text/javascript','.html':'text/html','.wasm':'application/wasm','.mp4':'video/mp4','.jpg':'image/jpeg','.png':'image/png','.wav':'audio/wav','.mp3':'audio/mpeg'}[path.extname(file)]||'application/octet-stream'),'Accept-Ranges':'bytes'};
+  if(range){const start=Number(range[1]),end=range[2]?Math.min(size-1,Number(range[2])):size-1;res.writeHead(206,{...headers,'Content-Range':`bytes ${start}-${end}/${size}`,'Content-Length':end-start+1});fs.createReadStream(file,{start,end}).pipe(res)}
+  else{res.writeHead(200,{...headers,'Content-Length':size});fs.createReadStream(file).pipe(res)}
+ });
  await new Promise(r=>server.listen(0,'127.0.0.1',r));
  const browser=await chromium.launch({executablePath:process.env.SKY_DUEL_CHROME,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--enable-unsafe-swiftshader','--use-angle=swiftshader']});let page;
  try{
@@ -65,13 +72,46 @@ async function main(){
   const url='http://127.0.0.1:'+server.address().port+'/index.html';
   const ready=async()=>{await page.waitForFunction(()=>!!window.__qa,null,{polling:100})};
   await page.goto(url,{waitUntil:'load'});await ready();await page.evaluate(()=>window.__qa.ready());
-  assert.equal(await page.title(),'银翼凌云');assert((await page.locator('#menu .hint').innerText()).includes('版本 1.0'));assert.equal(await page.locator('.terrain-credit').count(),0);
+  assert.equal(await page.title(),'银翼凌云');assert((await page.locator('#menu .lobby-aircraft span').innerText()).includes('1.0'));assert.equal(await page.locator('.terrain-credit').count(),0);
   await page.locator('#openSettings').click({force:true});await page.waitForFunction(()=>window.__qa.music().currentTime>0,null,{polling:100});
   const menuBgm=await page.evaluate(()=>window.__qa.music());assert(menuBgm.loop&&!menuBgm.paused&&menuBgm.sameInstance&&!menuBgm.error);
   await page.evaluate(()=>window.__qa.seekMusicEnd());await page.waitForFunction(()=>window.__qa.music().currentTime<2,null,{polling:100});assert(!(await page.evaluate(()=>window.__qa.music().paused)));
   await page.locator('#settingsHome').click({force:true});
   const fresh=await page.evaluate(()=>window.__qa.info());assert.equal(fresh.types.length,12);assert.equal(fresh.gameVersion,'1.0');assert.equal(fresh.mode,'standard');assert.deepEqual(fresh.unlocked,['bf109b1','f3f2','i15bis','i15']);assert.equal(fresh.selected,'i15');assert.equal(fresh.economy.rp,0);assert.equal(fresh.economy.gp,2000);
   for(const type of ['meteor','b29','mig15','f86'])assert.equal(fresh.states[type],'unavailable');
+  const lobbyChecks=[];
+  assert.equal(await page.locator('#menu .lobby-nav button').count(),4);
+  assert.equal(await page.locator('#menu #openEncyclopedia').count(),0);
+  assert(/^player_\d{4}$/.test(await page.locator('#playerName').innerText()));
+  await page.waitForFunction(()=>{const v=document.querySelector('#menuVideo');return v.readyState>=2&&v.currentTime>0},null,{polling:100});
+  const videoInfo=await page.evaluate(()=>{const v=document.querySelector('#menuVideo');return{duration:v.duration,width:v.videoWidth,height:v.videoHeight,muted:v.muted,loop:v.loop,playing:!v.paused}});
+  assert(videoInfo.muted&&videoInfo.loop&&videoInfo.playing);assert.equal(videoInfo.width,1280);assert.equal(videoInfo.height,720);
+  await page.evaluate(()=>{const v=document.querySelector('#menuVideo');v.currentTime=v.duration-.1});
+  await page.waitForFunction(()=>document.querySelector('#menuVideo').currentTime<1,null,{polling:100});
+  for(const [width,height] of [[844,390],[640,360],[480,320]]){
+    await page.setViewportSize({width,height});
+    const layout=await page.evaluate(()=>{
+      const dock=document.querySelector('.lobby-dock').getBoundingClientRect();
+      const scale=Math.max(innerWidth/1280,innerHeight/720),watermarkTop=(innerHeight-720*scale)/2+720*.88*scale;
+      return{watermarkCovered:dock.top<=watermarkTop&&dock.left<=0&&dock.right>=innerWidth,
+        overflow:document.body.scrollWidth>innerWidth,
+        boxes:[...document.querySelectorAll('#menu .lobby-top button,#menu .lobby-nav button')].map(n=>{const r=n.getBoundingClientRect();return{left:r.left,right:r.right,top:r.top,bottom:r.bottom}})};
+    });
+    assert(layout.watermarkCovered&&!layout.overflow,JSON.stringify(layout));
+    assert(layout.boxes.every(r=>r.left>=-1&&r.right<=width+1&&r.top>=0&&r.bottom<=height+1),JSON.stringify({width,...layout}));
+    lobbyChecks.push({width,height,...layout});
+  }
+  await page.setViewportSize({width:844,height:390});
+  await page.screenshot({path:path.join(__dirname,'menu-v20.png')});
+  await page.locator('[data-unavailable="gold"]').click();assert.equal(await page.locator('#menuNotice').innerText(),'暂未开放');
+  await page.locator('#openPlayerProfile').click();await page.locator('#profileNameInput').fill('银翼队长');await page.locator('#savePlayerName').click();
+  assert.equal(await page.locator('#playerName').innerText(),'银翼队长');
+  await page.reload({waitUntil:'load'});await ready();assert.equal(await page.locator('#playerName').innerText(),'银翼队长');
+  await page.evaluate(()=>window.onNativePause());assert(await page.evaluate(()=>document.querySelector('#menuVideo').paused));
+  await page.evaluate(()=>window.onNativeResume());await page.waitForFunction(()=>!document.querySelector('#menuVideo').paused,null,{polling:100});
+  await page.locator('#openSettings').click();assert(await page.evaluate(()=>document.querySelector('#menuVideo').paused));await page.locator('#settingsHome').click();
+  console.log('Actual H.264 video loops, pauses, watermark coverage and nickname editing passed');
+
   await page.locator('#start').click({force:true});assert(await page.locator('#chooseCampaign').isDisabled());await page.locator('#modeHome').click({force:true});
   const models=await page.evaluate(()=>window.__qa.preload());assert(Object.values(models).every(r=>r.attached&&!r.error));
   const preview=await page.evaluate(()=>window.__qa.makePreview()),c1Preview=await page.evaluate(()=>window.__qa.makePreview('bf109c1'));
@@ -83,15 +123,15 @@ async function main(){
    assert(s.bounds.every(v=>v>=0&&v<=1),JSON.stringify(row));
   }
   const prop=await page.evaluate(()=>window.__qa.prop()),c1Prop=await page.evaluate(()=>window.__qa.prop('bf109c1'));assert.equal(prop.running.rpm,1900);assert(prop.running.blur);assert.equal(prop.stoppedRpm,0);assert.equal(c1Prop.running.rpm,2300);assert(c1Prop.running.blur);assert.equal(c1Prop.stoppedRpm,0);console.log('Twelve real models, C-1 textures/scale/propeller and 36 chase-camera projections passed');
-  await page.locator('#openEncyclopedia').click({force:true});await page.locator('[data-preview-plane="bf109c1"]').click({force:true});assert.equal(await page.locator('#catalogName').innerText(),'Bf-109 C-1');
+  await page.locator('#openHangar').click();await page.locator('#openEncyclopedia').click({force:true});await page.locator('[data-preview-plane="bf109c1"]').click({force:true});assert.equal(await page.locator('#catalogName').innerText(),'Bf-109 C-1');
   const specs=await page.locator('#catalogSpecs').innerText();for(const word of ['2.0','390','465','124','13.2','19.0秒','11.3秒','1840','855','1200','4挺','14'])assert(specs.includes(word),word);assert(!specs.includes('8.55'));assert(!specs.includes('2.6'));assert(await page.locator('#useCatalogPlane').isDisabled());
-  await page.screenshot({path:path.join(__dirname,'bf109c1-catalog-v19.png')});await page.locator('#closeEncyclopedia').click({force:true});
+  await page.screenshot({path:path.join(__dirname,'bf109c1-catalog-v20.png')});await page.locator('#closeEncyclopedia').click({force:true});
   await page.locator('#openResearch').click({force:true});assert(await page.locator('#researchTree [data-tree-plane="mig3"]').isDisabled());assert.equal(await page.locator('#ownedCount').innerText(),'04');assert.equal(await page.locator('[data-nation-filter="uk"]').count(),0);assert.equal(await page.locator('#researchTree .nation-map').count(),4);
   for(const type of ['meteor','b29','mig15','f86'])assert.equal(await page.locator('#researchTree [data-tree-plane="'+type+'"]').count(),0);
-  await page.screenshot({path:path.join(__dirname,'research-start-v19.png')});
+  await page.screenshot({path:path.join(__dirname,'research-start-v20.png')});
   const rewards=[];for(let i=0;i<2;i++){
    const reward=await page.evaluate(()=>window.__qa.reward());assert.deepEqual(reward.first,reward.repeat);assert(reward.text.includes('334'));assert(reward.text.includes('944'));rewards.push(reward);
-   await page.locator('#returnHome').click({force:true});await page.locator('#openResearch').click({force:true});await page.locator('#researchTree [data-tree-plane="i16"]').click({force:true});
+   await page.locator('#returnHome').click({force:true});await page.locator('#hangarHome').click();await page.locator('#openResearch').click({force:true});await page.locator('#researchTree [data-tree-plane="i16"]').click({force:true});
    if(i===0){const partial=await page.evaluate(()=>window.__qa.info());assert.equal(partial.economy.research.i16,334);assert.equal(partial.economy.rp,0);assert(!partial.unlocked.includes('i16'))}
   }
   await page.locator('#researchTree [data-tree-plane="i16"]').click({force:true});const purchased=await page.evaluate(()=>window.__qa.info());assert.equal(purchased.selected,'i16');assert.equal(purchased.economy.gp,2488);assert.equal(purchased.economy.rp,168);assert.equal(purchased.states.mig3,'blocked');assert(purchased.unlocked.includes('f3f2'));assert.equal(await page.locator('#ownedCount').innerText(),'05');
@@ -108,10 +148,32 @@ async function main(){
   const imported=await page.evaluate(()=>window.__qa.info());assert.equal(imported.mode,'all-aircraft');assert.equal(imported.unlocked.length,12);assert.equal(imported.selected,'bf109c1');assert((await page.locator('#currentSaveMode').innerText()).includes('全解锁测试'));
   await page.reload({waitUntil:'load'});await ready();assert.deepEqual(await page.evaluate(()=>window.__qa.info()),imported);console.log('Real research UI, v18 reset, JSON import/rejection and persistence passed');
   await page.locator('#start').click({force:true});await page.locator('#chooseAIBattle').click({force:true});await page.waitForFunction(()=>window.__qa.fight().playing,null,{timeout:90000,polling:100});assert((await page.evaluate(()=>window.__qa.music())).paused);
-  const fight=await page.evaluate(()=>window.__qa.fight());assert.equal(fight.type,'bf109c1');assert.equal(fight.hp,390);assert.equal(fight.ammo.mg,1840);assert.equal(fight.units.length,10);assert(fight.units.every(u=>u.attached&&!u.error));const fired=await page.evaluate(()=>window.__qa.fire());assert.equal(fired.ammo.mg,1836);assert.equal(fired.bullets.length,4);assert(fired.bullets.every(b=>b.speed===855&&b.damage===14));await page.evaluate(()=>window.__qa.render());await page.screenshot({path:path.join(__dirname,'bf109c1-airspace-mobile-v19.png')});const smoke=await page.evaluate(()=>window.__qa.smokeTest());assert(smoke.visible.changed>12,JSON.stringify(smoke));assert(smoke.fading.gain<smoke.visible.gain,JSON.stringify(smoke));assert.equal(smoke.expired.changed,0);assert.equal(smoke.instancesAfterFade,0);assert.equal(smoke.glError,0);
+  const fight=await page.evaluate(()=>window.__qa.fight());assert.equal(fight.type,'bf109c1');assert.equal(fight.hp,390);assert.equal(fight.ammo.mg,1840);assert.equal(fight.units.length,10);assert(fight.units.every(u=>u.attached&&!u.error));const fired=await page.evaluate(()=>window.__qa.fire());assert.equal(fired.ammo.mg,1836);assert.equal(fired.bullets.length,4);assert(fired.bullets.every(b=>b.speed===855&&b.damage===14));await page.evaluate(()=>window.__qa.render());await page.screenshot({path:path.join(__dirname,'bf109c1-airspace-mobile-v20.png')});const smoke=await page.evaluate(()=>window.__qa.smokeTest());assert(smoke.visible.changed>12,JSON.stringify(smoke));assert(smoke.fading.gain<smoke.visible.gain,JSON.stringify(smoke));assert.equal(smoke.expired.changed,0);assert.equal(smoke.instancesAfterFade,0);assert.equal(smoke.glError,0);
+  const feedback=await page.evaluate(()=>{
+    clearProjectileSmoke();clearCombatFeedback();
+    const victim=session.airspaceUnits.find(u=>u.team==='red'),half=victim.root.userData.collisionHalfExtents;
+    victim.root.position.copy(session.player.position).add(new THREE.Vector3(0,0,-6).applyQuaternion(session.player.quaternion));
+    victim.root.updateMatrixWorld(true);
+    const point=victim.root.localToWorld(new THREE.Vector3(0,0,-half.z-.02));
+    damageAirspaceUnit(victim,victim.maxHealth*.3,'blue-0',{source:session.player,point,projectile:true,hits:1});
+    const redLines=document.querySelector('#reticle').classList.contains('hit-confirm');
+    const batch=resourceState.combatEffects,gl=viewState.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
+    const read=()=>{viewState.renderer.render(viewState.scene,viewState.camera);const bytes=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes};
+    const pixels=()=>{batch.mesh.visible=false;const a=read();batch.mesh.visible=true;const b=read();let changed=0;for(let i=0;i<a.length;i+=4)if(Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2])>12)changed++;return changed};
+    const sparkPixels=pixels();updateCombatFeedback(.3);const smokePixels=pixels();
+    updateCombatFeedback(3);const sustained=Array.from(batch.life.slice(192)).some(x=>x>0),engineCritical=victim.root.userData.engineCritical;
+    return{sparkPixels,smokePixels,sustained,engineCritical,redLines,hits:session.combatStats.hits,shots:session.combatStats.shots,glError:gl.getError()};
+  });
+  assert(feedback.redLines&&feedback.sparkPixels>0&&feedback.smokePixels>0&&feedback.sustained&&feedback.engineCritical,JSON.stringify(feedback));assert.equal(feedback.glError,0);
+  await page.evaluate(()=>{session.airspaceState.elapsed=300;session.airspaceState.scores.blue=20;session.airspaceState.scores.red=20;updateAirspaceStep(0)});
+  assert.equal(await page.locator('#airspaceTimer').innerText(),'00:00');assert.equal(await page.locator('#resultTitle').innerText(),'平局');
+  assert.equal(await page.locator('#resultShots').innerText(),'4');assert.equal(await page.locator('#resultHits').innerText(),'1');assert.equal(await page.locator('#resultAccuracy').innerText(),'25.0%');
+  await page.screenshot({path:path.join(__dirname,'results-v20.png')});
+  console.log('Native GPU sparks, hit lines, sustained black smoke and 5-minute result UI passed');
+
   await page.evaluate(()=>window.__qa.toMenu());await page.locator('#start').click({force:true});assert(!(await page.locator('#chooseCampaign').isDisabled()));await page.locator('#chooseCampaign').click({force:true});await page.locator('#beginCampaign').click({force:true});await page.waitForFunction(()=>window.__qa.fight().playing&&window.__qa.fight().mode==='campaign',null,{timeout:90000,polling:100});assert((await page.evaluate(()=>window.__qa.music())).paused);const campaign=await page.evaluate(()=>window.__qa.fight());assert.equal(campaign.type,'mig15');assert.equal(campaign.bomberCount,3);assert.equal(campaign.escortCount,5);
   assert.deepEqual(errors,[]);assert.deepEqual(httpErrors,[]);
-  const report={result:'passed',method:'Actual generated 1.0 page, native GLTF/Draco/PBR/WebGL/audio/DOM, controlled RAF and software rendering. Not an Android device.',checks:['Version 1.0, four free starter aircraft and four-country Rank I-II tree; source-license UI removed','Twelve real models load; C-1 textured 8.55m body and propeller motion','33 retained reference camera projections and 3 fixed C-1 tail-gap projections','Real partial research, exact charges and one-time C-1 purchase','Old v18 progress ignored; old JSON import rejected; all-aircraft JSON imports and persists 12 planes','Research panels fit three landscape widths','Actual C-1 5v5 has 390 HP, 1840 rounds and four 855m/s damage14 bullets','Actual GPU pixels show white projectile smoke with decreasing brightness and complete expiry, without WebGL errors','Same menu BGM loops and stops in both battle modes; all-unlock campaign remains playable'],menuBgm,fresh,models,preview,c1Preview,prop,c1Prop,cameras,rewards,purchased,c1Purchased,layouts,reset,imported,fight,fired,smoke,campaign,errors,httpErrors};fs.writeFileSync(path.join(__dirname,'browser-v19.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({result:report.result,checks:report.checks,errors},null,2));
- }finally{if(page)await page.screenshot({path:path.join(__dirname,'last-browser-v19.png')}).catch(()=>{});await browser.close();await new Promise(r=>server.close(r))}
+  const report={result:'passed',method:'Actual generated 1.0 page, native GLTF/Draco/PBR/WebGL/audio/DOM, controlled RAF and software rendering. Not an Android device.',checks:['Version 1.0, four free starter aircraft and four-country Rank I-II tree; source-license UI removed','Twelve real models load; C-1 textured 8.55m body and propeller motion','33 retained reference camera projections and 3 fixed C-1 tail-gap projections','Real partial research, exact charges and one-time C-1 purchase','Old v18 progress ignored; old JSON import rejected; all-aircraft JSON imports and persists 12 planes','Research panels fit three landscape widths','Actual C-1 5v5 has 390 HP, 1840 rounds and four 855m/s damage14 bullets','Actual GPU pixels show white projectile smoke with decreasing brightness and complete expiry, without WebGL errors','Same menu BGM loops and stops in both battle modes; all-unlock campaign remains playable','Native H.264 menu video, watermark mask, responsive four-button lobby and persisted nickname','Native hit lines, spark pixels, engine black smoke and timed results'],videoInfo,lobbyChecks,feedback,menuBgm,fresh,models,preview,c1Preview,prop,c1Prop,cameras,rewards,purchased,c1Purchased,layouts,reset,imported,fight,fired,smoke,campaign,errors,httpErrors};fs.writeFileSync(path.join(__dirname,'browser-v20.json'),JSON.stringify(report,null,2));console.log(JSON.stringify({result:report.result,checks:report.checks,errors},null,2));
+ }finally{if(page)await page.screenshot({path:path.join(__dirname,'last-browser-v20.png')}).catch(()=>{});await browser.close();await new Promise(r=>server.close(r))}
 }
 main().catch(e=>{console.error(e.stack);process.exitCode=1});

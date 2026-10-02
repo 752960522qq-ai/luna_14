@@ -8,6 +8,7 @@ function isAircraftResearchOpen(type) {
 function freshProgressionProfile() {
   return {
     format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    playerName: randomPlayerName(),
     mode: 'standard', unlocked: [...STARTER_AIRCRAFT], selected: 'i15',
     bomberLoadout: '18x1000',
     economy: { rp: 0, gp: ECONOMY_RULES.startGP, research: {}, completedSorties: 0 }
@@ -34,12 +35,14 @@ function normalizeProgressionProfile(saved) {
   }
   return {
     format: PROFILE_FORMAT, version: PROFILE_VERSION, gameVersion: GAME_VERSION,
+    playerName: validPlayerName(saved.playerName) ? saved.playerName : profileState.playerName || randomPlayerName(),
     mode: saved.mode, unlocked,
     selected: unlocked.includes(saved.selected) ? saved.selected : 'i15',
     bomberLoadout: BOMBER_LOADOUTS[saved.bomberLoadout] ? saved.bomberLoadout : '18x1000', economy
   };
 }
 function applyProgressionProfile(record) {
+  profileState.playerName = record.playerName;
   profileState.profileMode = record.mode;
   profileState.unlockedPlanes = record.unlocked;
   profileState.selectedAircraft = record.selected;
@@ -159,6 +162,7 @@ function purchaseResearchedAircraft(type) {
   };
 }
 function beginSortieEconomy() {
+  beginCombatStats();
   profileState.battleRewardSeconds = 0;
   profileState.battleRewardSettled = false;
   const reward = $('#sortieRewards');
@@ -198,6 +202,7 @@ function saveHangar() {
       format: PROFILE_FORMAT,
       version: PROFILE_VERSION,
       gameVersion: GAME_VERSION,
+      playerName: profileState.playerName,
       mode: profileState.profileMode,
       unlocked: profileState.unlockedPlanes,
       selected: profileState.selectedAircraft,
@@ -216,6 +221,7 @@ function importProgressionProfile(text) {
   try { record = normalizeProgressionProfile(JSON.parse(text)); } catch {}
   if (!record) return { ok: false, reason: 'format' };
   const before = {
+    playerName: profileState.playerName,
     mode: profileState.profileMode, unlocked: profileState.unlockedPlanes,
     selected: profileState.selectedAircraft, bomberLoadout: profileState.selectedBombPayload,
     economy: profileState.economy
@@ -227,6 +233,7 @@ function importProgressionProfile(text) {
   }
   profileState.pendingRewards = [];
   session.playerPlane = profileState.selectedAircraft;
+  renderPlayerProfile();
   stopGunSounds();
   stopEngineSound();
   updateThrottleUI();
