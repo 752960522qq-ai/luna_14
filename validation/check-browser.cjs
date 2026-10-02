@@ -51,6 +51,22 @@ window.__qa={
    const visible=score(),count=batch.geometry.instanceCount;updateProjectileSmoke(.25);const fading=score();
    updateProjectileSmoke(.61);const expired=score();return{visible,fading,expired,count,instancesAfterFade:batch.geometry.instanceCount,glError:gl.getError()}
  },
+ feedback:()=>{
+    clearProjectileSmoke();clearCombatFeedback();
+    const victim=session.airspaceUnits.find(u=>u.team==='red'),half=victim.root.userData.collisionHalfExtents;
+    victim.root.position.copy(session.player.position).add(new THREE.Vector3(0,0,-6).applyQuaternion(session.player.quaternion));
+    victim.root.updateMatrixWorld(true);
+    const point=victim.root.localToWorld(new THREE.Vector3(0,0,-half.z-.02));
+    damageAirspaceUnit(victim,victim.maxHealth*.3,'blue-0',{source:session.player,point,projectile:true,hits:1});
+    const redLines=document.querySelector('#reticle').classList.contains('hit-confirm');
+    const batch=resourceState.combatEffects,gl=viewState.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
+    const read=()=>{viewState.renderer.render(viewState.scene,viewState.camera);const bytes=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes};
+    const pixels=()=>{batch.mesh.visible=false;const a=read();batch.mesh.visible=true;const b=read();let changed=0;for(let i=0;i<a.length;i+=4)if(Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2])>12)changed++;return changed};
+    const sparkPixels=pixels();updateCombatFeedback(.3);const smokePixels=pixels();
+    updateCombatFeedback(3);const sustained=Array.from(batch.life.slice(192)).some(x=>x>0),engineCritical=victim.root.userData.engineCritical;
+    return{sparkPixels,smokePixels,sustained,engineCritical,redLines,hits:session.combatStats.hits,shots:session.combatStats.shots,glError:gl.getError()};
+ },
+ timeout:()=>{session.airspaceState.elapsed=300;session.airspaceState.scores.blue=20;session.airspaceState.scores.red=20;updateAirspaceStep(0)},
  render:()=>{if(gameMode==='airspace')updateAirspaceFrame(0,1/60);else{updateChaseCamera(0);updateCampaignHud()}renderer.render(scene,camera)}
 };`;
 async function main(){
@@ -149,23 +165,9 @@ async function main(){
   await page.reload({waitUntil:'load'});await ready();assert.deepEqual(await page.evaluate(()=>window.__qa.info()),imported);console.log('Real research UI, v18 reset, JSON import/rejection and persistence passed');
   await page.locator('#start').click({force:true});await page.locator('#chooseAIBattle').click({force:true});await page.waitForFunction(()=>window.__qa.fight().playing,null,{timeout:90000,polling:100});assert((await page.evaluate(()=>window.__qa.music())).paused);
   const fight=await page.evaluate(()=>window.__qa.fight());assert.equal(fight.type,'bf109c1');assert.equal(fight.hp,390);assert.equal(fight.ammo.mg,1840);assert.equal(fight.units.length,10);assert(fight.units.every(u=>u.attached&&!u.error));const fired=await page.evaluate(()=>window.__qa.fire());assert.equal(fired.ammo.mg,1836);assert.equal(fired.bullets.length,4);assert(fired.bullets.every(b=>b.speed===855&&b.damage===14));await page.evaluate(()=>window.__qa.render());await page.screenshot({path:path.join(__dirname,'bf109c1-airspace-mobile-v20.png')});const smoke=await page.evaluate(()=>window.__qa.smokeTest());assert(smoke.visible.changed>12,JSON.stringify(smoke));assert(smoke.fading.gain<smoke.visible.gain,JSON.stringify(smoke));assert.equal(smoke.expired.changed,0);assert.equal(smoke.instancesAfterFade,0);assert.equal(smoke.glError,0);
-  const feedback=await page.evaluate(()=>{
-    clearProjectileSmoke();clearCombatFeedback();
-    const victim=session.airspaceUnits.find(u=>u.team==='red'),half=victim.root.userData.collisionHalfExtents;
-    victim.root.position.copy(session.player.position).add(new THREE.Vector3(0,0,-6).applyQuaternion(session.player.quaternion));
-    victim.root.updateMatrixWorld(true);
-    const point=victim.root.localToWorld(new THREE.Vector3(0,0,-half.z-.02));
-    damageAirspaceUnit(victim,victim.maxHealth*.3,'blue-0',{source:session.player,point,projectile:true,hits:1});
-    const redLines=document.querySelector('#reticle').classList.contains('hit-confirm');
-    const batch=resourceState.combatEffects,gl=viewState.renderer.getContext(),w=gl.drawingBufferWidth,h=gl.drawingBufferHeight;
-    const read=()=>{viewState.renderer.render(viewState.scene,viewState.camera);const bytes=new Uint8Array(w*h*4);gl.readPixels(0,0,w,h,gl.RGBA,gl.UNSIGNED_BYTE,bytes);return bytes};
-    const pixels=()=>{batch.mesh.visible=false;const a=read();batch.mesh.visible=true;const b=read();let changed=0;for(let i=0;i<a.length;i+=4)if(Math.abs(a[i]-b[i])+Math.abs(a[i+1]-b[i+1])+Math.abs(a[i+2]-b[i+2])>12)changed++;return changed};
-    const sparkPixels=pixels();updateCombatFeedback(.3);const smokePixels=pixels();
-    updateCombatFeedback(3);const sustained=Array.from(batch.life.slice(192)).some(x=>x>0),engineCritical=victim.root.userData.engineCritical;
-    return{sparkPixels,smokePixels,sustained,engineCritical,redLines,hits:session.combatStats.hits,shots:session.combatStats.shots,glError:gl.getError()};
-  });
+  const feedback=await page.evaluate(()=>window.__qa.feedback());
   assert(feedback.redLines&&feedback.sparkPixels>0&&feedback.smokePixels>0&&feedback.sustained&&feedback.engineCritical,JSON.stringify(feedback));assert.equal(feedback.glError,0);
-  await page.evaluate(()=>{session.airspaceState.elapsed=300;session.airspaceState.scores.blue=20;session.airspaceState.scores.red=20;updateAirspaceStep(0)});
+  await page.evaluate(()=>window.__qa.timeout());
   assert.equal(await page.locator('#airspaceTimer').innerText(),'00:00');assert.equal(await page.locator('#resultTitle').innerText(),'平局');
   assert.equal(await page.locator('#resultShots').innerText(),'4');assert.equal(await page.locator('#resultHits').innerText(),'1');assert.equal(await page.locator('#resultAccuracy').innerText(),'25.0%');
   await page.screenshot({path:path.join(__dirname,'results-v20.png')});
