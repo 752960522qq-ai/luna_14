@@ -97,7 +97,7 @@ function reset(options = {}) {
   if (!viewState.scene) init();
   clearBattleWorld();
   setBattleMap(session.gameMode === 'campaign' || session.gameMode === 'airspace' ? 'korea1951' : Math.random() < .5 ? 'openSea' : 'korea1951');
-  mapState.groundPlane.scale.setScalar(session.gameMode === 'airspace' ? 600 / 2200 : 1);
+  mapState.groundPlane.scale.setScalar(mapState.activeMapId === 'korea1951' ? 6000 / 2200 : 1);
   inputState.keys.bomb = false;
   inputState.bombKeyWasDown = false;
   initializeSortiePlayer();

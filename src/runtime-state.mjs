@@ -157,7 +157,7 @@ session.airspaceAccumulator = 0;
 session.airspacePrepareToken = 0;
 const CONTROL_SETTINGS_KEY = 'silverwing.flight-controls.1.0';
 const DEFAULT_CONTROL_SETTINGS = {
-  mode: 'cursor',
+  mode: 'joystick',
   sensitivity: 1
 };
 inputState.controlSettings = loadControlSettings();
@@ -178,10 +178,13 @@ const MAP_LIBRARY = {
   korea1951: {
     name: '1951·朝鲜',
     modelFile: './korea-1951-terrain.glb',
+    sceneryFile: './korea-1951-distance.glb',
     sizeMeters: 6000
   }
 };
 mapState.activeMapId = 'openSea';
+mapState.koreaScenery = null;
+mapState.koreaSceneryPromise = null;
 mapState.groundPlane = null;
 mapState.mapSun = null;
 mapState.mapHemisphere = null;
@@ -299,6 +302,20 @@ const AI_TACTICS = {
   recoveryEnterSeconds: .3,
   recoveryStableSeconds: .4
 };
+const AI_CONTACT_RULES = {
+  reactionMinSeconds: 1,
+  reactionMaxSeconds: 2,
+  passRangeMeters: 1200,
+  pullAwayMeters: 700,
+  separationMeters: 650,
+  minimumPullAwaySeconds: 2,
+  maximumPullAwaySeconds: 8,
+  headOnRangeMeters: 325,
+  headOnConeDegrees: 1.2,
+  headOnHitProbability: .72,
+  headOnBurstSeconds: .18,
+  headOnPauseSeconds: .8
+};
 const AI_DUEL_CENTER = new THREE.Vector3(0, 60, 0);
 const planeDracoLoader = new DRACOLoader();
 const planeModelLoader = new GLTFLoader();
@@ -312,6 +329,7 @@ const CHASE_NARROW_PRESETS = {
   "f3f2": [15.734, 4.595],
   "i15bis": [16.541, 5.108],
   "bf109b1": [15.72, 4.954],
+  "bf109c1": [15.72, 4.954],
   "p36a": [17.002, 5.423],
   "mig15": [18.955, 4.828],
   "f86": [21.645, 5.568],

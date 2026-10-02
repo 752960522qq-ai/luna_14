@@ -222,9 +222,10 @@ async function prepareAirspaceBattle() {
   setBattleLoading(true, '正在准备空域与编队…');
   $('#airspaceLoadStatus').textContent = '正在加载空域与编队…';
   try {
-    const [terrain] = await Promise.all([loadKoreaTerrain(), ...duelOpponentsFor(profileState.selectedAircraft).map(loadPlaneModel), ...soundState.audioLoads.values()]);
+    const [terrain, scenery] = await Promise.all([loadKoreaTerrain(), loadKoreaScenery(), ...duelOpponentsFor(profileState.selectedAircraft).map(loadPlaneModel), ...soundState.audioLoads.values()]);
     if (token !== session.airspacePrepareToken) return;
     if (!terrain) throw new Error('地图未加载');
+    if (!scenery) throw new Error('远景未加载');
     if (!mapState.koreaHeightGrid) mapState.koreaHeightGrid = buildKoreaHeightGrid(terrain);
     session.gameMode = 'airspace';
     reset({

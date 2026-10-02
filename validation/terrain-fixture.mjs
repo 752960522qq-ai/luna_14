@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import * as THREE from '../app/src/main/assets/three.module.js';
 
-export function terrainGroup(){
- const data=fs.readFileSync(new URL('../app/src/main/assets/korea-1951-terrain.glb',import.meta.url));
+export function terrainGroup(filename='korea-1951-terrain.glb'){
+ const data=fs.readFileSync(new URL('../app/src/main/assets/'+filename,import.meta.url));
  const jsonBytes=data.readUInt32LE(12),json=JSON.parse(data.subarray(20,20+jsonBytes).toString()),binStart=20+jsonBytes+8;
  const types={SCALAR:1,VEC2:2,VEC3:3,VEC4:4},bytes={5121:1,5123:2,5125:4,5126:4};
  function accessor(index){

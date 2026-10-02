@@ -26,9 +26,60 @@ function initializeFighterAI(root, role, index = 0) {
     unsafeSeconds: 0,
     stableSeconds: 0,
     formationOffset: new THREE.Vector3(),
-    recoveries: 0
+    recoveries: 0,
+    contact: { phase: 'UNSEEN', reactionRemaining: 0, age: 0, closestMeters: Infinity, target: null, goal: null },
+    headOnBurstRemaining: 0,
+    headOnPauseRemaining: 0
   };
   return root.userData.ai;
+}
+function updateAIFirstContact(root, target, dt) {
+  const data = root.userData, ai = data.ai, contact = ai.contact;
+  const range = root.position.distanceTo(target.position) * METERS_PER_UNIT;
+  if (contact.phase === 'UNSEEN') {
+    if (range >= AI_FIGHTER[data.type].detectMeters) return null;
+    contact.reactionRemaining = THREE.MathUtils.lerp(AI_CONTACT_RULES.reactionMinSeconds, AI_CONTACT_RULES.reactionMaxSeconds, Math.random());
+    contact.phase = 'MANEUVER';
+    contact.target = target;
+    contact.forward = data.velocity.clone().setY(0);
+    if (contact.forward.lengthSq() < .001) contact.forward.set(0, 0, -1).applyQuaternion(root.quaternion).setY(0);
+    contact.forward.normalize();
+    // Each aircraft flies past on its own right. Opposing formations therefore
+    // take opposite sides, and each slot has a different lane and reaction time.
+    contact.right = new THREE.Vector3().crossVectors(contact.forward, new THREE.Vector3(0, 1, 0)).normalize();
+    contact.goal = root.position.clone().addScaledVector(contact.forward, (range + AI_CONTACT_RULES.pullAwayMeters) / METERS_PER_UNIT)
+      .addScaledVector(contact.right, (150 + ai.index * 35) / METERS_PER_UNIT);
+    contact.goal.y += (ai.index % 3) * 2;
+    contact.passLimitSeconds = THREE.MathUtils.clamp(range / Math.max(data.airspeed, 50) + 4, 12, 35);
+  }
+  contact.reactionRemaining = Math.max(0, contact.reactionRemaining - dt);
+  contact.age += dt;
+  if (contact.phase === 'MANEUVER' && contact.reactionRemaining <= 0) {
+    contact.phase = ai.role === 'airspace' ? 'APPROACH' : 'COMPLETE';
+    contact.age = 0;
+  }
+  if (ai.role !== 'airspace' || contact.phase === 'COMPLETE') return null;
+  const tracked = contact.target, relative = tracked.position.clone().sub(root.position), trackedRange = relative.length() * METERS_PER_UNIT;
+  contact.closestMeters = Math.min(contact.closestMeters, trackedRange);
+  const crossed = contact.closestMeters < AI_CONTACT_RULES.passRangeMeters &&
+    (relative.dot(contact.forward) <= 0 || trackedRange > contact.closestMeters + 180);
+  if ((contact.phase === 'APPROACH' || contact.phase === 'MANEUVER') &&
+      (crossed || tracked.userData.destroyed || contact.age > contact.passLimitSeconds)) {
+    contact.phase = 'PULL_AWAY';
+    contact.age = 0;
+    contact.crossPosition = root.position.clone();
+    contact.goal = root.position.clone().addScaledVector(contact.forward, AI_CONTACT_RULES.pullAwayMeters / METERS_PER_UNIT)
+      .addScaledVector(contact.right, 12 + ai.index * 2);
+  }
+  if (contact.phase === 'PULL_AWAY') {
+    const travelled = root.position.distanceTo(contact.crossPosition) * METERS_PER_UNIT;
+    if (contact.reactionRemaining <= 0 && contact.age >= AI_CONTACT_RULES.minimumPullAwaySeconds + ai.index * .12 &&
+        (trackedRange >= AI_CONTACT_RULES.separationMeters && travelled >= 400 || contact.age >= AI_CONTACT_RULES.maximumPullAwaySeconds)) {
+      contact.phase = 'COMPLETE';
+      changeAIState(ai, 'INTERCEPT', true);
+    }
+  }
+  return contact.phase === 'COMPLETE' ? null : safeAIGoal(root, contact.goal);
 }
 function changeAIState(ai, state, force = false) {
   if (ai.state === state) return false;
@@ -106,7 +157,7 @@ function decideFighterAI(root, target, center) {
     armed: selectedWeaponIds(type, mode).some(id => weaponInfo[type]?.[id] && ammo?.[id] >= weaponInfo[type][id].cost)
   };
 }
-function aiFireIntent(root, target) {
+function aiFireIntent(root, target, dt = FLIGHT_PHYSICS.stepSeconds) {
   const data = root.userData,
     ai = data.ai,
     type = data.type,
@@ -116,7 +167,14 @@ function aiFireIntent(root, target) {
     forward = new THREE.Vector3(0, 0, -1).applyQuaternion(root.quaternion).normalize(),
     local = target.position.clone().sub(root.position).applyQuaternion(root.quaternion.clone().invert()),
     intent = {};
-  if (data.boundaryReturning || data.instructorRecovering || ai.state !== 'FIRE_PASS' || local.z >= 0) return intent;
+  ai.fireIntent = intent;
+  ai.headOnPauseRemaining = Math.max(0, ai.headOnPauseRemaining - dt);
+  if (data.boundaryReturning || data.instructorRecovering || ai.state !== 'FIRE_PASS' || local.z >= 0 ||
+      ai.contact.reactionRemaining > 0 || ai.role === 'airspace' && ai.contact.phase !== 'COMPLETE') return intent;
+  const relative = target.position.clone().sub(root.position).normalize(), targetVelocity = target.userData.velocity;
+  const headOn = targetVelocity.lengthSq() > .001 && forward.dot(targetVelocity.clone().normalize()) < -.65 &&
+    targetVelocity.dot(relative) < -3;
+  if (headOn && ai.headOnPauseRemaining > 0) return intent;
   for (const id of selectedWeaponIds(type, mode)) {
     const spec = weaponInfo[type]?.[id],
       gun = config.gun[id];
@@ -127,8 +185,21 @@ function aiFireIntent(root, target) {
     const alignment = forward.dot(intercept.direction),
       cone = Math.cos(THREE.MathUtils.degToRad(gun.coneDeg));
     if (alignment < cone || !terrainLineClear(origin, intercept.point)) continue;
+    if (headOn) {
+      const range = origin.distanceTo(target.position) * METERS_PER_UNIT;
+      const missMeters = intercept.point.distanceTo(origin) * METERS_PER_UNIT * Math.sqrt(Math.max(0, 1 - alignment * alignment));
+      const radius = Math.max(1.5, (target.userData.collisionHalfExtents?.x || .3) * METERS_PER_UNIT * .65);
+      const probability = Math.exp(-.5 * (missMeters / radius) ** 2) * THREE.MathUtils.clamp(ai.headingVelocityDot ?? 1, 0, 1);
+      if (range > Math.min(gun.rangeMeters, AI_CONTACT_RULES.headOnRangeMeters) ||
+          alignment < Math.cos(THREE.MathUtils.degToRad(AI_CONTACT_RULES.headOnConeDegrees)) || probability < AI_CONTACT_RULES.headOnHitProbability) continue;
+    }
     intent[id] = true;
   }
+  if (headOn && Object.keys(intent).length) {
+    if (ai.headOnBurstRemaining <= 0) ai.headOnBurstRemaining = AI_CONTACT_RULES.headOnBurstSeconds;
+    ai.headOnBurstRemaining -= dt;
+    if (ai.headOnBurstRemaining <= 0) ai.headOnPauseRemaining = AI_CONTACT_RULES.headOnPauseSeconds;
+  } else if (!headOn) ai.headOnBurstRemaining = 0;
   ai.fireIntent = intent;
   return intent;
 }
@@ -137,6 +208,8 @@ function updateFighterAI(root, target, center, dt, orderGoal = null) {
     data = root.userData,
     ai = data.ai;
   if (!ai || !target) return;
+  const openingGoal = updateAIFirstContact(root, target, dt);
+  if (openingGoal && !data.airspaceUnit?.resupplying) orderGoal = openingGoal;
   ai.stateAge += dt;
   ai.decisionRemaining -= dt;
   const forward = w.a.set(0, 0, -1).applyQuaternion(root.quaternion),
@@ -166,6 +239,7 @@ function updateFighterAI(root, target, center, dt, orderGoal = null) {
     if (ai.state === 'REJOIN') desiredKmh = slotDistance > 300 && goalAlignment > .65 ? THREE.MathUtils.clamp(430 + slotDistance * .18, 430, 650) : THREE.MathUtils.clamp(320 + slotDistance * .18, 320, 500);else if (ai.state === 'GUARD') desiredKmh = THREE.MathUtils.clamp(320 + slotDistance * .20, 320, 450);else desiredKmh = data.campaignCruiseKmh + 60;
     data.throttle = ai.state === 'RECOVER' ? .95 : THREE.MathUtils.clamp(desiredKmh / planeInfo.f86.maxSpeedKmh, .27, .9);
   } else if (ai.role === 'airspace' && orderGoal) data.throttle = ai.state === 'RECOVER' ? .95 : data.airspaceNavigationThrottle;else data.throttle = ai.state === 'RECOVER' ? .95 : THREE.MathUtils.clamp(.78 + (ai.state === 'INTERCEPT' || ai.state === 'FIRE_PASS' ? .11 : 0), .35, .95);
+  if (openingGoal && !data.airspaceUnit?.resupplying && ai.state !== 'RECOVER') data.throttle = .88;
   const boundaryGoal = duelBoundaryReturnGoal(root),
     direction = ai.role === 'airspace' && orderGoal ? airspaceFlightDirection(root, boundaryGoal || safeAIGoal(root, orderGoal)) : boundaryGoal ? boundaryGoal.sub(root.position) : toGoal;
   const count = Math.max(1, Math.ceil(dt / FLIGHT_PHYSICS.stepSeconds)),
@@ -186,6 +260,10 @@ function updateFighterAI(root, target, center, dt, orderGoal = null) {
     ai.telemetry.speedKmh = data.airspeed * 3.6;
     ai.telemetry.throttle = data.throttle;
     ai.telemetry.unsafeSeconds = ai.unsafeSeconds;
+    ai.telemetry.contactPhase = ai.contact.phase;
+    ai.telemetry.reactionRemaining = ai.contact.reactionRemaining;
   }
-  fireWeapons(root, true, dt, orderGoal ? false : aiFireIntent(root, target));
+  // Opening flight orders keep the guns silent throughout the first crossing
+  // and separation, including frames where the normal AI has entered FIRE_PASS.
+  fireWeapons(root, true, dt, orderGoal ? false : aiFireIntent(root, target, dt));
 }

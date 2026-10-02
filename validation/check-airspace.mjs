@@ -23,7 +23,7 @@ for(const type of planes){
  assert(run('airspaceUnits.every(u=>outsideTerrainMeters(u.root.position)===0)'));
  assert.deepEqual(JSON.parse(run('JSON.stringify(terrainBattleBounds())')),{minX:-300,maxX:300,minZ:-300,maxZ:300});
  assert.equal(run('airspaceState.progress'),0);assert.equal(run('airspaceState.owner'),null);assert.equal(run('airspaceState.scores.blue+airspaceState.scores.red'),0);
- assert.equal(run('groundPlane.scale.x'),600/2200);
+ assert.equal(run('groundPlane.scale.x'),6000/2200);
 }
 checks.push('All ten catalog entries are cleaned; all aircraft generate one player + four allied AI vs five enemy AI, with independent ammunition and BR ±1.0');
 checks.push('6 km square bounds and opposite diagonal bases contain every initial aircraft; headings and velocities point toward A');

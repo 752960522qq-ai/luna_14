@@ -74,6 +74,21 @@ function terrainHeightAt(x, z) {
   }
   return h00 * (1 - fx) * (1 - fz) + h10 * fx * (1 - fz) + h01 * (1 - fx) * fz + h11 * fx * fz;
 }
+function loadKoreaScenery() {
+  if (!mapState.koreaSceneryPromise) mapState.koreaSceneryPromise = planeModelLoader.loadAsync(MAP_LIBRARY.korea1951.sceneryFile).then(gltf => {
+    const scenery = gltf.scene;
+    scenery.name = 'korea-distance-scenery';
+    scenery.userData.visualOnly = true;
+    scenery.traverse(node => { if (node.isMesh) node.frustumCulled = true; });
+    mapState.koreaScenery = scenery;
+    return scenery;
+  }).catch(error => {
+    mapState.koreaSceneryPromise = null;
+    console.error('无法加载朝鲜远景', error);
+    return null;
+  });
+  return mapState.koreaSceneryPromise;
+}
 function loadKoreaTerrain() {
   if (!mapState.koreaTerrainPromise) mapState.koreaTerrainPromise = planeModelLoader.loadAsync(MAP_LIBRARY.korea1951.modelFile).then(gltf => {
     const terrain = gltf.scene,
@@ -115,9 +130,11 @@ function setBattleMap(id) {
   mapState.activeMapId = id;
   const korea = id === 'korea1951';
   viewState.scene.background.setHex(korea ? 0x9cb9ca : 0x83b9d1);
-  viewState.scene.fog.color.setHex(korea ? 0xa9bdc4 : 0x9bbfce);
-  viewState.scene.fog.near = korea ? 230 : 170;
-  viewState.scene.fog.far = korea ? 1050 : 620;
+  viewState.scene.fog.color.setHex(korea ? 0x9cb9ca : 0x9bbfce);
+  viewState.scene.fog.near = korea ? 5000 / METERS_PER_UNIT : 170;
+  viewState.scene.fog.far = korea ? 19000 / METERS_PER_UNIT : 620;
+  viewState.camera.far = korea ? 28000 / METERS_PER_UNIT : 1400;
+  viewState.camera.updateProjectionMatrix();
   mapState.mapHemisphere.color.setHex(korea ? 0xd5e9ef : 0xdaf5ff);
   mapState.mapHemisphere.groundColor.setHex(korea ? 0x62665c : 0x596c74);
   mapState.mapHemisphere.intensity = korea ? 1.95 : 2.3;
@@ -137,8 +154,14 @@ function setBattleMap(id) {
   }
   if (!korea) {
     if (mapState.koreaTerrain) mapState.koreaTerrain.visible = false;
+    if (mapState.koreaScenery) mapState.koreaScenery.visible = false;
     return;
   }
+  loadKoreaScenery().then(scenery => {
+    if (!scenery || mapState.activeMapId !== 'korea1951' || !viewState.scene) return;
+    if (scenery.parent !== viewState.scene) viewState.scene.add(scenery);
+    scenery.visible = true;
+  });
   loadKoreaTerrain().then(terrain => {
     if (!terrain || mapState.activeMapId !== 'korea1951' || !viewState.scene) return;
     if (terrain.parent !== viewState.scene) viewState.scene.add(terrain);

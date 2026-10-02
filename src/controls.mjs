@@ -2,7 +2,7 @@ function loadControlSettings() {
   try {
     const saved = JSON.parse(localStorage.getItem(CONTROL_SETTINGS_KEY) || 'null');
     return {
-      mode: saved?.mode === 'joystick' ? 'joystick' : 'cursor',
+      mode: saved?.mode === 'cursor' || saved?.mode === 'joystick' ? saved.mode : DEFAULT_CONTROL_SETTINGS.mode,
       sensitivity: THREE.MathUtils.clamp(Number.isFinite(saved?.sensitivity) ? saved.sensitivity : 1, .5, 1.8)
     };
   } catch {

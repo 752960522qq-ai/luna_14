@@ -1248,8 +1248,8 @@
   },
   "bf109c1": {
     "model": {
-      "chaseOffsetMeters": 2.6,
-      "chaseHeightMeters": 1.4,
+      "chaseOffsetMeters": 8,
+      "chaseHeightMeters": 3.8,
       "modelFile": "./bf109-c1.glb",
       "lengthMeters": 8.55,
       "rollRateDps": 135,
@@ -1270,7 +1270,6 @@
         "y": 3.0071844,
         "z": 8.55
       },
-      "chaseFixed": true,
       "levelDragCompensation": 0.018
     },
     "propeller": {

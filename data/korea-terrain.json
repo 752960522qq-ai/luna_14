@@ -1,0 +1,53 @@
+{
+  "mapMeters": 6000,
+  "tileMeters": 3000,
+  "fogStartMeters": 5000,
+  "sceneryMeters": [
+    12000,
+    20000
+  ],
+  "tiles": [
+    {
+      "source": "aerial_grassy_and_rocky_mountain_3.glb",
+      "sha256": "e01501297bc5251e5ffc6f348ad31fd353d9f82a9ec1731bd925954891f60d9f",
+      "tileMeters": 3000,
+      "vertices": 16384,
+      "triangles": 32258,
+      "maxHeightMetersMSL": 702.5462341308594
+    },
+    {
+      "source": "aerial_grassy_and_rocky_mountain_4.glb",
+      "sha256": "690837bbf9391bd4aaefc66ceaf036b52ecb2141c9e6ffb120e6b0d124d293a4",
+      "tileMeters": 3000,
+      "vertices": 16384,
+      "triangles": 32258,
+      "maxHeightMetersMSL": 986.5181732177734
+    },
+    {
+      "source": "aerial_grassy_and_rocky_mountain_5.glb",
+      "sha256": "1d81dd777f50a42e2ce2f23f2d5bee7f6b305959736d27b2e7adbb6623e7dbee",
+      "tileMeters": 3000,
+      "vertices": 16384,
+      "triangles": 32258,
+      "maxHeightMetersMSL": 879.9888610839844
+    },
+    {
+      "source": "aerial_grassy_and_rocky_mountain_6.glb",
+      "sha256": "0aaa043d7dd1f5dbce9a6337ccfa66470bb15e0ac0d41150ec8d3227c0de953f",
+      "tileMeters": 3000,
+      "vertices": 16384,
+      "triangles": 32258,
+      "maxHeightMetersMSL": 725.0706481933594
+    }
+  ],
+  "korea-distance-medium-3-12km": {
+    "vertices": 7112,
+    "triangles": 13208
+  },
+  "korea-distance-low-12-20km": {
+    "vertices": 2540,
+    "triangles": 4064
+  },
+  "coreBytes": 9607028,
+  "distanceBytes": 557360
+}

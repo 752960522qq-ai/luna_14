@@ -63,7 +63,7 @@ report.checks.push('Soviet I-15 supplied stats, BR1.0 matching, four 750RPM PV-1
 const c1=run('planeInfo.bf109c1'),c1Gun=run('weaponInfo.bf109c1.mg');
 assert.equal(c1.health,390);assert.equal(c1.maxSpeedKmh,465);assert.equal(c1.minLevelFlightKmh,124);assert.equal(c1.bestClimbMps,13.2);assert.equal(c1.turnTimeS,19);assert.equal(c1.verticalTurnTimeS,11.3);
 assert(Math.abs(c1.horizontalTurnRateDps-360/19)<1e-12);assert(Math.abs(c1.verticalTurnRateDps-360/11.3)<1e-12);
-assert.equal(run('AIRCRAFT_TREE.bf109c1.rating'),2);assert.equal(run('AIRCRAFT_TREE.bf109c1.rank'),'II');assert.equal(run('AIRCRAFT_TREE.bf109c1.nation'),'de');assert.equal(run('AIRCRAFT_SPECS.bf109c1.lengthMeters'),8.55);assert.equal(run('AIRCRAFT_SPECS.bf109c1.chaseOffsetMeters'),2.6);
+assert.equal(run('AIRCRAFT_TREE.bf109c1.rating'),2);assert.equal(run('AIRCRAFT_TREE.bf109c1.rank'),'II');assert.equal(run('AIRCRAFT_TREE.bf109c1.nation'),'de');assert.equal(run('AIRCRAFT_SPECS.bf109c1.lengthMeters'),8.55);assert.equal(run('AIRCRAFT_SPECS.bf109c1.chaseOffsetMeters'),run('AIRCRAFT_SPECS.bf109b1.chaseOffsetMeters'));assert.equal(run('AIRCRAFT_SPECS.bf109c1.chaseHeightMeters'),run('AIRCRAFT_SPECS.bf109b1.chaseHeightMeters'));
 assert.deepEqual([c1Gun.rpm,c1Gun.damage,c1Gun.speed,c1Gun.count,c1Gun.cost],[1200,14,855,4,4]);
 for(const fps of [30,60,120]){
  h.ctx.player=plane(h,'bf109c1',true,new THREE.Vector3(0,100,0),true);h.ctx.playerPlane='bf109c1';h.ctx.playerAmmo=run("freshAmmo('bf109c1')");h.ctx.playerWeaponCooldowns={};h.ctx.weaponMode='mg';h.ctx.bullets=[];h.ctx.bulletPool=[];

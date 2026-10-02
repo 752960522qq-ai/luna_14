@@ -2513,6 +2513,18 @@ canvas {
 }
 .lobby-video { object-fit: cover; }
 .lobby-shade { background: linear-gradient(#0c192b55,transparent 30%,transparent 65%,#030a1880); }
+.lobby-corner-cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(220px,28vw,420px);
+  height: clamp(74px,15vh,108px);
+  background: linear-gradient(120deg,#142432,#233442);
+  border-bottom: 1px solid #8caaa65c;
+  border-right: 1px solid #8caaa65c;
+  border-radius: 0 0 16px 0;
+  pointer-events: none;
+}
 .lobby-top {
   position: absolute;
   top: max(12px,env(safe-area-inset-top));
