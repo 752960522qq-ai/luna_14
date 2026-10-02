@@ -1718,7 +1718,10 @@ function updateAmmoUI() {
   const ids = Object.keys(weaponInfo[type]),
     current = ids.reduce((n, id) => n + (session.playerAmmo[id] || 0), 0),
     total = ids.reduce((n, id) => n + (capacity[id] || 0), 0);
-  $('#ammo').textContent = ids.map(id => record.weapons[id].label + ' ' + Math.floor(session.playerAmmo[id] || 0) + ' / ' + capacity[id]).join(' · ');
+  $('#ammo').textContent = ids.map(id => {
+    const shortName = record.weapons[id].label.match(/mm\s+([A-Za-z0-9-]+)/)?.[1] || id.toUpperCase();
+    return shortName + ' ' + Math.floor(session.playerAmmo[id] || 0) + (ids.length === 1 ? ' / ' + capacity[id] : '');
+  }).join(' · ');
   $('#ammoBar').style.width = (total ? current / total * 100 : 0) + '%';
 }
 function updateHealthUI() {
