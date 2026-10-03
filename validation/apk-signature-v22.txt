@@ -1,0 +1,22 @@
+Verifies
+Verified using v1 scheme (JAR signing): true
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): true
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Sky Duel, OU=Game, O=Luna, C=CN
+Signer #1 certificate SHA-256 digest: eff77ee038d6e1a9f8c166530161adf6fc14428ebb1912ffa75a15868896521f
+Signer #1 certificate SHA-1 digest: fb282f90fabf38fb01afa53daf2133a9788244e4
+Signer #1 certificate MD5 digest: 9bcb32dc0e54c8cde94335a787c99a18
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 19c07f04ec055f1d1f0d85777647142e542bc7b206a0f045a6e066b1eacc7ac2
+Signer #1 public key SHA-1 digest: 8484f99d79a87d72be8451c69fb52e01899a7cd6
+Signer #1 public key MD5 digest: b1ca9179e592f2b7cfedb1a781063d5d
+WARNING: META-INF/com/android/build/gradle/app-metadata.properties not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.
+WARNING: META-INF/androidx.annotation_annotation-experimental.version not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.
+WARNING: META-INF/androidx.core_core.version not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.
+WARNING: META-INF/androidx.lifecycle_lifecycle-runtime.version not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.
+WARNING: META-INF/androidx.versionedparcelable_versionedparcelable.version not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.
+WARNING: META-INF/androidx.webkit_webkit.version not protected by signature. Unauthorized modifications to this JAR entry will not be detected. Delete or move the entry outside of META-INF/.

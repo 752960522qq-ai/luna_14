@@ -58,23 +58,23 @@ function loadProgressionProfile() {
   session.playerPlane = profileState.selectedAircraft;
   saveHangar();
 }
-function researchStages() {
-  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(isAircraftResearchOpen).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
+function researchStages(nation = null) {
+  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(type => isAircraftResearchOpen(type) && (!nation || AIRCRAFT_TREE[type].nation === nation)).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
 }
 function researchPrerequisite(type) {
-  const rating = AIRCRAFT_TREE[type]?.rating;
+  const rating = AIRCRAFT_TREE[type]?.rating, nation = AIRCRAFT_TREE[type]?.nation;
   if (!Number.isFinite(rating) || !isAircraftResearchOpen(type)) return {
     allowed: false,
     rating: null,
     choices: []
   };
-  const prior = researchStages().filter(value => value < rating - 1e-9).at(-1);
+  const prior = researchStages(nation).filter(value => value < rating - 1e-9).at(-1);
   if (prior === undefined) return {
     allowed: true,
     rating: null,
     choices: []
   };
-  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
+  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && AIRCRAFT_TREE[id].nation === nation && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
   return {
     allowed: choices.some(id => profileState.unlockedPlanes.includes(id)),
     rating: prior,

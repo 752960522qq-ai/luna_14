@@ -1,11 +1,30 @@
 {
   "mapMeters": 6000,
   "tileMeters": 3000,
-  "fogStartMeters": 5000,
-  "sceneryMeters": [
-    12000,
-    20000
+  "distanceOrigin": "rectangular combat boundary",
+  "outsideHighDetailMeters": [
+    0,
+    6000
   ],
+  "outsideLowDetailMeters": [
+    6000,
+    12000
+  ],
+  "outsideFogMeters": [
+    12000,
+    16000
+  ],
+  "floorYUnits": -90.0,
+  "bottomPlaneYUnits": -90.15,
+  "atlasPixels": [
+    4096,
+    4096
+  ],
+  "atlasTilePixels": [
+    2048,
+    2048
+  ],
+  "fixedGreenSeamRemoved": true,
   "tiles": [
     {
       "source": "aerial_grassy_and_rocky_mountain_3.glb",
@@ -13,7 +32,19 @@
       "tileMeters": 3000,
       "vertices": 16384,
       "triangles": 32258,
-      "maxHeightMetersMSL": 702.5462341308594
+      "maxHeightMetersMSL": 702.5462341308594,
+      "boundingBoxMeters": {
+        "min": [
+          -3000.0,
+          -900.0,
+          -3000.0
+        ],
+        "max": [
+          0.0,
+          -197.45376586914062,
+          0.0
+        ]
+      }
     },
     {
       "source": "aerial_grassy_and_rocky_mountain_4.glb",
@@ -21,7 +52,19 @@
       "tileMeters": 3000,
       "vertices": 16384,
       "triangles": 32258,
-      "maxHeightMetersMSL": 986.5181732177734
+      "maxHeightMetersMSL": 986.5181732177734,
+      "boundingBoxMeters": {
+        "min": [
+          0.0,
+          -900.0,
+          -3000.0
+        ],
+        "max": [
+          3000.0,
+          86.51817321777344,
+          0.0
+        ]
+      }
     },
     {
       "source": "aerial_grassy_and_rocky_mountain_5.glb",
@@ -29,7 +72,19 @@
       "tileMeters": 3000,
       "vertices": 16384,
       "triangles": 32258,
-      "maxHeightMetersMSL": 879.9888610839844
+      "maxHeightMetersMSL": 879.9888610839844,
+      "boundingBoxMeters": {
+        "min": [
+          -3000.0,
+          -900.0,
+          0.0
+        ],
+        "max": [
+          0.0,
+          -20.011138916015625,
+          3000.0
+        ]
+      }
     },
     {
       "source": "aerial_grassy_and_rocky_mountain_6.glb",
@@ -37,17 +92,39 @@
       "tileMeters": 3000,
       "vertices": 16384,
       "triangles": 32258,
-      "maxHeightMetersMSL": 725.0706481933594
+      "maxHeightMetersMSL": 725.0706481933594,
+      "boundingBoxMeters": {
+        "min": [
+          0.0,
+          -900.0,
+          0.0
+        ],
+        "max": [
+          3000.0,
+          -174.92935180664062,
+          3000.0
+        ]
+      }
     }
   ],
-  "korea-distance-medium-3-12km": {
-    "vertices": 7112,
-    "triangles": 13208
+  "highDetailCopies": 9,
+  "highDetailTileCount": 36,
+  "korea-outside-low-6-12km": {
+    "vertices": 21336,
+    "triangles": 36576,
+    "outsideMeters": [
+      6000,
+      12000
+    ]
   },
-  "korea-distance-low-12-20km": {
-    "vertices": 2540,
-    "triangles": 4064
+  "korea-outside-fog-12-16km": {
+    "vertices": 12192,
+    "triangles": 18288,
+    "outsideMeters": [
+      12000,
+      16000
+    ]
   },
-  "coreBytes": 9607028,
-  "distanceBytes": 557360
+  "coreBytes": 11081480,
+  "distanceBytes": 1733724
 }

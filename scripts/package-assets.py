@@ -57,7 +57,7 @@ def manifest_version(data, version):
                     at = ext + attr_start + i * attr_size
                     if strings[struct.unpack_from('<I', data, at + 4)[0]] == 'versionCode':
                         assert data[at + 15] == 0x10, 'versionCode must be an integer'
-                        assert struct.unpack_from('<I', data, at + 16)[0] == 20, 'Expected the v20 native shell'
+                        assert struct.unpack_from('<I', data, at + 16)[0] == 21, 'Expected the v21 native shell'
                         struct.pack_into('<I', out, at + 16, version)
                         matches.append(at)
         pos += size
@@ -77,7 +77,7 @@ def main(base, output, sha):
                 continue
             data = source.read(name)
             if name == 'AndroidManifest.xml':
-                data = manifest_version(data, 21)
+                data = manifest_version(data, 22)
                 changed.append(name)
             elif name in files:
                 new = files.pop(name).read_bytes()
@@ -103,7 +103,7 @@ def main(base, output, sha):
     report = {'result': 'passed', 'baseSha256': sha, 'changed': changed, 'added': added,
               'retainedPayloadCount': len(retained), 'allPackagedAssetsMatchSource': True,
               'unchangedNativeClassesAndResources': True, 'unsignedBytes': output.stat().st_size}
-    (ROOT / 'validation/package-v21.json').write_text(json.dumps(report, indent=2) + '\n')
+    (ROOT / 'validation/package-v22.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps(report, indent=2))
 
 

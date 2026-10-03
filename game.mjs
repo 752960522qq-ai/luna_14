@@ -1562,6 +1562,7 @@ const MAP_LIBRARY = {
 mapState.activeMapId = 'openSea';
 mapState.koreaScenery = null;
 mapState.koreaSceneryPromise = null;
+mapState.terrainFogEnabled = { value: 0 };
 mapState.groundPlane = null;
 mapState.mapSun = null;
 mapState.mapHemisphere = null;
@@ -2019,6 +2020,9 @@ function updateEconomyDisplay() {
   const mode = $('#currentSaveMode');
   if (mode) mode.textContent = profileState.profileMode === 'all-aircraft' ? '全解锁测试存档 · 全部飞机已入库' : '普通存档 · 中、德、美、苏四系 Rank I—II';
 }
+function researchPrerequisiteLabel(state) {
+  return '需先入库：' + state.prerequisite.choices.map(id => planeInfo[id].name).join(' 或 ');
+}
 function handleResearchAircraft(type) {
   const state = aircraftResearchState(type);
   if (state.status === 'unavailable' || state.status === 'invalid') {
@@ -2031,7 +2035,7 @@ function handleResearchAircraft(type) {
     return;
   }
   if (state.status === 'blocked') {
-    toast('先解锁一架 BR ' + state.prerequisite.rating.toFixed(1) + ' 飞机');
+    toast(researchPrerequisiteLabel(state));
     return;
   }
   if (state.status === 'research') {
@@ -2058,7 +2062,7 @@ function treeVehicleCard(type) {
     status = selected ? '当前出战' : '已入库';
     action = '选择出战';
   } else if (blocked) {
-    status = '需先入库任一 BR ' + state.prerequisite.rating.toFixed(1) + ' 飞机';
+    status = researchPrerequisiteLabel(state);
     action = '前置未解锁';
   } else if (state.status === 'ready') {
     status = '研发完成 · ' + state.cost.gp.toLocaleString('zh-CN') + ' GP';
@@ -5648,7 +5652,7 @@ function animate() {
     restoreBattlePhysicsPose();
   }
 }
-// One owned aircraft opens the next BR stage, across all national branches.
+// Research prerequisites advance independently within each nation.
 
 function clearBattleWorld() {
   clearCombatFeedback();
@@ -5742,7 +5746,11 @@ function terrainHeightAt(x, z) {
     resolution,
     half
   } = mapState.koreaHeightGrid;
-  if (Math.abs(x) > half || Math.abs(z) > half) return -90;
+  if (Math.abs(x) > half || Math.abs(z) > half) {
+    if (Math.abs(x) > half + 6000 / METERS_PER_UNIT || Math.abs(z) > half + 6000 / METERS_PER_UNIT) return -90;
+    x = THREE.MathUtils.euclideanModulo(x + half, half * 2) - half;
+    z = THREE.MathUtils.euclideanModulo(z + half, half * 2) - half;
+  }
   const u = (x + half) / (half * 2) * (resolution - 1),
     v = (z + half) / (half * 2) * (resolution - 1),
     i = Math.min(resolution - 2, Math.floor(u)),
@@ -5762,11 +5770,51 @@ function terrainHeightAt(x, z) {
   }
   return h00 * (1 - fx) * (1 - fz) + h10 * fx * (1 - fz) + h01 * (1 - fx) * fz + h11 * fx * fz;
 }
+function applyKoreaTerrainFog(material) {
+  if (material.userData.koreaBoundaryFog) return;
+  material.userData.koreaBoundaryFog = true;
+  material.onBeforeCompile = shader => {
+    shader.uniforms.koreaTerrainFogEnabled = mapState.terrainFogEnabled;
+    shader.vertexShader = 'varying vec2 vKoreaXZ;\n' + shader.vertexShader;
+    shader.vertexShader = shader.vertexShader.replace('#include <project_vertex>', '#include <project_vertex>\nvKoreaXZ = (modelMatrix * vec4(transformed, 1.0)).xz;');
+    shader.fragmentShader = 'uniform float koreaTerrainFogEnabled;\nvarying vec2 vKoreaXZ;\n' + shader.fragmentShader;
+    shader.fragmentShader = shader.fragmentShader.replace('#include <fog_fragment>', `
+      if (koreaTerrainFogEnabled > .5) {
+        #ifdef USE_FOG
+          vec2 outsideMeters = max(abs(vKoreaXZ) * 10.0 - vec2(3000.0), vec2(0.0));
+          float boundaryDistance = max(outsideMeters.x, outsideMeters.y);
+          float fogFactor = smoothstep(12000.0, 16000.0, boundaryDistance);
+          gl_FragColor.rgb = mix(gl_FragColor.rgb, fogColor, fogFactor);
+        #endif
+      } else {
+        #include <fog_fragment>
+      }
+    `);
+  };
+  material.customProgramCacheKey = () => 'korea-boundary-fog-v22';
+  material.needsUpdate = true;
+}
 function loadKoreaScenery() {
-  if (!mapState.koreaSceneryPromise) mapState.koreaSceneryPromise = planeModelLoader.loadAsync(MAP_LIBRARY.korea1951.sceneryFile).then(gltf => {
-    const scenery = gltf.scene;
+  if (!mapState.koreaSceneryPromise) mapState.koreaSceneryPromise = Promise.all([loadKoreaTerrain(), planeModelLoader.loadAsync(MAP_LIBRARY.korea1951.sceneryFile)]).then(([core, gltf]) => {
+    if (!core) throw new Error('近景地形未加载');
+    const scenery = new THREE.Group();
     scenery.name = 'korea-distance-scenery';
     scenery.userData.visualOnly = true;
+    let atlasMaterial;
+    core.traverse(node => { if (node.isMesh) atlasMaterial ||= node.material; });
+    // Eight copies surround the central map. Clone shares geometry, normals
+    // and the atlas: external 0–6 km has exactly the same precision and texels.
+    for (const x of [-600, 0, 600]) for (const z of [-600, 0, 600]) {
+      if (x === 0 && z === 0) continue;
+      const patch = core.clone(true);
+      patch.name = 'korea-high-detail-' + x + '-' + z;
+      patch.visible = true;
+      patch.position.x += x;
+      patch.position.z += z;
+      scenery.add(patch);
+    }
+    gltf.scene.traverse(node => { if (node.isMesh) node.material = atlasMaterial; });
+    scenery.add(gltf.scene);
     scenery.traverse(node => { if (node.isMesh) node.frustumCulled = true; });
     mapState.koreaScenery = scenery;
     return scenery;
@@ -5796,6 +5844,7 @@ function loadKoreaTerrain() {
       if (node.isMesh) {
         node.receiveShadow = true;
         node.frustumCulled = true;
+        for (const material of Array.isArray(node.material) ? node.material : [node.material]) applyKoreaTerrainFog(material);
       }
     });
     const coverage = new THREE.Box3().setFromObject(terrain);
@@ -5819,9 +5868,11 @@ function setBattleMap(id) {
   const korea = id === 'korea1951';
   viewState.scene.background.setHex(korea ? 0x9cb9ca : 0x83b9d1);
   viewState.scene.fog.color.setHex(korea ? 0x9cb9ca : 0x9bbfce);
-  viewState.scene.fog.near = korea ? 5000 / METERS_PER_UNIT : 170;
+  mapState.terrainFogEnabled.value = korea ? 1 : 0;
+  applyKoreaTerrainFog(mapState.groundPlane.material);
+  viewState.scene.fog.near = korea ? 12000 / METERS_PER_UNIT : 170;
   viewState.scene.fog.far = korea ? 19000 / METERS_PER_UNIT : 620;
-  viewState.camera.far = korea ? 28000 / METERS_PER_UNIT : 1400;
+  viewState.camera.far = korea ? 40000 / METERS_PER_UNIT : 1400;
   viewState.camera.updateProjectionMatrix();
   mapState.mapHemisphere.color.setHex(korea ? 0xd5e9ef : 0xdaf5ff);
   mapState.mapHemisphere.groundColor.setHex(korea ? 0x62665c : 0x596c74);
@@ -6596,23 +6647,23 @@ function loadProgressionProfile() {
   session.playerPlane = profileState.selectedAircraft;
   saveHangar();
 }
-function researchStages() {
-  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(isAircraftResearchOpen).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
+function researchStages(nation = null) {
+  return [...new Set(Object.keys(AIRCRAFT_TREE).filter(type => isAircraftResearchOpen(type) && (!nation || AIRCRAFT_TREE[type].nation === nation)).map(type => AIRCRAFT_TREE[type].rating))].sort((a, b) => a - b);
 }
 function researchPrerequisite(type) {
-  const rating = AIRCRAFT_TREE[type]?.rating;
+  const rating = AIRCRAFT_TREE[type]?.rating, nation = AIRCRAFT_TREE[type]?.nation;
   if (!Number.isFinite(rating) || !isAircraftResearchOpen(type)) return {
     allowed: false,
     rating: null,
     choices: []
   };
-  const prior = researchStages().filter(value => value < rating - 1e-9).at(-1);
+  const prior = researchStages(nation).filter(value => value < rating - 1e-9).at(-1);
   if (prior === undefined) return {
     allowed: true,
     rating: null,
     choices: []
   };
-  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
+  const choices = Object.keys(AIRCRAFT_TREE).filter(id => isAircraftResearchOpen(id) && AIRCRAFT_TREE[id].nation === nation && Math.abs(AIRCRAFT_TREE[id].rating - prior) < 1e-9);
   return {
     allowed: choices.some(id => profileState.unlockedPlanes.includes(id)),
     rating: prior,

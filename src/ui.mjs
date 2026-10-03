@@ -183,6 +183,9 @@ function updateEconomyDisplay() {
   const mode = $('#currentSaveMode');
   if (mode) mode.textContent = profileState.profileMode === 'all-aircraft' ? '全解锁测试存档 · 全部飞机已入库' : '普通存档 · 中、德、美、苏四系 Rank I—II';
 }
+function researchPrerequisiteLabel(state) {
+  return '需先入库：' + state.prerequisite.choices.map(id => planeInfo[id].name).join(' 或 ');
+}
 function handleResearchAircraft(type) {
   const state = aircraftResearchState(type);
   if (state.status === 'unavailable' || state.status === 'invalid') {
@@ -195,7 +198,7 @@ function handleResearchAircraft(type) {
     return;
   }
   if (state.status === 'blocked') {
-    toast('先解锁一架 BR ' + state.prerequisite.rating.toFixed(1) + ' 飞机');
+    toast(researchPrerequisiteLabel(state));
     return;
   }
   if (state.status === 'research') {
@@ -222,7 +225,7 @@ function treeVehicleCard(type) {
     status = selected ? '当前出战' : '已入库';
     action = '选择出战';
   } else if (blocked) {
-    status = '需先入库任一 BR ' + state.prerequisite.rating.toFixed(1) + ' 飞机';
+    status = researchPrerequisiteLabel(state);
     action = '前置未解锁';
   } else if (state.status === 'ready') {
     status = '研发完成 · ' + state.cost.gp.toLocaleString('zh-CN') + ' GP';

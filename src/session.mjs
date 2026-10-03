@@ -354,7 +354,7 @@ function animate() {
     restoreBattlePhysicsPose();
   }
 }
-// One owned aircraft opens the next BR stage, across all national branches.
+// Research prerequisites advance independently within each nation.
 
 function clearBattleWorld() {
   clearCombatFeedback();

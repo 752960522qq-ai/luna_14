@@ -185,6 +185,7 @@ const MAP_LIBRARY = {
 mapState.activeMapId = 'openSea';
 mapState.koreaScenery = null;
 mapState.koreaSceneryPromise = null;
+mapState.terrainFogEnabled = { value: 0 };
 mapState.groundPlane = null;
 mapState.mapSun = null;
 mapState.mapHemisphere = null;
